@@ -57,13 +57,10 @@ export function diff(array1, array2, strict) {
  */
 export function merge() {
   let result = [ ]
-  let push = function (item) {
-    result.push(item)
-  }
   each(
     arguments,
     function (array) {
-      each(array, push)
+      push(result, array)
     }
   )
   return result
@@ -73,15 +70,20 @@ export function merge() {
  * 压入一个数组
  *
  * @param {Array} original
- * @param {Array} array
+ * @param {Array|*} array
  */
 export function push(original, array) {
-  each(
-    array,
-    function (item) {
-      original.push(item)
-    }
-  )
+  if (is.array(array)) {
+    each(
+      array,
+      function (item) {
+        original.push(item)
+      }
+    )
+  }
+  else {
+    original.push(array)
+  }
 }
 
 /**
