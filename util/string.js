@@ -24,7 +24,7 @@ export function camelCase(str) {
  * @return {string}
  */
 export function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1)
+  return charAt(str, 0).toUpperCase() + str.slice(1)
 }
 
 /**
@@ -51,7 +51,7 @@ export function parse(str, separator, pair) {
           item = {
             key: key.trim(),
           }
-          if (value) {
+          if (is.string(value)) {
             item.value = value.trim()
           }
           result.push(item)
@@ -60,6 +60,16 @@ export function parse(str, separator, pair) {
     )
   }
   return result
+}
+
+/**
+ * 为了压缩而存在的两个方法
+ */
+export function charAt(str, index) {
+  return str.charAt(index)
+}
+export function charCodeAt(str, index) {
+  return str.charCodeAt(index)
 }
 
 // export function replace(str, pattern, replacement) {
