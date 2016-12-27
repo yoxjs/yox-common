@@ -1,12 +1,9 @@
 
-import * as is from '../util/is'
-
 export default function (str, defaultValue = '') {
-  if (is.string(str)) {
-    return str
+  try {
+    return str.toString()
   }
-  if (is.numeric(str)) {
-    return '' + str
+  catch (e) {
+    return defaultValue
   }
-  return defaultValue
 }
