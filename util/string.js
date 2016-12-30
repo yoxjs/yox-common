@@ -49,10 +49,10 @@ export function parse(str, separator, pair) {
         value = terms[1]
         if (key) {
           item = {
-            key: key.trim(),
+            key: trim(key),
           }
           if (is.string(value)) {
-            item.value = value.trim()
+            item.value = trim(value)
           }
           result.push(item)
         }
@@ -63,8 +63,11 @@ export function parse(str, separator, pair) {
 }
 
 /**
- * 为了压缩而存在的两个方法
+ * 为了压缩而存在的几个方法
  */
+export function trim(str) {
+ return str ? str.trim() : ''
+}
 export function charAt(str, index) {
   return str.charAt(index)
 }
