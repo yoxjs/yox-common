@@ -49,7 +49,8 @@ export function resolve(base, path) {
         list.pop()
       }
       else {
-        list.push(
+        array.push(
+          list,
           normalize(term)
         )
       }

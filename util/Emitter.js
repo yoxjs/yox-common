@@ -24,9 +24,9 @@ export default class Emitter {
       if (is.func(listener)) {
         let list = listeners[type] || (listeners[type] = [ ])
         if (!list.length) {
-          added.push(type)
+          array.push(added, type)
         }
-        list.push(listener)
+        array.push(list, listener)
       }
     }
 
@@ -77,7 +77,7 @@ export default class Emitter {
         function (list, type) {
           if (is.array(listeners[type])) {
             listeners[type].length = 0
-            removed.push(type)
+            array.push(removed, type)
           }
         }
       )
@@ -92,7 +92,7 @@ export default class Emitter {
           array.remove(list, listener)
         }
         if (!list.length) {
-          removed.push(type)
+          array.push(removed, type)
         }
       }
     }

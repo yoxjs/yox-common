@@ -14,7 +14,7 @@ export function add(task) {
   if (!nextTasks.length) {
     nextTick(run)
   }
-  nextTasks.push(task)
+  array.push(nextTasks, task)
 }
 
 /**

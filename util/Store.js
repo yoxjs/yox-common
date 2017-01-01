@@ -1,6 +1,6 @@
 
-import * as is from '../util/is'
-import * as object from '../util/object'
+import * as is from './is'
+import * as object from './object'
 
 export default class Store {
 
