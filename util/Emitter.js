@@ -17,7 +17,7 @@ export default class Emitter {
 
   on(type, listener) {
 
-    let { listeners, onAdd } = this
+    let { listeners, afterAdd } = this
     let added = [ ]
 
     let addListener = function (listener, type) {
@@ -37,8 +37,8 @@ export default class Emitter {
       addListener(listener, type)
     }
 
-    if (added.length && is.func(onAdd)) {
-      onAdd(added)
+    if (added.length && is.func(afterAdd)) {
+      afterAdd(added)
     }
 
   }
@@ -68,7 +68,7 @@ export default class Emitter {
 
   off(type, listener) {
 
-    let { listeners, onRemove } = this
+    let { listeners, afterRemove } = this
     let removed = [ ]
 
     if (type == env.NULL) {
@@ -97,8 +97,8 @@ export default class Emitter {
       }
     }
 
-    if (removed.length && is.func(onRemove)) {
-      onRemove(removed)
+    if (removed.length && is.func(afterRemove)) {
+      afterRemove(removed)
     }
 
   }
