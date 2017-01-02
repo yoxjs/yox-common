@@ -2,6 +2,8 @@
 import * as is from './is'
 import * as env from './env'
 
+import execute from '../function/execute'
+
 let { slice } = Array.prototype
 
 /**
@@ -56,34 +58,37 @@ export function diff(array1, array2, strict) {
  * @return {Array}
  */
 export function merge() {
+  let args = toArray(arguments)
   let result = [ ]
-  each(
-    arguments,
-    function (array) {
-      push(result, array)
-    }
-  )
+  args.unshift(result)
+  execute(push, env.NULL, args)
   return result
 }
 
 /**
- * 压入一个数组
+ * 压入数组
  *
  * @param {Array} original
- * @param {Array|*} array
  */
-export function push(original, array) {
-  if (is.array(array)) {
-    each(
-      array,
-      function (item) {
-        original.push(item)
+export function push(original) {
+  each(
+    arguments,
+    function (array, index) {
+      if (index > 0) {
+        if (is.array(array)) {
+          each(
+            array,
+            function (item) {
+              original.push(item)
+            }
+          )
+        }
+        else {
+          original.push(array)
+        }
       }
-    )
-  }
-  else {
-    original.push(array)
-  }
+    }
+  )
 }
 
 /**

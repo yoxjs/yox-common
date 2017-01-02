@@ -10,6 +10,13 @@ export const NULL = null
 export const UNDEFINED = undefined
 
 /**
+ * 换行符
+ *
+ * @type {string}
+ */
+export const BREAKLINE = '\n'
+
+/**
  * 浏览器环境下的 window 对象
  *
  * @type {?Window}

@@ -54,7 +54,7 @@ export function parse(str, separator, pair) {
           if (is.string(value)) {
             item.value = trim(value)
           }
-          result.push(item)
+          array.push(result, item)
         }
       }
     )
