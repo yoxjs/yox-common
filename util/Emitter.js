@@ -5,6 +5,7 @@ import * as is from './is'
 import * as env from './env'
 import * as array from './array'
 import * as object from './object'
+import * as string from './string'
 
 import Event from './Event'
 
@@ -160,7 +161,7 @@ export default class Emitter {
                 .replace(/\./g, '\\.')
                 .replace(/\*\*/g, '([\.\\w]+?)')
                 .replace(/\*/g, '(\\w+)'),
-              key.endsWith('**') ? '' : '$'
+              string.endsWith(key, '**') ? '' : '$'
             ]
             let match = type.match(
               new RegExp(key.join(''))
