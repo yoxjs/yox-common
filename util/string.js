@@ -78,7 +78,7 @@ export function startsWith(str, part) {
   return str.indexOf(part) === 0
 }
 export function endsWith(str, part) {
-  return str.lastIndexOf(part) === part.length
+  return str === part || str.lastIndexOf(part) === part.length
 }
 
 // export function replace(str, pattern, replacement) {
