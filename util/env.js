@@ -17,6 +17,13 @@ export const UNDEFINED = undefined
 export const BREAKLINE = '\n'
 
 /**
+ * 空字符串
+ *
+ * @type {string}
+ */
+export const EMPTY = ''
+
+/**
  * 浏览器环境下的 window 对象
  *
  * @type {?Window}
