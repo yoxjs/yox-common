@@ -1,4 +1,5 @@
 
+import * as env from './env'
 import * as array from './array'
 
 export const SEPARATOR_KEY = '.'
@@ -34,7 +35,7 @@ export function stringify(keypaths) {
   return keypaths
   .filter(
     function (term) {
-      return term !== '' && term !== LEVEL_CURRENT
+      return term !== env.EMPTY && term !== LEVEL_CURRENT
     }
   )
   .join(SEPARATOR_KEY)

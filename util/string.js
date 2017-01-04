@@ -1,5 +1,6 @@
 
 import * as is from './is'
+import * as env from './env'
 import * as array from './array'
 
 /**
@@ -66,7 +67,7 @@ export function parse(str, separator, pair) {
  * 为了压缩而存在的几个方法
  */
 export function trim(str) {
- return str ? str.trim() : ''
+ return str ? str.trim() : env.EMPTY
 }
 export function charAt(str, index) {
   return str.charAt(index)
@@ -90,5 +91,5 @@ export function endsWith(str, part) {
 // }
 //
 // export function falsy(str) {
-//   return !is.string(str) || str === ''
+//   return !is.string(str) || str === env.EMPTY
 // }
