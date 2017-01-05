@@ -9,8 +9,7 @@ import * as env from './env'
  */
 const hasConsole = typeof console !== 'undefined'
 
-const tester = function () { /** yox */ }
-const debug = /yox/.test(tester.toString())
+const debug = /yox/.test(env.noop.toString())
 
 // 全局可覆盖
 // 比如开发环境，开了 debug 模式，但是有时候觉得看着一堆日志特烦，想强制关掉

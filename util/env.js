@@ -36,3 +36,10 @@ export const win = typeof window !== 'undefined' ? window : NULL
  * @type {?Document}
  */
 export const doc = typeof document !== 'undefined' ? document : NULL
+
+/**
+ * 空函数
+ *
+ * @return {Function} 
+ */
+export const noop = function () { /** yox */ }
