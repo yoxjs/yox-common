@@ -10,18 +10,25 @@ export const NULL = null
 export const UNDEFINED = undefined
 
 /**
- * 换行符
- *
- * @type {string}
- */
-export const BREAKLINE = '\n'
-
-/**
- * 空字符串
+ * 为了压缩，定义的常用字符
  *
  * @type {string}
  */
 export const EMPTY = ''
+export const DOT = '.'
+export const DASH = '-'
+export const SLASH = '/'
+export const COMMA = ','
+export const COLON = ':'
+export const SEMCOL = ';'
+export const SQUOTE = "'"
+export const DQUOTE = '"'
+export const OPAREN = '('
+export const CPAREN = ')'
+export const OBRACK = '['
+export const CBRACK = ']'
+export const QUMARK = '?'
+export const BREAKLINE = '\n'
 
 /**
  * 浏览器环境下的 window 对象
@@ -40,6 +47,6 @@ export const doc = typeof document !== 'undefined' ? document : NULL
 /**
  * 空函数
  *
- * @return {Function} 
+ * @return {Function}
  */
 export const noop = function () { /** yox */ }

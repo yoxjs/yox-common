@@ -18,7 +18,7 @@ export default function (fn, delay, lazy) {
     timer = setTimeout(
       function () {
         timer = env.NULL
-        prevTime = Date.now()
+        prevTime = +new Date()
         fn.apply(env.NULL, array.toArray(args))
       },
       delay
@@ -29,7 +29,7 @@ export default function (fn, delay, lazy) {
 
     if (lazy
       && prevTime > 0
-      && Date.now() - prevTime < delay
+      && +new Date() - prevTime < delay
     ) {
       clearTimeout(timer)
       timer = env.NULL

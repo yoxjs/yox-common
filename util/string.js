@@ -10,12 +10,15 @@ import * as array from './array'
  * @return {string}
  */
 export function camelCase(str) {
-  return str.replace(
-    /-([a-z])/gi,
-    function ($0, $1) {
-      return $1.toUpperCase()
-    }
-  )
+  if (str.indexOf(env.DASH) >= 0) {
+    return str.replace(
+      /-([a-z])/gi,
+      function ($0, $1) {
+        return $1.toUpperCase()
+      }
+    )
+  }
+  return str
 }
 
 /**
@@ -26,6 +29,16 @@ export function camelCase(str) {
  */
 export function capitalize(str) {
   return charAt(str, 0).toUpperCase() + str.slice(1)
+}
+
+/**
+ * 判断长度大于 0 的字符串
+ *
+ * @param {*} str
+ * @return {boolean}
+ */
+export function falsy(str) {
+  return !is.string(str) || str === env.EMPTY
 }
 
 /**
@@ -67,7 +80,7 @@ export function parse(str, separator, pair) {
  * 为了压缩而存在的几个方法
  */
 export function trim(str) {
- return str ? str.trim() : env.EMPTY
+ return falsy(str) ? env.EMPTY : str.trim()
 }
 export function charAt(str, index) {
   return str.charAt(index)
@@ -90,6 +103,3 @@ export function endsWith(str, part) {
 //   )
 // }
 //
-// export function falsy(str) {
-//   return !is.string(str) || str === env.EMPTY
-// }

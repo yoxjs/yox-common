@@ -183,7 +183,7 @@ export function remove(array, item, strict) {
 }
 
 /**
- * 用于判断长度不为 0 的数组
+ * 用于判断长度大于 0 的数组
  *
  * @param {*} array
  * @return {boolean}
