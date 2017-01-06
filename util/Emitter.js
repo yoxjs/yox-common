@@ -161,10 +161,10 @@ export default class Emitter {
                 .replace(/\./g, '\\.')
                 .replace(/\*\*/g, '([\.\\w]+?)')
                 .replace(/\*/g, '(\\w+)'),
-              string.endsWith(key, '**') ? env.BLANK : '$'
+              string.endsWith(key, '**') ? string.CHAR_BLANK : '$'
             ]
             let match = type.match(
-              new RegExp(key.join(env.BLANK))
+              new RegExp(key.join(string.CHAR_BLANK))
             )
             if (match) {
               handle(

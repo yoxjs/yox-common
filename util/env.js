@@ -10,30 +10,6 @@ export const NULL = null
 export const UNDEFINED = undefined
 
 /**
- * 为了压缩，定义的常用字符
- *
- * @type {string}
- */
-export const DOT = '.'
-export const DASH = '-'
-export const SLASH = '/'
-export const COMMA = ','
-export const COLON = ':'
-export const SEMCOL = ';'
-export const SQUOTE = "'"
-export const DQUOTE = '"'
-export const OPAREN = '('
-export const CPAREN = ')'
-export const OBRACK = '['
-export const CBRACK = ']'
-export const QUMARK = '?'
-
-export const BLANK = ''
-export const TAB = '\t'
-export const BREAKLINE = '\n'
-export const WHITESPACE = ' '
-
-/**
  * 浏览器环境下的 window 对象
  *
  * @type {?Window}

@@ -1,7 +1,7 @@
 
-import * as env from '../util/env'
+import * as string from '../util/string'
 
-export default function (str, defaultValue = env.BLANK) {
+export default function (str, defaultValue = string.CHAR_BLANK) {
   try {
     return str.toString()
   }
