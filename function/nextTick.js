@@ -6,7 +6,7 @@ let nextTick
 if (typeof MutationObserver === 'function') {
   nextTick = function (fn) {
     let observer = new MutationObserver(fn)
-    let textNode = env.doc.createTextNode(env.EMPTY)
+    let textNode = env.doc.createTextNode(env.BLANK)
     observer.observe(textNode, {
       characterData: env.TRUE,
     })

@@ -14,7 +14,6 @@ export const UNDEFINED = undefined
  *
  * @type {string}
  */
-export const EMPTY = ''
 export const DOT = '.'
 export const DASH = '-'
 export const SLASH = '/'
@@ -28,7 +27,11 @@ export const CPAREN = ')'
 export const OBRACK = '['
 export const CBRACK = ']'
 export const QUMARK = '?'
+
+export const BLANK = ''
+export const TAB = '\t'
 export const BREAKLINE = '\n'
+export const WHITESPACE = ' '
 
 /**
  * 浏览器环境下的 window 对象

@@ -39,7 +39,7 @@ export function stringify(keypaths) {
   return keypaths
   .filter(
     function (term) {
-      return term !== env.EMPTY && term !== LEVEL_CURRENT
+      return term !== env.BLANK && term !== LEVEL_CURRENT
     }
   )
   .join(SEPARATOR_KEY)

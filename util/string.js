@@ -38,7 +38,7 @@ export function capitalize(str) {
  * @return {boolean}
  */
 export function falsy(str) {
-  return !is.string(str) || str === env.EMPTY
+  return !is.string(str) || str === env.BLANK
 }
 
 /**
@@ -80,7 +80,7 @@ export function parse(str, separator, pair) {
  * 为了压缩而存在的几个方法
  */
 export function trim(str) {
- return falsy(str) ? env.EMPTY : str.trim()
+ return falsy(str) ? env.BLANK : str.trim()
 }
 export function charAt(str, index) {
   return str.charAt(index)
