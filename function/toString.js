@@ -1,7 +1,7 @@
 
-import * as string from '../util/string'
+import char from '../util/char'
 
-export default function (str, defaultValue = string.CHAR_BLANK) {
+export default function (str, defaultValue = char.CHAR_BLANK) {
   try {
     return str.toString()
   }

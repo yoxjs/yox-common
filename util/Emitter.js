@@ -1,5 +1,6 @@
 
 import execute from '../function/execute'
+import char from './char'
 
 import * as is from './is'
 import * as env from './env'
@@ -161,10 +162,10 @@ export default class Emitter {
                 .replace(/\./g, '\\.')
                 .replace(/\*\*/g, '([\.\\w]+?)')
                 .replace(/\*/g, '(\\w+)'),
-              string.endsWith(key, '**') ? string.CHAR_BLANK : '$'
+              string.endsWith(key, '**') ? char.CHAR_BLANK : '$'
             ]
             let match = type.match(
-              new RegExp(key.join(string.CHAR_BLANK))
+              new RegExp(key.join(char.CHAR_BLANK))
             )
             if (match) {
               handle(

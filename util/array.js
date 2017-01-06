@@ -71,24 +71,20 @@ export function merge() {
  * @param {Array} original
  */
 export function push(original) {
-  each(
-    arguments,
-    function (array, index) {
-      if (index > 0) {
-        if (is.array(array)) {
-          each(
-            array,
-            function (item) {
-              original.push(item)
-            }
-          )
+  let args = arguments
+  for (let i = 1, len = args.length; i < len; i++) {
+    if (is.array(args[i])) {
+      each(
+        args[i],
+        function (item) {
+          original.push(item)
         }
-        else {
-          original.push(array)
-        }
-      }
+      )
     }
-  )
+    else {
+      original.push(args[i])
+    }
+  }
 }
 
 /**

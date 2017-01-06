@@ -1,8 +1,9 @@
 
+import char from './char'
+
 import * as is from './is'
 import * as env from './env'
 import * as array from './array'
-import * as string from './string'
 import * as keypathUtil from './keypath'
 
 /**
@@ -111,7 +112,7 @@ export function get(object, keypath) {
     }
   }
   // 不能以 . 开头
-  if (is.string(keypath) && keypath.indexOf(string.CHAR_DOT) > 0) {
+  if (is.string(keypath) && keypath.indexOf(char.CHAR_DOT) > 0) {
     let list = keypathUtil.parse(keypath)
     for (let i = 0, len = list.length; i < len && object; i++) {
       if (i < len - 1) {
@@ -135,7 +136,7 @@ export function get(object, keypath) {
  * @param {?boolean} autofill 是否自动填充不存在的对象，默认自动填充
  */
 export function set(object, keypath, value, autofill) {
-  if (is.string(keypath) && keypath.indexOf(string.CHAR_DOT) > 0) {
+  if (is.string(keypath) && keypath.indexOf(char.CHAR_DOT) > 0) {
     let originalObject = object
     let list = keypathUtil.parse(keypath)
     let prop = list.pop()
