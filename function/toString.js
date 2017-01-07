@@ -1,5 +1,5 @@
 
-import char from '../util/char'
+import * as char from '../util/char'
 
 export default function (str, defaultValue = char.CHAR_BLANK) {
   try {

@@ -1,7 +1,6 @@
 
-import char from './char'
-
 import * as is from './is'
+import * as char from './char'
 import * as array from './array'
 
 /**
@@ -83,19 +82,12 @@ export function parse(str, separator, pair) {
 export function trim(str) {
  return falsy(str) ? char.CHAR_BLANK : str.trim()
 }
-export function charAt(str, index = 0) {
-  return str.charAt(index)
-}
-export function charCodeAt(str, index = 0) {
-  return str.charCodeAt(index)
-}
 export function startsWith(str, part) {
   return str.indexOf(part) === 0
 }
 export function endsWith(str, part) {
   return str === part || str.lastIndexOf(part) === part.length
 }
-
 
 
 

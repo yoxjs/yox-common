@@ -1,7 +1,6 @@
 
-import char from '../util/char'
-
 import * as env from '../util/env'
+import * as char from '../util/char'
 
 let nextTick
 

@@ -65,27 +65,38 @@ export function merge() {
   return result
 }
 
-/**
- * 压入数组
- *
- * @param {Array} original
- */
-export function push(original) {
-  let args = arguments
-  for (let i = 1, len = args.length; i < len; i++) {
-    if (is.array(args[i])) {
-      each(
-        args[i],
-        function (item) {
-          original.push(item)
-        }
-      )
-    }
-    else {
-      original.push(args[i])
+function add(action) {
+  return function (original) {
+    let args = arguments
+    for (let i = 1, len = args.length; i < len; i++) {
+      if (is.array(args[i])) {
+        each(
+          args[i],
+          function (item) {
+            original[action](item)
+          }
+        )
+      }
+      else {
+        original[action](args[i])
+      }
     }
   }
 }
+
+/**
+ * push 数组
+ *
+ * @param {Array} original
+ */
+export let push = add('push')
+
+/**
+ * unshift 数组
+ *
+ * @param {Array} original
+ */
+export let unshift = add('unshift')
 
 /**
  * 把类数组转成数组
