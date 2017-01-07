@@ -28,7 +28,7 @@ export function camelCase(str) {
  * @return {string}
  */
 export function capitalize(str) {
-  return charAt(str, 0).toUpperCase() + str.slice(1)
+  return char.charAt(str, 0).toUpperCase() + str.slice(1)
 }
 
 /**
