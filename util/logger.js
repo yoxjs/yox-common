@@ -5,7 +5,7 @@ import * as env from './env'
 /**
  * 是否有原生的日志特性，没有必要单独实现
  *
- * @param {boolean}
+ * @type {boolean}
  */
 const hasConsole = typeof console !== 'undefined'
 
