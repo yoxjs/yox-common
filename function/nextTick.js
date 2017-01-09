@@ -11,7 +11,7 @@ if (typeof MutationObserver === 'function') {
     observer.observe(textNode, {
       characterData: env.TRUE,
     })
-    textNode.data = ' '
+    textNode.data = char.CHAR_WHITESPACE
   }
 }
 else if (typeof setImmediate === 'function') {

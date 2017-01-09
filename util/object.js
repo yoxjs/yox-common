@@ -25,7 +25,7 @@ export function each(object, callback) {
   array.each(
     keys(object),
     function (key) {
-      return callback(object[key], key)
+      return callback(object[ key ], key)
     }
   )
 }
@@ -47,13 +47,13 @@ export function has(object, key) {
  * @return {Object}
  */
 export function extend() {
-  let args = arguments, result = args[0]
+  let args = arguments, result = args[ 0 ]
   for (let i = 1, len = args.length; i < len; i++) {
-    if (is.object(args[i])) {
+    if (is.object(args[ i ])) {
       each(
-        args[i],
+        args[ i ],
         function (value, key) {
-          result[key] = value
+          result[ key ] = value
         }
       )
     }
@@ -75,7 +75,7 @@ export function copy(object, deep) {
     array.each(
       object,
       function (item, index) {
-        result[index] = deep ? copy(item) : item
+        result[ index ] = deep ? copy(item) : item
       }
     )
   }
@@ -84,7 +84,7 @@ export function copy(object, deep) {
     each(
       object,
       function (value, key) {
-        result[key] = deep ? copy(value) : value
+        result[ key ] = deep ? copy(value) : value
       }
     )
   }
@@ -107,7 +107,7 @@ export function get(object, keypath) {
   // 如 data['a.b.c'] = 1 是一个合法赋值
   if (has(object, keypath)) {
     return {
-      value: object[keypath],
+      value: object[ keypath ],
     }
   }
   // 不能以 . 开头
@@ -115,11 +115,11 @@ export function get(object, keypath) {
     let list = keypathUtil.parse(keypath)
     for (let i = 0, len = list.length; i < len && object; i++) {
       if (i < len - 1) {
-        object = object[list[i]]
+        object = object[ list[ i ] ]
       }
-      else if (has(object, list[i])) {
+      else if (has(object, list[ i ])) {
         return {
-          value: object[list[i]],
+          value: object[ list[ i ] ],
         }
       }
     }
@@ -142,11 +142,11 @@ export function set(object, keypath, value, autofill) {
     array.each(
       list,
       function (item, index) {
-        if (object[item]) {
-          object = object[item]
+        if (object[ item ]) {
+          object = object[ item ]
         }
         else if (autofill !== env.FALSE) {
-          object = object[item] = { }
+          object = object[ item ] = { }
         }
         else {
           object = env.NULL
@@ -155,10 +155,10 @@ export function set(object, keypath, value, autofill) {
       }
     )
     if (object && object !== originalObject) {
-      object[prop] = value
+      object[ prop ] = value
     }
   }
   else {
-    object[keypath] = value
+    object[ keypath ] = value
   }
 }

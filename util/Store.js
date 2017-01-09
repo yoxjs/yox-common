@@ -16,7 +16,7 @@ export default class Store {
    * @return {*}
    */
   get(key) {
-    return this.data[key]
+    return this.data[ key ]
   }
 
   /**
@@ -27,14 +27,14 @@ export default class Store {
    */
   getAsync(key, callback) {
     let { data } = this
-    let value = data[key]
+    let value = data[ key ]
     if (is.func(value)) {
       let { $pending } = value
       if (!$pending) {
         $pending = value.$pending = [ callback ]
         value(function (replacement) {
           delete value.$pending
-          data[key] = replacement
+          data[ key ] = replacement
           array.each(
             $pending,
             function (callback) {
@@ -58,12 +58,12 @@ export default class Store {
       object.each(
         key,
         function (value, key) {
-          data[key] = value
+          data[ key ] = value
         }
       )
     }
     else if (is.string(key)) {
-      data[key] = value
+      data[ key ] = value
     }
   }
 

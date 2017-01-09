@@ -19,7 +19,7 @@ export function normalize(str) {
     return str.replace(
       /\[\s*?([\S]+)\s*?\]/g,
       function ($0, $1) {
-        let firstChar = $1.charAt[0]
+        let firstChar = char.charAt($1)
         if (firstChar === char.CHAR_DQUOTE || firstChar === char.CHAR_SQUOTE) {
           $1 = $1.slice(1, -1)
         }

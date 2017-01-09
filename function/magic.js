@@ -15,7 +15,7 @@ export default function (options) {
   let { args, get, set } = options
   args = array.toArray(args)
 
-  let key = args[0], value = args[1]
+  let key = args[ 0 ], value = args[ 1 ]
   if (is.object(key)) {
     execute(set, env.NULL, key)
   }

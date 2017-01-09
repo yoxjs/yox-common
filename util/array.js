@@ -17,39 +17,18 @@ export function each(array, callback, reversed) {
   let { length } = array
   if (reversed) {
     for (let i = length - 1; i >= 0; i--) {
-      if (callback(array[i], i) === env.FALSE) {
+      if (callback(array[ i ], i) === env.FALSE) {
         break
       }
     }
   }
   else {
     for (let i = 0; i < length; i++) {
-      if (callback(array[i], i) === env.FALSE) {
+      if (callback(array[ i ], i) === env.FALSE) {
         break
       }
     }
   }
-}
-
-/**
- * 返回 array2 中包含，array1 中不包含的数组项
- *
- * @param {Array} array1
- * @param {Array} array2
- * @param {?boolean} strict 是否全等判断，默认是全等
- * @return {Array}
- */
-export function diff(array1, array2, strict) {
-  let result = [ ]
-  each(
-    array2,
-    function (item) {
-      if (!has(array1, item, strict)) {
-        result.push(item)
-      }
-    }
-  )
-  return result
 }
 
 /**
@@ -69,16 +48,16 @@ function add(action) {
   return function (original) {
     let args = arguments
     for (let i = 1, len = args.length; i < len; i++) {
-      if (is.array(args[i])) {
+      if (is.array(args[ i ])) {
         each(
-          args[i],
+          args[ i ],
           function (item) {
-            original[action](item)
+            original[ action ](item)
           }
         )
       }
       else {
-        original[action](args[i])
+        original[ action ](args[ i ])
       }
     }
   }
@@ -115,12 +94,12 @@ export function toArray(array) {
  * @param {?string} key 数组项包含的字段名称，如果数组项是基本类型，可不传
  * @return {Object}
  */
-export function toObject(array, key) {
+export function toObject(array, key, value) {
   let result = { }
   each(
     array,
     function (item) {
-      result[key ? item[key] : item] = item
+      result[ key ? item[ key ] : item ] = value ? item[ value ] : item
     }
   )
   return result
@@ -172,7 +151,7 @@ export function has(array, item, strict) {
  * @return {*}
  */
 export function last(array) {
-  return array[array.length - 1]
+  return array[ array.length - 1 ]
 }
 
 /**
