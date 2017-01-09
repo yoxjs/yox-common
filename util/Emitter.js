@@ -24,7 +24,7 @@ export default class Emitter {
 
     let addListener = function (listener, type) {
       if (is.func(listener)) {
-        let list = listeners[type] || (listeners[type] = [ ])
+        let list = listeners[ type ] || (listeners[ type ] = [ ])
         if (!list.length) {
           array.push(added, type)
         }
@@ -77,15 +77,15 @@ export default class Emitter {
       object.each(
         listeners,
         function (list, type) {
-          if (is.array(listeners[type])) {
-            listeners[type].length = 0
+          if (is.array(listeners[ type ])) {
+            listeners[ type ].length = 0
             array.push(removed, type)
           }
         }
       )
     }
     else {
-      let list = listeners[type]
+      let list = listeners[ type ]
       if (is.array(list)) {
         if (listener == env.NULL) {
           list.length = 0
@@ -144,7 +144,7 @@ export default class Emitter {
     }
 
     let { listeners } = this
-    handle(listeners[type], data)
+    handle(listeners[ type ], data)
 
     // user.* 能响应 user.name
     // *.* 能响应 user.name
@@ -184,7 +184,7 @@ export default class Emitter {
   }
 
   has(type, listener) {
-    let list = this.listeners[type]
+    let list = this.listeners[ type ]
     if (listener == env.NULL) {
       // 是否注册过 type 事件
       return is.array(list) && list.length > 0
