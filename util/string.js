@@ -10,7 +10,7 @@ import * as array from './array'
  * @return {string}
  */
 export function camelCase(str) {
-  if (str.indexOf(char.CHAR_DASH) >= 0) {
+  if (has(str, char.CHAR_DASH)) {
     return str.replace(
       /-([a-z])/gi,
       function ($0, $1) {

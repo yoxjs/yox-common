@@ -155,7 +155,7 @@ export default class Emitter {
       object.each(
         listeners,
         function (list, key) {
-          if (key !== type || key.indexOf(char.CHAR_ASTERISK) >= 0) {
+          if (key !== type || string.has(key, char.CHAR_ASTERISK)) {
             key = [
               '^',
               key
@@ -186,8 +186,7 @@ export default class Emitter {
   has(type, listener) {
     let list = this.listeners[ type ]
     if (listener == env.NULL) {
-      // 是否注册过 type 事件
-      return is.array(list) && list.length > 0
+      return !array.falsy(list)
     }
     return is.array(list)
       ? array.has(list, listener)
