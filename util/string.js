@@ -76,14 +76,18 @@ export function parse(str, separator, pair) {
   return result
 }
 
-/**
- * 为了压缩而存在的几个方法
- */
+
 export function trim(str) {
  return falsy(str) ? char.CHAR_BLANK : str.trim()
 }
+export function indexOf(str, part) {
+  return str.indexOf(part)
+}
+export function has(str, part) {
+  return indexOf(str, part) >= 0
+}
 export function startsWith(str, part) {
-  return str.indexOf(part) === 0
+  return indexOf(str, part) === 0
 }
 export function endsWith(str, part) {
   return str === part || str.lastIndexOf(part) === part.length

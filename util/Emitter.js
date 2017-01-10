@@ -155,14 +155,14 @@ export default class Emitter {
       object.each(
         listeners,
         function (list, key) {
-          if (key !== type || key.indexOf('*') >= 0) {
+          if (key !== type || key.indexOf(char.CHAR_ASTERISK) >= 0) {
             key = [
               '^',
               key
                 .replace(/\./g, '\\.')
                 .replace(/\*\*/g, '([\.\\w]+?)')
                 .replace(/\*/g, '(\\w+)'),
-              string.endsWith(key, '**') ? char.CHAR_BLANK : '$'
+              string.endsWith(key, `${char.CHAR_ASTERISK}${char.CHAR_ASTERISK}`) ? char.CHAR_BLANK : '$'
             ]
             let match = type.match(
               new RegExp(key.join(char.CHAR_BLANK))

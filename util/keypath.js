@@ -11,16 +11,16 @@ export const LEVEL_PARENT = `${char.CHAR_DOT}${char.CHAR_DOT}`
 
 export function normalize(str) {
   if (!string.falsy(str)
-    && str.indexOf(char.CHAR_OBRACK) > 0
-    && str.indexOf(char.CHAR_CBRACK) > 0
+    && string.indexOf(str, char.CHAR_OBRACK) > 0
+    && string.indexOf(str, char.CHAR_CBRACK) > 0
   ) {
     // array[0] => array.0
     // object['key'] => array.key
     return str.replace(
       /\[\s*?([\S]+)\s*?\]/g,
       function ($0, $1) {
-        let firstChar = char.charAt($1)
-        if (firstChar === char.CHAR_DQUOTE || firstChar === char.CHAR_SQUOTE) {
+        let code = char.codeAt($1)
+        if (code === char.CODE_SQUOTE || code === char.CODE_DQUOTE) {
           $1 = $1.slice(1, -1)
         }
         return `${SEPARATOR_KEY}${$1}`
@@ -31,9 +31,9 @@ export function normalize(str) {
 }
 
 export function parse(str) {
-  return str
-    ? normalize(str).split(SEPARATOR_KEY)
-    : [ ]
+  return string.falsy(str)
+    ? [ ]
+    : normalize(str).split(SEPARATOR_KEY)
 }
 
 export function stringify(keypaths) {

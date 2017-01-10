@@ -12,6 +12,7 @@ export function codeAt(str, index = 0) {
 }
 
 export const CHAR_BLANK = ''
+export const CHAR_ASTERISK = '*'
 
 export const CHAR_DOT = '.'
 export const CODE_DOT = codeAt(CHAR_DOT)
@@ -69,9 +70,6 @@ export const CODE_RIGHT = codeAt(CHAR_RIGHT)
 
 export const CHAR_QUMARK = '?'
 export const CODE_QUMARK = codeAt(CHAR_QUMARK)
-
-export const CHAR_BACKSLASH = '\\'
-export const CODE_BACKSLASH = codeAt(CHAR_BACKSLASH)
 
 export const CHAR_TAB = '\t'
 export const CODE_TAB = codeAt(CHAR_TAB)

@@ -8,21 +8,20 @@ if (typeof MutationObserver === 'function') {
   nextTick = function (fn) {
     let observer = new MutationObserver(fn)
     let textNode = env.doc.createTextNode(char.CHAR_BLANK)
-    observer.observe(textNode, {
-      characterData: env.TRUE,
-    })
+    observer.observe(
+      textNode,
+      {
+        characterData: env.TRUE,
+      }
+    )
     textNode.data = char.CHAR_WHITESPACE
   }
 }
 else if (typeof setImmediate === 'function') {
-  nextTick = function (fn) {
-    setImmediate(fn)
-  }
+  nextTick = setImmediate
 }
 else {
-  nextTick = function (fn) {
-    setTimeout(fn)
-  }
+  nextTick = setTimeout
 }
 
 export default nextTick
