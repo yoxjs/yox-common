@@ -21,7 +21,7 @@ export function normalize(str) {
       function ($0, $1) {
         let code = char.codeAt($1)
         if (code === char.CODE_SQUOTE || code === char.CODE_DQUOTE) {
-          $1 = $1.slice(1, -1)
+          $1 = string.slice($1, 1, -1)
         }
         return `${SEPARATOR_KEY}${$1}`
       }

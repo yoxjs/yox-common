@@ -28,7 +28,7 @@ export function camelCase(str) {
  * @return {string}
  */
 export function capitalize(str) {
-  return char.charAt(str, 0).toUpperCase() + str.slice(1)
+  return char.charAt(str, 0).toUpperCase() + slice(str, 1)
 }
 
 /**
@@ -79,6 +79,11 @@ export function parse(str, separator, pair) {
 
 export function trim(str) {
  return falsy(str) ? char.CHAR_BLANK : str.trim()
+}
+export function slice(str, start, end) {
+  return is.number(end)
+    ? str.slice(start, end)
+    : str.slice(start)
 }
 export function indexOf(str, part) {
   return str.indexOf(part)
