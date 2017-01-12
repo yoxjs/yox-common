@@ -31,9 +31,7 @@ export function normalize(str) {
 }
 
 export function parse(str) {
-  return string.falsy(str)
-    ? [ ]
-    : normalize(str).split(SEPARATOR_KEY)
+  return string.split(normalize(str), SEPARATOR_KEY)
 }
 
 export function stringify(keypaths) {
@@ -49,7 +47,7 @@ export function stringify(keypaths) {
 export function resolve(base, path) {
   let list = parse(base)
   array.each(
-    path.split(SEPARATOR_PATH),
+    string.split(path, SEPARATOR_PATH),
     function (term) {
       if (term === LEVEL_PARENT) {
         list.pop()

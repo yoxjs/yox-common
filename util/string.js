@@ -56,9 +56,9 @@ export function parse(str, separator, pair) {
   if (is.string(str)) {
     let terms, key, value, item
     array.each(
-      str.split(separator),
+      split(str, separator),
       function (term) {
-        terms = term.split(pair)
+        terms = split(term, pair)
         key = terms[0]
         value = terms[1]
         if (key) {
@@ -76,6 +76,22 @@ export function parse(str, separator, pair) {
   return result
 }
 
+/**
+ * 替换可正则可用的字符串
+ *
+ * @param {string} str
+ * @param {string} pattern
+ * @param {string} replacement
+ * @return {string}
+ */
+// export function replace(str, pattern, replacement) {
+//   pattern = pattern.replace(/[$.]/g, '\\$&')
+//   return str.replace(
+//     new RegExp(`(?:^|\\b)${pattern}(?:$|\\b)`, 'g'),
+//     replacement
+//   )
+// }
+
 
 export function trim(str) {
  return falsy(str) ? char.CHAR_BLANK : str.trim()
@@ -84,6 +100,13 @@ export function slice(str, start, end) {
   return is.number(end)
     ? str.slice(start, end)
     : str.slice(start)
+}
+export function split(str, delimiter) {
+  return falsy(str)
+    ? [ ]
+    : str.split(
+        new RegExp(`\\s*${delimiter.replace(/[.*?]/g, '\\$&')}\\s*`)
+      )
 }
 export function indexOf(str, part) {
   return str.indexOf(part)
@@ -97,14 +120,3 @@ export function startsWith(str, part) {
 export function endsWith(str, part) {
   return str === part || str.lastIndexOf(part) === part.length
 }
-
-
-
-// export function replace(str, pattern, replacement) {
-//   pattern = pattern.replace(/[$.]/g, '\\$&')
-//   return str.replace(
-//     new RegExp(`(?:^|\\b)${pattern}(?:$|\\b)`, 'g'),
-//     replacement
-//   )
-// }
-//
