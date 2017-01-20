@@ -84,7 +84,7 @@ export let unshift = add('unshift')
  * @return {Array}
  */
 export function toArray(array) {
-  return is.array(array) ? array : slice.call(array)
+  return is.array(array) ? array : execute(slice, array)
 }
 
 /**
