@@ -112,72 +112,44 @@ export default class Emitter {
     }
 
     let done = env.TRUE
-    let handle = function (list, data) {
-      if (is.array(list)) {
-        array.each(
-          list,
-          function (listener) {
-            let result = execute(listener, context, data)
 
-            let { $once } = listener
-            if (is.func($once)) {
-              $once()
-            }
-
-            // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
-            if (data instanceof Event) {
-              if (result === env.FALSE) {
-                data.prevent()
-                data.stop()
-              }
-              else if (data.isStoped) {
-                result = env.FALSE
-              }
-            }
-
-            if (result === env.FALSE) {
-              return done = env.FALSE
-            }
-          }
-        )
-      }
-    }
-
-    let { listeners } = this
-    handle(listeners[ type ], data)
-
-    // user.* 能响应 user.name
-    // *.* 能响应 user.name
-    // * 能响应 user.name
-    //
-    // ** 可以响应所有数据变化，是一个超级通配符的存在
-    if (done) {
-      object.each(
-        listeners,
-        function (list, key) {
-          if (key !== type || string.has(key, char.CHAR_ASTERISK)) {
-            key = [
-              '^',
-              key
-                .replace(/\./g, '\\.')
-                .replace(/\*\*/g, '([\.\\w]+?)')
-                .replace(/\*/g, '(\\w+)'),
-              string.endsWith(key, `${char.CHAR_ASTERISK}${char.CHAR_ASTERISK}`) ? char.CHAR_BLANK : '$'
-            ]
-            let match = type.match(
-              new RegExp(key.join(char.CHAR_BLANK))
-            )
-            if (match) {
-              handle(
-                list,
-                array.merge(data, array.toArray(match).slice(1))
+    this.match(
+      type,
+      function (list, extra) {
+        if (is.array(list)) {
+          array.each(
+            list,
+            function (listener) {
+              let result = execute(
+                listener,
+                context,
+                extra ? array.merge(data, extra) : data
               )
+
+              let { $once } = listener
+              if (is.func($once)) {
+                $once()
+              }
+
+              // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
+              if (data instanceof Event) {
+                if (result === env.FALSE) {
+                  data.prevent()
+                  data.stop()
+                }
+                else if (data.isStoped) {
+                  result = env.FALSE
+                }
+              }
+
+              if (result === env.FALSE) {
+                return done = env.FALSE
+              }
             }
-            return done
-          }
+          )
         }
-      )
-    }
+      }
+    )
 
     return done
 
@@ -192,4 +164,36 @@ export default class Emitter {
       ? array.has(list, listener)
       : env.FALSE
   }
+
+  match(type, handler) {
+    let { listeners } = this
+    object.each(
+      listeners,
+      function (list, key) {
+        if (key === type) {
+          return handler(list)
+        }
+        else if (string.has(key, char.CHAR_ASTERISK)) {
+          let terms = [
+            '^',
+            key
+              .replace(/\./g, '\\.')
+              .replace(/\*\*/g, '([\.\\w]+?)')
+              .replace(/\*/g, '(\\w+)'),
+            '$'
+          ]
+          let match = type.match(
+            new RegExp(terms.join(char.CHAR_BLANK))
+          )
+          if (match) {
+            return handler(
+              list,
+              array.toArray(match).slice(1)
+            )
+          }
+        }
+      }
+    )
+  }
+
 }
