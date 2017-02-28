@@ -156,13 +156,22 @@ export default class Emitter {
   }
 
   has(type, listener) {
-    let list = this.listeners[ type ]
-    if (listener == env.NULL) {
-      return !array.falsy(list)
-    }
-    return is.array(list)
-      ? array.has(list, listener)
-      : env.FALSE
+    let result = env.FALSE
+    this.match(
+      type,
+      function (list) {
+        if (listener == env.NULL) {
+          result = !array.falsy(list)
+        }
+        else if (is.array(list)) {
+          result = array.has(list, listener)
+        }
+        if (result) {
+          return env.FALSE
+        }
+      }
+    )
+    return result
   }
 
   match(type, handler) {
@@ -174,16 +183,12 @@ export default class Emitter {
           return handler(list)
         }
         else if (string.has(key, char.CHAR_ASTERISK)) {
-          let terms = [
-            '^',
-            key
-              .replace(/\./g, '\\.')
-              .replace(/\*\*/g, '([\.\\w]+?)')
-              .replace(/\*/g, '(\\w+)'),
-            '$'
-          ]
+          key = key
+            .replace(/\./g, '\\.')
+            .replace(/\*\*/g, '([\.\\w]+?)')
+            .replace(/\*/g, '(\\w+)')
           let match = type.match(
-            new RegExp(terms.join(char.CHAR_BLANK))
+            new RegExp(`^${key}$`)
           )
           if (match) {
             return handler(
