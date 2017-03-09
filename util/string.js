@@ -118,5 +118,6 @@ export function startsWith(str, part) {
   return indexOf(str, part) === 0
 }
 export function endsWith(str, part) {
-  return str === part || str.lastIndexOf(part) === str.length - part.length
+  let offset = str.length - part.length
+  return offset >= 0 && str.lastIndexOf(part) === offset
 }
