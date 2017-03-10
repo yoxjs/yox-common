@@ -17,6 +17,28 @@ export function keys(object) {
 }
 
 /**
+ * 排序对象的 key
+ *
+ * @param {Object} object
+ * @param {Object} desc 是否逆序，默认从小到大排序
+ * @return {Array.<string>}
+ */
+export function sort(object, desc) {
+  let sorter
+  if (desc) {
+    sorter = function (a, b) {
+      return b.length - a.length
+    }
+  }
+  else {
+    sorter = function (a, b) {
+      return a.length - b.length
+    }
+  }
+  return object.keys(object).sort(sorter)
+}
+
+/**
  * 遍历对象
  *
  * @param {Object} object
