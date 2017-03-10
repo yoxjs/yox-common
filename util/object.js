@@ -35,7 +35,7 @@ export function sort(object, desc) {
       return a.length - b.length
     }
   }
-  return object.keys(object).sort(sorter)
+  return keys(object).sort(sorter)
 }
 
 /**
