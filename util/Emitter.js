@@ -166,7 +166,7 @@ export default class Emitter {
         if (key === type) {
           return handler(list)
         }
-        else if (string.has(key, char.CHAR_ASTERISK)) {
+        else if (string.has(key, '*')) {
           key = key
             .replace(/\./g, '\\.')
             .replace(/\*\*/g, '([\.\\w]+?)')

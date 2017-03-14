@@ -12,7 +12,6 @@ export function codeAt(str, index = 0) {
 }
 
 export const CHAR_BLANK = ''
-export const CHAR_ASTERISK = '*'
 
 export const CHAR_DOT = '.'
 export const CODE_DOT = codeAt(CHAR_DOT)
