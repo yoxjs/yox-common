@@ -114,6 +114,16 @@ export function copy(object, deep) {
   return result
 }
 
+// 如果函数改写了 toString，就调用 toString() 求值
+const { toString } = Function.prototype
+
+function getValue(value) {
+  if (is.func(value) && value.toString !== toString) {
+    value = value.toString()
+  }
+  return value
+}
+
 /**
  * 从对象中查找一个 keypath
  *
@@ -126,27 +136,31 @@ export function copy(object, deep) {
  */
 export function get(object, keypath) {
 
-  // object 的 key 可能是 'a.b.c' 这样的
-  // 如 data['a.b.c'] = 1 是一个合法赋值
-  if (has(object, keypath)) {
-    return {
-      value: object[ keypath ],
-    }
-  }
   // 不能以 . 开头
-  if (is.string(keypath) && string.indexOf(keypath, char.CHAR_DOT) > 0) {
+  if (!has(object, keypath)
+    && is.string(keypath)
+    && string.indexOf(keypath, char.CHAR_DOT) > 0
+  ) {
     let list = keypathUtil.parse(keypath)
-    for (let i = 0, len = list.length; i < len && object; i++) {
+    for (let i = 0, len = list.length; i < len; i++) {
       if (i < len - 1) {
-        object = object[ list[ i ] ]
-      }
-      else if (has(object, list[ i ])) {
-        return {
-          value: object[ list[ i ] ],
+        object = getValue(object[ list[ i ] ])
+        if (is.primitive(object)) {
+          return
         }
       }
+      else {
+        keypath = list[ i ]
+      }
     }
   }
+
+  if (has(object, keypath)) {
+    return {
+      value: getValue(object[ keypath ])
+    }
+  }
+
 }
 
 /**
