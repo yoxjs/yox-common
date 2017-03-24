@@ -145,7 +145,7 @@ export function get(object, keypath) {
     for (let i = 0, len = list.length; i < len; i++) {
       if (i < len - 1) {
         object = getValue(object[ list[ i ] ])
-        if (is.primitive(object)) {
+        if (object == env.NULL) {
           return
         }
       }
