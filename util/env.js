@@ -8,6 +8,7 @@ export const TRUE = true
 export const FALSE = false
 export const NULL = null
 export const UNDEFINED = undefined
+export const THIS = 'this'
 
 /**
  * 浏览器环境下的 window 对象

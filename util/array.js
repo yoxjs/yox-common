@@ -4,8 +4,6 @@ import * as env from './env'
 
 import execute from '../function/execute'
 
-let { slice } = Array.prototype
-
 /**
  * 遍历数组
  *
@@ -84,7 +82,7 @@ export let unshift = add('unshift')
  * @return {Array}
  */
 export function toArray(array) {
-  return is.array(array) ? array : execute(slice, array)
+  return is.array(array) ? array : execute(Array.prototype.slice, array)
 }
 
 /**

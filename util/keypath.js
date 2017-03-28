@@ -4,10 +4,10 @@ import * as char from './char'
 import * as array from './array'
 import * as string from './string'
 
-export const SEPARATOR_KEY = char.CHAR_DOT
-export const SEPARATOR_PATH = char.CHAR_SLASH
-export const LEVEL_CURRENT = char.CHAR_DOT
-export const LEVEL_PARENT = `${char.CHAR_DOT}${char.CHAR_DOT}`
+export const SEPARATOR_KEY = '.'
+export const SEPARATOR_PATH = '/'
+export const LEVEL_CURRENT = '.'
+export const LEVEL_PARENT = '..'
 
 export function normalize(str) {
   if (!string.falsy(str)
@@ -38,7 +38,9 @@ export function stringify(keypaths) {
   return keypaths
   .filter(
     function (term) {
-      return term !== char.CHAR_BLANK && term !== LEVEL_CURRENT
+      return term !== char.CHAR_BLANK
+        && term !== LEVEL_CURRENT
+        && term !== env.THIS
     }
   )
   .join(SEPARATOR_KEY)
