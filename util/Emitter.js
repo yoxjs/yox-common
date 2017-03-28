@@ -95,6 +95,12 @@ export default class Emitter {
       context = env.NULL
     }
 
+    let event = data
+    if (is.array(data)) {
+      event = data[ 0 ]
+    }
+
+    let isEvent = event instanceof Event
     let done = env.TRUE
 
     this.match(
@@ -104,6 +110,7 @@ export default class Emitter {
           array.each(
             list,
             function (listener) {
+
               let result = execute(
                 listener,
                 context,
@@ -116,12 +123,12 @@ export default class Emitter {
               }
 
               // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
-              if (data instanceof Event) {
+              if (isEvent) {
                 if (result === env.FALSE) {
-                  data.prevent()
-                  data.stop()
+                  event.prevent()
+                  event.stop()
                 }
-                else if (data.isStoped) {
+                else if (event.isStoped) {
                   result = env.FALSE
                 }
               }

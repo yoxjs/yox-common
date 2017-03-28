@@ -17,8 +17,13 @@ export default class Event {
   prevent() {
     if (!this.isPrevented) {
       let { originalEvent } = this
-      if (originalEvent && is.func(originalEvent.preventDefault)) {
-        originalEvent.preventDefault()
+      if (originalEvent) {
+        if (is.func(originalEvent.prevent)) {
+          originalEvent.prevent()
+        }
+        else if (is.func(originalEvent.preventDefault)) {
+          originalEvent.preventDefault()
+        }
       }
       this.isPrevented = env.TRUE
     }
@@ -27,8 +32,13 @@ export default class Event {
   stop() {
     if (!this.isStoped) {
       let { originalEvent } = this
-      if (originalEvent && is.func(originalEvent.stopPropagation)) {
-        originalEvent.stopPropagation()
+      if (originalEvent) {
+        if (is.func(originalEvent.stop)) {
+          originalEvent.stop()
+        }
+        else if (is.func(originalEvent.stopPropagation)) {
+          originalEvent.stopPropagation()
+        }
       }
       this.isStoped = env.TRUE
     }
