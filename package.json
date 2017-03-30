@@ -10,11 +10,20 @@
     "type": "git",
     "url": "git+https://github.com/yoxjs/yox-common.git"
   },
+  "scripts": {
+    "test": "jasmine JASMINE_CONFIG_PATH=test/jasmine.json"
+  },
   "keywords": [],
   "author": "musicode",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/yoxjs/yox-common/issues"
   },
-  "homepage": "https://github.com/yoxjs/yox-common#readme"
+  "homepage": "https://github.com/yoxjs/yox-common#readme",
+  "devDependencies": {
+    "babel-core": "^6.24.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-register": "^6.24.0"
+  }
 }
