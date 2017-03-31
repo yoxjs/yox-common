@@ -1,149 +1,318 @@
 
-import * as is from '../../src/util/is'
+import * as is from '../../util/is'
 
 describe('util/is', () => {
-  it('isFunction', () => {
+  it('function', () => {
+
     expect(
-      is.isFunction(
+      is.func(
         function () {}
       )
     )
     .toBe(true)
 
     expect(
-      is.isFunction(
+      is.func(
         parseInt
       )
     )
     .toBe(true)
 
     expect(
-      is.isFunction(null)
+      is.func(null)
     )
     .toBe(false)
 
     expect(
-      is.isFunction(' ')
-    )
-    .toBe(false)
-
-  })
-
-  it('isArray', () => {
-
-    expect(
-      is.isArray([])
-    )
-    .toBe(true)
-
-    expect(
-      is.isArray(null)
+      is.func()
     )
     .toBe(false)
 
     expect(
-      is.isArray(' ')
+      is.func(' ')
     )
     .toBe(false)
 
   })
 
-  it('isObject', () => {
+  it('array', () => {
 
     expect(
-      is.isObject(null)
+      is.array([])
+    )
+    .toBe(true)
+
+    expect(
+      is.array({ length: 0 })
     )
     .toBe(false)
 
     expect(
-      is.isObject({})
+      is.array(null)
+    )
+    .toBe(false)
+
+    expect(
+      is.array()
+    )
+    .toBe(false)
+
+    expect(
+      is.array(' ')
+    )
+    .toBe(false)
+
+  })
+
+  it('object', () => {
+
+    expect(
+      is.object({})
     )
     .toBe(true)
 
     expect(
-      is.isObject(new String(''))
+      is.object(new Date())
+    )
+    .toBe(false)
+
+    expect(
+      is.object(new RegExp())
+    )
+    .toBe(false)
+
+    expect(
+      is.object([ ])
+    )
+    .toBe(false)
+
+    expect(
+      is.object(new String(''))
+    )
+    .toBe(false)
+
+    expect(
+      is.object(new Number(1))
+    )
+    .toBe(false)
+
+    expect(
+      is.object(new Boolean(true))
+    )
+    .toBe(false)
+
+    expect(
+      is.object(null)
+    )
+    .toBe(false)
+
+    expect(
+      is.object()
+    )
+    .toBe(false)
+
+    expect(
+      is.object(1)
+    )
+    .toBe(false)
+
+    expect(
+      is.object(true)
+    )
+    .toBe(false)
+
+    expect(
+      is.object('1')
+    )
+    .toBe(false)
+
+  })
+
+  it('string', () => {
+
+    expect(
+      is.string(null)
+    )
+    .toBe(false)
+
+    expect(
+      is.string({})
+    )
+    .toBe(false)
+
+    expect(
+      is.string(1)
+    )
+    .toBe(false)
+
+    expect(
+      is.string(true)
+    )
+    .toBe(false)
+
+    expect(
+      is.string(new String(''))
     )
     .toBe(true)
 
     expect(
-      is.isObject(new Date())
+      is.string('')
     )
     .toBe(true)
 
   })
 
-  it('isString', () => {
+  it('number', () => {
 
     expect(
-      is.isString(null)
+      is.number(null)
     )
     .toBe(false)
 
     expect(
-      is.isString({})
+      is.number({})
     )
     .toBe(false)
 
     expect(
-      is.isString(new String(''))
+      is.number('')
+    )
+    .toBe(false)
+
+    expect(
+      is.number(true)
+    )
+    .toBe(false)
+
+    expect(
+      is.number(new Number(1))
     )
     .toBe(true)
 
     expect(
-      is.isString('')
-    )
-    .toBe(true)
-
-  })
-
-  it('isNumber', () => {
-
-    expect(
-      is.isNumber(null)
-    )
-    .toBe(false)
-
-    expect(
-      is.isNumber({})
-    )
-    .toBe(false)
-
-    expect(
-      is.isNumber(new Number(1))
-    )
-    .toBe(true)
-
-    expect(
-      is.isNumber(1)
+      is.number(1)
     )
     .toBe(true)
 
   })
 
-  it('isNumeric', () => {
+  it('boolean', () => {
 
     expect(
-      is.isNumeric(null)
-    )
-    .toBe(false)
-
-    expect(
-      is.isNumeric({})
-    )
-    .toBe(false)
-
-    expect(
-      is.isNumeric('1.1str')
-    )
-    .toBe(false)
-
-    expect(
-      is.isNumeric(1)
+      is.boolean(true)
     )
     .toBe(true)
 
     expect(
-      is.isNumeric('1.1')
+      is.boolean(false)
+    )
+    .toBe(true)
+
+    expect(
+      is.boolean(new Boolean(true))
+    )
+    .toBe(true)
+
+    expect(
+      is.boolean(new Boolean(false))
+    )
+    .toBe(true)
+
+    expect(
+      is.boolean('')
+    )
+    .toBe(false)
+
+    expect(
+      is.boolean(1)
+    )
+    .toBe(false)
+
+    expect(
+      is.boolean(0)
+    )
+    .toBe(false)
+
+    expect(
+      is.boolean(null)
+    )
+    .toBe(false)
+
+    expect(
+      is.boolean()
+    )
+    .toBe(false)
+
+  })
+
+  it('primitive', () => {
+
+    expect(
+      is.primitive(null)
+    )
+    .toBe(true)
+
+    expect(
+      is.primitive()
+    )
+    .toBe(true)
+
+    expect(
+      is.primitive('')
+    )
+    .toBe(true)
+
+    expect(
+      is.primitive(1)
+    )
+    .toBe(true)
+
+    expect(
+      is.primitive(true)
+    )
+    .toBe(true)
+
+    expect(
+      is.primitive(false)
+    )
+    .toBe(true)
+
+    expect(
+      is.primitive({ })
+    )
+    .toBe(false)
+
+    expect(
+      is.primitive([ ])
+    )
+    .toBe(false)
+
+  })
+
+  it('numeric', () => {
+
+    expect(
+      is.numeric(null)
+    )
+    .toBe(false)
+
+    expect(
+      is.numeric({})
+    )
+    .toBe(false)
+
+    expect(
+      is.numeric('1.1str')
+    )
+    .toBe(false)
+
+    expect(
+      is.numeric(1)
+    )
+    .toBe(true)
+
+    expect(
+      is.numeric('1.1')
     )
     .toBe(true)
 

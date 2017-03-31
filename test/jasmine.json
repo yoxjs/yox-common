@@ -1,7 +1,8 @@
 {
   "spec_dir": "test",
   "spec_files": [
-    "**/array.spec.js"
+    "function/*.spec.js",
+    "util/keypath.spec.js"
   ],
   "helpers": [
     "../node_modules/babel-register/lib/node.js"

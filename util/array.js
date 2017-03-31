@@ -65,6 +65,7 @@ function add(action) {
  * push 数组
  *
  * @param {Array} original
+ * @param {...}
  */
 export let push = add('push')
 
@@ -72,6 +73,7 @@ export let push = add('push')
  * unshift 数组
  *
  * @param {Array} original
+ * @param {...}
  */
 export let unshift = add('unshift')
 
@@ -88,16 +90,27 @@ export function toArray(array) {
 /**
  * 把数组转成对象
  *
+ * [ { key: 'key1', value: 'value1' }, { key: 'key2', value: 'value2' } ]
+ * 可转成
+ * { key1: value1, key2: value2 }
+ *
  * @param {Array} array 数组
  * @param {?string} key 数组项包含的字段名称，如果数组项是基本类型，可不传
+ * @param {?string} value 数组项包含的字段名称或值
  * @return {Object}
  */
 export function toObject(array, key, value) {
-  let result = { }
+  let result = { }, hasValue = arguments.length === 3
   each(
     array,
-    function (item) {
-      result[ key ? item[ key ] : item ] = value ? item[ value ] : item
+    function (item, index) {
+      if (is.string(value)) {
+        index = item[ value ]
+      }
+      else {
+        index = hasValue ? value : item
+      }
+      result[ key ? item[ key ] : item ] = index
     }
   )
   return result
@@ -116,17 +129,12 @@ export function indexOf(array, item, strict) {
     return array.indexOf(item)
   }
   else {
-    let index = -1
-    each(
-      array,
-      function (value, i) {
-        if (item == value) {
-          index = i
-          return env.FALSE
-        }
+    for (let i = 0, len = array.length; i < len; i++) {
+      if (array[ i ] == item) {
+        return i
       }
-    )
-    return index
+    }
+    return -1
   }
 }
 
@@ -158,12 +166,15 @@ export function last(array) {
  * @param {Array} array 数组
  * @param {*} item 待删除项
  * @param {?boolean} strict 是否全等判断，默认是全等
+ * @return {boolean} 是否删除成功
  */
 export function remove(array, item, strict) {
   let index = indexOf(array, item, strict)
   if (index >= 0) {
     array.splice(index, 1)
+    return env.TRUE
   }
+  return env.FALSE
 }
 
 /**

@@ -1,5 +1,5 @@
 
-import * as keypath from '../../src/util/keypath'
+import * as keypath from '../../util/keypath'
 
 describe('util/keypath', () => {
   it('normalize', () => {
@@ -23,20 +23,6 @@ describe('util/keypath', () => {
       keypath.normalize('a["b"].c')
     )
     .toBe('a.b.c')
-
-  })
-
-  it('getWildcardNames', () => {
-
-    expect(
-      keypath.getWildcardNames('a.b.c', 'a.*.c')[0]
-    )
-    .toBe('b')
-
-    expect(
-      keypath.getWildcardNames('a.b.c.d.e', 'a.*.c.*.e').join('')
-    )
-    .toBe('bd')
 
   })
 
