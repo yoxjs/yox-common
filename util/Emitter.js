@@ -101,7 +101,7 @@ export default class Emitter {
     }
 
     let isEvent = event instanceof Event
-    let done = env.TRUE
+    let isComplete = env.TRUE
 
     this.match(
       type,
@@ -134,7 +134,7 @@ export default class Emitter {
               }
 
               if (result === env.FALSE) {
-                return done = env.FALSE
+                return isComplete = env.FALSE
               }
             }
           )
@@ -142,7 +142,7 @@ export default class Emitter {
       }
     )
 
-    return done
+    return isComplete
 
   }
 
@@ -178,13 +178,13 @@ export default class Emitter {
             .replace(/\./g, '\\.')
             .replace(/\*\*/g, '([\.\\w]+?)')
             .replace(/\*/g, '(\\w+)')
-          let match = type.match(
+          key = type.match(
             new RegExp(`^${key}$`)
           )
-          if (match) {
+          if (key) {
             return handler(
               list,
-              array.toArray(match).slice(1)
+              array.toArray(key).slice(1)
             )
           }
         }
