@@ -114,11 +114,10 @@ export function copy(object, deep) {
   return result
 }
 
-// 如果函数改写了 toString，就调用 toString() 求值
-const { toString } = Function.prototype
 
 function getValue(value) {
-  if (is.func(value) && value.toString !== toString) {
+  // 如果函数改写了 toString，就调用 toString() 求值
+  if (is.func(value) && value.toString !== Function.prototype.toString) {
     value = value.toString()
   }
   return value

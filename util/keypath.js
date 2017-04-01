@@ -11,13 +11,11 @@ export const LEVEL_PARENT = '..'
 
 export function normalize(str) {
   if (!string.falsy(str)
-    && string.indexOf(str, char.CHAR_OBRACK) > 0
-    && string.indexOf(str, char.CHAR_CBRACK) > 0
+    && string.indexOf(str, '[') > 0
+    && string.indexOf(str, ']') > 0
   ) {
-    // array[0] => array.0
-    // object['key'] => array.key
     return str.replace(
-      /\[\s*?([\S]+)\s*?\]/g,
+      /\[\s*?([^\]]+)\s*?\]/g,
       function ($0, $1) {
         let code = char.codeAt($1)
         if (code === char.CODE_SQUOTE || code === char.CODE_DQUOTE) {
@@ -30,20 +28,22 @@ export function normalize(str) {
   return str
 }
 
+function filter(term) {
+  return term !== char.CHAR_BLANK
+    && term !== env.THIS
+    && term !== LEVEL_CURRENT
+}
+
 export function parse(str) {
-  return string.split(normalize(str), SEPARATOR_KEY)
+  return string
+    .split(normalize(str), SEPARATOR_KEY)
+    .filter(filter)
 }
 
 export function stringify(keypaths) {
   return keypaths
-  .filter(
-    function (term) {
-      return term !== char.CHAR_BLANK
-        && term !== LEVEL_CURRENT
-        && term !== env.THIS
-    }
-  )
-  .join(SEPARATOR_KEY)
+    .filter(filter)
+    .join(SEPARATOR_KEY)
 }
 
 export function resolve(base, path) {
@@ -55,10 +55,7 @@ export function resolve(base, path) {
         list.pop()
       }
       else {
-        array.push(
-          list,
-          normalize(term)
-        )
+        array.push(list, parse(term))
       }
     }
   )

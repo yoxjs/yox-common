@@ -1,7 +1,30 @@
 
-import * as object from '../../src/util/object'
+import * as object from '../../util/object'
 
 describe('util/object', () => {
+
+  it('sort', () => {
+    let target = {
+      a: 1,
+      aaa: 3,
+      aa: 2,
+      aaaa: 4,
+    }
+    let result1 = object.sort(target)
+    expect(result1.length).toBe(4)
+    expect(result1[0]).toBe('a')
+    expect(result1[1]).toBe('aa')
+    expect(result1[2]).toBe('aaa')
+    expect(result1[3]).toBe('aaaa')
+
+    let result2 = object.sort(target, true)
+    expect(result2[0]).toBe('aaaa')
+    expect(result2[1]).toBe('aaa')
+    expect(result2[2]).toBe('aa')
+    expect(result2[3]).toBe('a')
+
+  })
+
   it('each callback params', () => {
     let key = 'a'
     let value = 1
@@ -47,6 +70,33 @@ describe('util/object', () => {
     expect(object.has(test2, 'toString')).toBe(false)
   })
 
+  it('extend', () => {
+    let test1 = { a: 1 }
+    let test2 = { b: 2 }
+    let result = object.extend(test1, test2)
+
+    expect(result).toBe(test1)
+    expect(object.keys(result).length).toBe(2)
+    expect(object.keys(test2).length).toBe(1)
+  })
+
+  it('copy', () => {
+    let obj = { a: 1 }
+    let objCopy = object.copy(obj)
+    let arr = [ 'a' ]
+    let arrCopy = object.copy(arr)
+    expect(obj).not.toBe(objCopy)
+    expect(arr).not.toBe(arrCopy)
+    expect(obj.a).toBe(objCopy.a)
+    expect(arr[0]).toBe(arrCopy[0])
+    expect(object.copy(null)).toBe(null)
+    expect(object.copy(1)).toBe(1)
+    expect(object.copy('1')).toBe('1')
+
+    obj = { user: { name: 'a' }}
+    expect(object.copy(obj, true).user).not.toBe(obj.user)
+  })
+
   it('get', () => {
     let test = {
       user: {
@@ -63,25 +113,25 @@ describe('util/object', () => {
     expect(object.get(test, 'other.name')).toBe(undefined)
     expect(object.get(test, 'user.extra.married').value).toBe(test.user.extra.married)
   })
-
-  it('set', () => {
-    let test = {
-      user: {
-        name: 'musicode',
-        age: 1,
-        extra: {
-          married: false
-        }
-      }
-    }
-    object.set(test, 'user.name', 'haha')
-    expect(object.get(test, 'user.name').value).toBe('haha')
-
-    object.set(test, 'a.b', 'haha', false)
-    expect(object.get(test, 'a.b')).toBe(undefined)
-
-    object.set(test, 'a.b', 'haha', true)
-    expect(object.get(test, 'a.b').value).toBe('haha')
-
-  })
+  //
+  // it('set', () => {
+  //   let test = {
+  //     user: {
+  //       name: 'musicode',
+  //       age: 1,
+  //       extra: {
+  //         married: false
+  //       }
+  //     }
+  //   }
+  //   object.set(test, 'user.name', 'haha')
+  //   expect(object.get(test, 'user.name').value).toBe('haha')
+  //
+  //   object.set(test, 'a.b', 'haha', false)
+  //   expect(object.get(test, 'a.b')).toBe(undefined)
+  //
+  //   object.set(test, 'a.b', 'haha', true)
+  //   expect(object.get(test, 'a.b').value).toBe('haha')
+  //
+  // })
 })
