@@ -135,9 +135,9 @@ function getValue(value) {
  */
 export function get(object, keypath) {
 
-  // 不能以 . 开头
-  if (!has(object, keypath)
-    && is.string(keypath)
+  if (is.string(keypath)
+    && !has(object, keypath)
+    // 不能以 . 开头
     && string.indexOf(keypath, char.CHAR_DOT) > 0
   ) {
     let list = keypathUtil.parse(keypath)
@@ -171,29 +171,34 @@ export function get(object, keypath) {
  * @param {?boolean} autofill 是否自动填充不存在的对象，默认自动填充
  */
 export function set(object, keypath, value, autofill) {
-  if (is.string(keypath) && string.indexOf(keypath, char.CHAR_DOT) > 0) {
-    let originalObject = object
-    let list = keypathUtil.parse(keypath)
-    let prop = list.pop()
-    array.each(
-      list,
-      function (item, index) {
-        if (object[ item ]) {
-          object = object[ item ]
+  if (is.string(keypath)) {
+    if (has(object, keypath)) {
+      object[ keypath ] = value
+    }
+    else if (string.indexOf(keypath, char.CHAR_DOT) > 0) {
+      let originalObject = object
+      let list = keypathUtil.parse(keypath)
+      let prop = list.pop()
+      array.each(
+        list,
+        function (item, index) {
+          if (object[ item ]) {
+            object = object[ item ]
+          }
+          else if (autofill !== env.FALSE) {
+            object = object[ item ] = { }
+          }
+          else {
+            return object = env.FALSE
+          }
         }
-        else if (autofill !== env.FALSE) {
-          object = object[ item ] = { }
-        }
-        else {
-          object = env.NULL
-          return env.FALSE
-        }
+      )
+      if (object && object !== originalObject) {
+        object[ prop ] = value
       }
-    )
-    if (object && object !== originalObject) {
-      object[ prop ] = value
     }
   }
+  // keypath 是数字
   else {
     object[ keypath ] = value
   }

@@ -107,11 +107,15 @@ describe('util/object', () => {
         }
       }
     }
+    expect(object.get(test, 'toString')).toBe(undefined)
     expect(object.get(test, 'user').value).toBe(test.user)
     expect(object.get(test, 'user.name').value).toBe(test.user.name)
     expect(object.get(test, 'user.haha')).toBe(undefined)
     expect(object.get(test, 'other.name')).toBe(undefined)
     expect(object.get(test, 'user.extra.married').value).toBe(test.user.extra.married)
+
+    test = [ 1 ]
+    expect(object.get(test, 0).value).toBe(1)
   })
   //
   // it('set', () => {

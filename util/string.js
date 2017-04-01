@@ -76,31 +76,16 @@ export function parse(str, separator, pair) {
   return result
 }
 
-/**
- * 替换可正则可用的字符串
- *
- * @param {string} str
- * @param {string} pattern
- * @param {string} replacement
- * @return {string}
- */
-// export function replace(str, pattern, replacement) {
-//   pattern = pattern.replace(/[$.]/g, '\\$&')
-//   return str.replace(
-//     new RegExp(`(?:^|\\b)${pattern}(?:$|\\b)`, 'g'),
-//     replacement
-//   )
-// }
-
-
 export function trim(str) {
  return falsy(str) ? char.CHAR_BLANK : str.trim()
 }
+
 export function slice(str, start, end) {
   return is.number(end)
     ? str.slice(start, end)
     : str.slice(start)
 }
+
 export function split(str, delimiter) {
   return falsy(str)
     ? [ ]
@@ -108,15 +93,19 @@ export function split(str, delimiter) {
         new RegExp(`\\s*${delimiter.replace(/[.*?]/g, '\\$&')}\\s*`)
       )
 }
+
 export function indexOf(str, part) {
   return str.indexOf(part)
 }
+
 export function has(str, part) {
   return indexOf(str, part) >= 0
 }
+
 export function startsWith(str, part) {
   return indexOf(str, part) === 0
 }
+
 export function endsWith(str, part) {
   let offset = str.length - part.length
   return offset >= 0 && str.lastIndexOf(part) === offset

@@ -10,16 +10,6 @@ export default class Store {
   }
 
   /**
-   * 同步取值
-   *
-   * @param {string} key
-   * @return {*}
-   */
-  get(key) {
-    return this.data[ key ]
-  }
-
-  /**
    * 异步取值
    *
    * @param {string} key
@@ -50,6 +40,16 @@ export default class Store {
     else {
       callback(value)
     }
+  }
+
+  /**
+   * 同步取值
+   *
+   * @param {string} key
+   * @return {*}
+   */
+  get(key) {
+    return this.data[ key ]
   }
 
   set(key, value) {
