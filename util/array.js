@@ -161,6 +161,18 @@ export function last(array) {
 }
 
 /**
+ * 弹出数组最后一项
+ *
+ * 项目里用的太多，节省点字符...
+ *
+ * @param {Array} array 数组
+ * @return {*}
+ */
+export function pop(array) {
+  return array.pop()
+}
+
+/**
  * 删除数组项
  *
  * @param {Array} array 数组
