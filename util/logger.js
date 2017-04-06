@@ -56,3 +56,12 @@ export function error(msg) {
     console.error(`[Yox error]: ${msg}`)
   }
 }
+
+/**
+ * 致命错误，中断程序
+ *
+ * @param {string} msg
+ */
+export function fatal(msg) {
+  throw new Error(msg)
+}
