@@ -100,8 +100,7 @@ export default class Emitter {
       event = data[ 0 ]
     }
 
-    let isEvent = event instanceof Event
-    let isComplete = env.TRUE
+    let isEvent = Event.is(event), isComplete = env.TRUE
 
     this.match(
       type,

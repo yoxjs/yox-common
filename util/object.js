@@ -65,6 +65,20 @@ export function has(object, key) {
 }
 
 /**
+ * 清空对象所有的值
+ *
+ * @param {Object} object
+ */
+export function clear(object) {
+  each(
+    object,
+    function (value, key) {
+      delete object[ key ]
+    }
+  )
+}
+
+/**
  * 扩展对象
  *
  * @return {Object}

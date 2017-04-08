@@ -45,3 +45,7 @@ export default class Event {
   }
 
 }
+
+Event.is = function (target) {
+  return target instanceof Event
+}
