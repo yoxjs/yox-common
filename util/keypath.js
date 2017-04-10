@@ -45,22 +45,3 @@ export function stringify(keypaths) {
     .filter(filter)
     .join(SEPARATOR_KEY)
 }
-
-export function resolve(base, path) {
-  let list = parse(base)
-  if (base.length) {
-    array.pop(list)
-  }
-  array.each(
-    string.split(path, SEPARATOR_PATH),
-    function (term) {
-      if (term === LEVEL_PARENT) {
-        array.pop(list)
-      }
-      else {
-        array.push(list, parse(term))
-      }
-    }
-  )
-  return stringify(list)
-}

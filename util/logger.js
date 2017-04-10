@@ -63,5 +63,5 @@ export function error(msg) {
  * @param {string} msg
  */
 export function fatal(msg) {
-  throw new Error(msg)
+  throw new Error(`[Yox fatal]: ${msg}`)
 }
