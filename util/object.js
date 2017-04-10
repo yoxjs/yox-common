@@ -191,7 +191,7 @@ export function set(object, keypath, value, autofill) {
   ) {
     let originalObject = object
     let list = keypathUtil.parse(keypath)
-    let prop = list.pop()
+    let prop = array.pop(list)
     array.each(
       list,
       function (item, index) {
