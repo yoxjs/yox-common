@@ -48,11 +48,14 @@ export function stringify(keypaths) {
 
 export function resolve(base, path) {
   let list = parse(base)
+  if (base.length) {
+    array.pop(list)
+  }
   array.each(
     string.split(path, SEPARATOR_PATH),
     function (term) {
       if (term === LEVEL_PARENT) {
-        list.pop()
+        array.pop(list)
       }
       else {
         array.push(list, parse(term))
