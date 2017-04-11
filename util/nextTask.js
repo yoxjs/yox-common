@@ -5,16 +5,29 @@ import * as array from './array'
 
 let nextTasks = [ ]
 
-/**
- * 添加异步任务
- *
- * @param {Function} task
- */
-export function add(task) {
+function add(name, task) {
   if (!nextTasks.length) {
     nextTick(run)
   }
-  array.push(nextTasks, task)
+  array[ name ](nextTasks, task)
+}
+
+/**
+ * 在队尾添加异步任务
+ *
+ * @param {Function} task
+ */
+export function append(task) {
+  add('push', task)
+}
+
+/**
+ * 在队首添加异步任务
+ *
+ * @param {Function} task
+ */
+export function prepend(task) {
+  add('unshift', task)
 }
 
 /**
