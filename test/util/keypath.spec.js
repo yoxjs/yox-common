@@ -109,28 +109,4 @@ describe('util/keypath', () => {
 
   })
 
-  it('resolve', () => {
-
-    expect(
-      keypath.resolve('a.b', 'c.d')
-    )
-    .toBe('a.b.c.d')
-
-    expect(
-      keypath.resolve('a.b', 'this.d')
-    )
-    .toBe('a.b.d')
-
-    expect(
-      keypath.resolve('a.b', '.d')
-    )
-    .toBe('a.b.d')
-
-    expect(
-      keypath.resolve('a.b', 'c/../d')
-    )
-    .toBe('a.b.d')
-
-  })
-
 })
