@@ -45,3 +45,15 @@ export function stringify(keypaths) {
     .filter(filter)
     .join(SEPARATOR_KEY)
 }
+
+export function join(keypath1, keypath2) {
+  if (keypath1 && keypath2) {
+    return keypath1 + SEPARATOR_KEY + keypath2
+  }
+  else if (keypath1) {
+    return keypath1
+  }
+  else {
+    return keypath2 || char.CHAR_BLANK
+  }
+}
