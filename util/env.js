@@ -29,4 +29,6 @@ export const doc = typeof document !== 'undefined' ? document : NULL
  *
  * @return {Function}
  */
-export const noop = function () { /** yox */ }
+export function noop() {
+  /** yox */
+}

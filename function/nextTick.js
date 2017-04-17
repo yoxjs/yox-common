@@ -38,7 +38,7 @@ export default function (fn) {
   // 因此当输入框是激活状态时，改用 setTimeout
   if (env.doc) {
     let { activeElement } = env.doc
-    if (activeElement && 'oninput' in activeElement) {
+    if (activeElement && 'autofocus' in activeElement) {
       byTimeout(fn)
       return
     }
