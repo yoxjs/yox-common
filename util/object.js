@@ -61,7 +61,12 @@ export function each(object, callback) {
  * @return {boolean}
  */
 export function has(object, key) {
-  return object.hasOwnProperty(key)
+  try {
+    return object.hasOwnProperty(key)
+  }
+  catch (e) {
+    return key in object
+  }
 }
 
 /**
