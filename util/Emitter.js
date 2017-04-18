@@ -101,94 +101,59 @@ export default class Emitter {
 
     let isEvent = Event.is(event), isComplete = env.TRUE
 
-    this.match(
-      type,
-      function (list, extra) {
-        if (is.array(list)) {
-          array.each(
-            list,
-            function (listener) {
+    let { listeners } = this
+    let list = listeners[ type ]
+    if (is.array(list)) {
+      array.each(
+        list,
+        function (listener) {
 
-              let result = execute(
-                listener,
-                context,
-                extra ? array.merge(data, extra) : data
-              )
-
-              let { $magic } = listener
-              if (is.func($magic)) {
-                $magic()
-                delete listener.$magic
-              }
-
-              // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
-              if (isEvent) {
-                if (result === env.FALSE) {
-                  event.prevent()
-                  event.stop()
-                }
-                else if (event.isStoped) {
-                  result = env.FALSE
-                }
-              }
-
-              if (result === env.FALSE) {
-                return isComplete = env.FALSE
-              }
-            }
+          let result = execute(
+            listener,
+            context,
+            data
           )
+
+          let { $magic } = listener
+          if (is.func($magic)) {
+            $magic()
+            delete listener.$magic
+          }
+
+          // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
+          if (isEvent) {
+            if (result === env.FALSE) {
+              event.prevent()
+              event.stop()
+            }
+            else if (event.isStoped) {
+              result = env.FALSE
+            }
+          }
+
+          if (result === env.FALSE) {
+            return isComplete = env.FALSE
+          }
         }
-      }
-    )
+      )
+    }
 
     return isComplete
 
   }
 
   has(type, listener) {
-    let result = env.FALSE
-    this.match(
-      type,
-      function (list) {
-        if (listener == env.NULL) {
-          result = !array.falsy(list)
-        }
-        else if (is.array(list)) {
-          result = array.has(list, listener)
-        }
-        if (result) {
-          return env.FALSE
-        }
-      }
-    )
-    return result
-  }
 
-  match(type, handler) {
     let { listeners } = this
-    object.each(
-      listeners,
-      function (list, key) {
-        if (key === type) {
-          return handler(list)
-        }
-        else if (string.has(key, '*')) {
-          key = key
-            .replace(/\./g, '\\.')
-            .replace(/\*\*/g, '([\.\\w]+?)')
-            .replace(/\*/g, '(\\w+)')
-          key = type.match(
-            new RegExp(`^${key}$`)
-          )
-          if (key) {
-            return handler(
-              list,
-              array.toArray(key).slice(1)
-            )
-          }
-        }
-      }
-    )
+    let list = listeners[ type ]
+
+    if (listener == env.NULL) {
+      return !array.falsy(list)
+    }
+    else if (is.array(list)) {
+      return array.has(list, listener)
+    }
+
   }
 
 }

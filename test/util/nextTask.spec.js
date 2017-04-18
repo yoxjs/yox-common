@@ -6,13 +6,13 @@ describe('util/nextTask', () => {
 
     let i = 0
 
-    nextTask.add(
+    nextTask.append(
       function () {
         i += 5
       }
     )
 
-    nextTask.add(
+    nextTask.append(
       function () {
         i -= 3
       }
