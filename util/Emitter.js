@@ -69,7 +69,7 @@ export default class Emitter {
         listeners,
         function (list, type) {
           if (is.array(listeners[ type ])) {
-            listeners[ type ].length = 0
+            delete listeners[ type ]
           }
         }
       )
@@ -82,6 +82,9 @@ export default class Emitter {
         }
         else {
           array.remove(list, listener)
+        }
+        if (!list.length) {
+          delete listeners[ type ]
         }
       }
     }
