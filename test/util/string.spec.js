@@ -9,11 +9,6 @@ describe('util/string', () => {
     expect(string.camelCase('ab')).toBe('ab')
   })
 
-  it('capitalize', () => {
-    expect(string.capitalize('ab')).toBe('Ab')
-    expect(string.capitalize('AA')).toBe('AA')
-  })
-
   it('falsy', () => {
     expect(string.falsy('ab')).toBe(false)
     expect(string.falsy('')).toBe(true)
