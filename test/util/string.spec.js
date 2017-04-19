@@ -23,26 +23,6 @@ describe('util/string', () => {
     expect(string.falsy(undefined)).toBe(true)
   })
 
-  it('parse', () => {
-    let data = string.parse('name:yox;age:0;father:musicode;', ';', ':')
-    expect(data.length).toBe(3)
-    expect(data[0].key).toBe('name')
-    expect(data[0].value).toBe('yox')
-    expect(data[1].key).toBe('age')
-    expect(data[1].value).toBe('0')
-    expect(data[2].key).toBe('father')
-    expect(data[2].value).toBe('musicode')
-
-    data = string.parse('name : yox; age:0 ; father : musicode ', ';', ':')
-    expect(data.length).toBe(3)
-    expect(data[0].key).toBe('name')
-    expect(data[0].value).toBe('yox')
-    expect(data[1].key).toBe('age')
-    expect(data[1].value).toBe('0')
-    expect(data[2].key).toBe('father')
-    expect(data[2].value).toBe('musicode')
-  })
-
   it('trim', () => {
     expect(string.trim(' ab')).toBe('ab')
     expect(string.trim(' ab ')).toBe('ab')

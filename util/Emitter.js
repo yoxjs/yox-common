@@ -43,7 +43,7 @@ export default class Emitter {
     let instance = this
     let addOnce = function (listener, type) {
       if (is.func(listener)) {
-        listener.$magic = function () {
+        listener.$once = function () {
           instance.off(type, listener)
         }
       }
@@ -62,21 +62,13 @@ export default class Emitter {
 
   off(type, listener) {
 
-    let { listeners } = this
-
     if (type == env.NULL) {
-      object.each(
-        listeners,
-        function (list, type) {
-          if (is.array(listeners[ type ])) {
-            delete listeners[ type ]
-          }
-        }
-      )
+      this.listeners = { }
     }
     else {
+      let { listeners } = this
       let list = listeners[ type ]
-      if (is.array(list)) {
+      if (list) {
         if (listener == env.NULL) {
           list.length = 0
         }
@@ -106,21 +98,17 @@ export default class Emitter {
 
     let { listeners } = this
     let list = listeners[ type ]
-    if (is.array(list)) {
+    if (list) {
       array.each(
         list,
         function (listener) {
 
-          let result = execute(
-            listener,
-            context,
-            data
-          )
+          let result = execute(listener, context, data)
 
-          let { $magic } = listener
-          if (is.func($magic)) {
-            $magic()
-            delete listener.$magic
+          let { $once } = listener
+          if (is.func($once)) {
+            $once()
+            delete listener.$once
           }
 
           // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
@@ -153,7 +141,7 @@ export default class Emitter {
     if (listener == env.NULL) {
       return !array.falsy(list)
     }
-    else if (is.array(list)) {
+    else if (list) {
       return array.has(list, listener)
     }
 

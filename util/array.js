@@ -13,17 +13,19 @@ import execute from '../function/execute'
  */
 export function each(array, callback, reversed) {
   let { length } = array
-  if (reversed) {
-    for (let i = length - 1; i >= 0; i--) {
-      if (callback(array[ i ], i) === env.FALSE) {
-        break
+  if (length) {
+    if (reversed) {
+      for (let i = length - 1; i >= 0; i--) {
+        if (callback(array[ i ], i) === env.FALSE) {
+          break
+        }
       }
     }
-  }
-  else {
-    for (let i = 0; i < length; i++) {
-      if (callback(array[ i ], i) === env.FALSE) {
-        break
+    else {
+      for (let i = 0; i < length; i++) {
+        if (callback(array[ i ], i) === env.FALSE) {
+          break
+        }
       }
     }
   }
@@ -84,7 +86,9 @@ export let unshift = add('unshift')
  * @return {Array}
  */
 export function toArray(array) {
-  return is.array(array) ? array : execute(Array.prototype.slice, array)
+  return is.array(array)
+    ? array
+    : execute(Array.prototype.slice, array)
 }
 
 /**

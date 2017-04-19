@@ -17,7 +17,7 @@ export function array(arg) {
 
 export function object(arg) {
   // 低版本 IE 会把 null 和 undefined 当作 object
-  return arg && is(arg, 'object') ? env.TRUE : env.FALSE
+  return arg && is(arg, 'object')
 }
 
 export function string(arg) {

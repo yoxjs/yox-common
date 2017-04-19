@@ -42,40 +42,11 @@ export function falsy(str) {
 }
 
 /**
- * 把字符串解析成对象形式
+ * 删除两侧空白符
  *
- * 为了给外部去重的机会，返回的是数组而不是对象
- *
- * @param {string} str
- * @param {string} separator 分隔符，如 & ;
- * @param {string} pair 键值对分隔符，如 = :
- * @return {Array}
+ * @param {*} str
+ * @return {boolean}
  */
-export function parse(str, separator, pair) {
-  let result = [ ]
-  if (is.string(str)) {
-    let terms, key, value, item
-    array.each(
-      split(str, separator),
-      function (term) {
-        terms = split(term, pair)
-        key = terms[0]
-        value = terms[1]
-        if (key) {
-          item = {
-            key: trim(key),
-          }
-          if (is.string(value)) {
-            item.value = trim(value)
-          }
-          array.push(result, item)
-        }
-      }
-    )
-  }
-  return result
-}
-
 export function trim(str) {
  return falsy(str) ? char.CHAR_BLANK : str.trim()
 }

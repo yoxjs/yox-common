@@ -74,57 +74,57 @@ describe('util/is', () => {
     expect(
       is.object(new Date())
     )
-    .toBe(false)
+    .not.toBe(true)
 
     expect(
       is.object(new RegExp())
     )
-    .toBe(false)
+    .not.toBe(true)
 
     expect(
       is.object([ ])
     )
-    .toBe(false)
+    .not.toBe(true)
 
     expect(
       is.object(new String(''))
     )
-    .toBe(false)
+    .not.toBe(true)
 
     expect(
       is.object(new Number(1))
     )
-    .toBe(false)
+    .not.toBe(true)
 
     expect(
       is.object(new Boolean(true))
     )
-    .toBe(false)
+    .not.toBe(true)
 
     expect(
       is.object(null)
     )
-    .toBe(false)
+    .not.toBe(true)
 
     expect(
       is.object()
     )
-    .toBe(false)
+    .not.toBe(true)
 
     expect(
       is.object(1)
     )
-    .toBe(false)
+    .not.toBe(true)
 
     expect(
       is.object(true)
     )
-    .toBe(false)
+    .not.toBe(true)
 
     expect(
       is.object('1')
     )
-    .toBe(false)
+    .not.toBe(true)
 
   })
 
