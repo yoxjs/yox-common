@@ -154,7 +154,7 @@ function getValue(value) {
  */
 export function get(object, keypath) {
 
-  if (is.string(keypath)
+  if (!string.falsy(keypath)
     && !has(object, keypath)
     // 不能以 . 开头
     && string.indexOf(keypath, char.CHAR_DOT) > 0
@@ -190,7 +190,7 @@ export function get(object, keypath) {
  * @param {?boolean} autofill 是否自动填充不存在的对象，默认自动填充
  */
 export function set(object, keypath, value, autofill) {
-  if (is.string(keypath)
+  if (!string.falsy(keypath)
     && !has(object, keypath)
     && string.indexOf(keypath, char.CHAR_DOT) > 0
   ) {

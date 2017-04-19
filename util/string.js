@@ -22,16 +22,6 @@ export function camelCase(str) {
 }
 
 /**
- * 首字母大写
- *
- * @param {string} str
- * @return {string}
- */
-export function capitalize(str) {
-  return char.charAt(str, 0).toUpperCase() + slice(str, 1)
-}
-
-/**
  * 判断长度大于 0 的字符串
  *
  * @param {*} str
