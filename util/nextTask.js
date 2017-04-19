@@ -46,8 +46,11 @@ export function run() {
       }
       else {
         task.i--
-        array.push(task)
+        array.push(nextTasks, task)
       }
     }
   )
+  if (nextTasks.length) {
+    nextTick(run)
+  }
 }
