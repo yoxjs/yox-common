@@ -16,11 +16,8 @@ export default function (list, value) {
     list,
     function (prefix) {
       if (string.startsWith(value, prefix)) {
-        array.push(
-          result,
-          prefix,
-          string.slice(value, prefix.length)
-        )
+        array.push(result, prefix)
+        array.push(result, string.slice(value, prefix.length))
         return env.FALSE
       }
     }
