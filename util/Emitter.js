@@ -85,10 +85,6 @@ export default class Emitter {
 
   fire(type, data, context) {
 
-    if (arguments.length === 2) {
-      context = env.NULL
-    }
-
     let event = data
     if (is.array(data)) {
       event = data[ 0 ]

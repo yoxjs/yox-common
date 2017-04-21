@@ -61,12 +61,18 @@ export function each(object, callback) {
  * @return {boolean}
  */
 export function has(object, key) {
-  try {
-    return object.hasOwnProperty(key)
-  }
-  catch (e) {
-    return key in object
-  }
+  return object.hasOwnProperty(key)
+}
+
+/**
+ * 本来想用 in，无奈关键字...
+ *
+ * @param {Object} object
+ * @param {string} key
+ * @return {boolean}
+ */
+export function exists(object, key) {
+  return key in object
 }
 
 /**
@@ -88,19 +94,21 @@ export function clear(object) {
  *
  * @return {Object}
  */
-export function extend() {
-  let args = arguments, result = args[ 0 ]
-  for (let i = 1, len = args.length; i < len; i++) {
-    if (is.object(args[ i ])) {
-      each(
-        args[ i ],
-        function (value, key) {
-          result[ key ] = value
-        }
-      )
+export function extend(original, object1, object2) {
+  array.each(
+    [ object1, object2 ],
+    function (object) {
+      if (is.object(object)) {
+        each(
+          object,
+          function (value, key) {
+            original[ key ] = value
+          }
+        )
+      }
     }
-  }
-  return result
+  )
+  return original
 }
 
 /**
@@ -155,7 +163,7 @@ function getValue(value) {
 export function get(object, keypath) {
 
   if (!string.falsy(keypath)
-    && !has(object, keypath)
+    && !exists(object, keypath)
     // 不能以 . 开头
     && string.indexOf(keypath, char.CHAR_DOT) > 0
   ) {
@@ -173,7 +181,7 @@ export function get(object, keypath) {
     }
   }
 
-  if (has(object, keypath)) {
+  if (exists(object, keypath)) {
     return {
       value: getValue(object[ keypath ])
     }
@@ -191,7 +199,7 @@ export function get(object, keypath) {
  */
 export function set(object, keypath, value, autofill) {
   if (!string.falsy(keypath)
-    && !has(object, keypath)
+    && !exists(object, keypath)
     && string.indexOf(keypath, char.CHAR_DOT) > 0
   ) {
     let originalObject = object

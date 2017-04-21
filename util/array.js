@@ -32,52 +32,58 @@ export function each(array, callback, reversed) {
 }
 
 /**
- * 合并多个数组，不去重
+ * 合并多个数组
  *
+ * @param {Array} array1
+ * @param {Array} array2
  * @return {Array}
  */
-export function merge() {
-  let args = toArray(arguments)
+export function merge(array1, array2) {
   let result = [ ]
-  args.unshift(result)
-  execute(push, env.NULL, args)
+  push(result, array1)
+  push(result, array2)
   return result
 }
 
-function add(action) {
-  return function (original) {
-    let args = arguments
-    for (let i = 1, len = args.length; i < len; i++) {
-      if (is.array(args[ i ])) {
-        each(
-          args[ i ],
-          function (item) {
-            original[ action ](item)
-          }
-        )
+/**
+ * 往后加
+ *
+ * @param {Array} original
+ * @param {*} value
+ */
+export function push(original, value) {
+  if (is.array(value)) {
+    each(
+      value,
+      function (item) {
+        original.push(item)
       }
-      else {
-        original[ action ](args[ i ])
-      }
-    }
+    )
+  }
+  else {
+    original.push(value)
   }
 }
 
 /**
- * push 数组
+ * 往前加
  *
  * @param {Array} original
- * @param {...}
+ * @param {*} value
  */
-export let push = add('push')
-
-/**
- * unshift 数组
- *
- * @param {Array} original
- * @param {...}
- */
-export let unshift = add('unshift')
+export function unshift(original, value) {
+  if (is.array(value)) {
+    each(
+      value,
+      function (item) {
+        original.unshift(item)
+      }
+    )
+  }
+  else {
+    original.unshift(value)
+  }
+}
 
 /**
  * 把类数组转成数组
@@ -88,33 +94,23 @@ export let unshift = add('unshift')
 export function toArray(array) {
   return is.array(array)
     ? array
-    : execute(Array.prototype.slice, array)
+    : execute([ ].slice, array)
 }
 
 /**
  * 把数组转成对象
  *
- * [ { key: 'key1', value: 'value1' }, { key: 'key2', value: 'value2' } ]
- * 可转成
- * { key1: value1, key2: value2 }
- *
  * @param {Array} array 数组
  * @param {?string} key 数组项包含的字段名称，如果数组项是基本类型，可不传
- * @param {?string} value 数组项包含的字段名称或值
+ * @param {*} value
  * @return {Object}
  */
 export function toObject(array, key, value) {
-  let result = { }, hasValue = arguments.length === 3
+  let result = { }
   each(
     array,
     function (item, index) {
-      if (is.string(value)) {
-        index = item[ value ]
-      }
-      else {
-        index = hasValue ? value : item
-      }
-      result[ key ? item[ key ] : item ] = index
+      result[ key ? item[ key ] : item ] = value
     }
   )
   return result
@@ -167,7 +163,7 @@ export function last(array) {
 /**
  * 弹出数组最后一项
  *
- * 项目里用的太多，节省点字符...
+ * 项目里用的太多，仅用于节省字符...
  *
  * @param {Array} array 数组
  * @return {*}
