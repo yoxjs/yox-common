@@ -85,16 +85,18 @@ export default class Emitter {
 
   fire(type, data, context) {
 
-    let event = data
-    if (is.array(data)) {
-      event = data[ 0 ]
-    }
+    let isComplete = env.TRUE
 
-    let isEvent = Event.is(event), isComplete = env.TRUE
-
-    let { listeners } = this
-    let list = listeners[ type ]
+    let list = this.listeners[ type ]
     if (list) {
+
+      let event = data
+      if (is.array(data)) {
+        event = data[ 0 ]
+      }
+
+      let isEvent = Event.is(event)
+
       array.each(
         list,
         function (listener) {
@@ -131,9 +133,7 @@ export default class Emitter {
 
   has(type, listener) {
 
-    let { listeners } = this
-    let list = listeners[ type ]
-
+    let list = this.listeners[ type ]
     if (listener == env.NULL) {
       return !array.falsy(list)
     }

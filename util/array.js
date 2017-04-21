@@ -102,7 +102,7 @@ export function toArray(array) {
  *
  * @param {Array} array 数组
  * @param {?string} key 数组项包含的字段名称，如果数组项是基本类型，可不传
- * @param {*} value
+ * @param {?*} value
  * @return {Object}
  */
 export function toObject(array, key, value) {
