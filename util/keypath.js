@@ -52,6 +52,10 @@ export function stringify(keypaths) {
     .join(SEPARATOR_KEY)
 }
 
+export function startsWith(keypath, prefix) {
+  return keypath === prefix || string.startsWith(keypath, prefix + SEPARATOR_KEY)
+}
+
 export function join(keypath1, keypath2) {
   if (keypath1 && keypath2) {
     return keypath1 + SEPARATOR_KEY + keypath2
