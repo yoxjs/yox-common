@@ -52,16 +52,14 @@ export function stringify(keypaths) {
     .join(SEPARATOR_KEY)
 }
 
-export function startsWith(keypath, prefix) {
-  return keypath === prefix || string.startsWith(keypath, prefix + SEPARATOR_KEY)
-}
-
-export function subpath(keypath, prefix) {
-  if (keypath === prefix) {
-    return char.CHAR_BLANK
+export function startsWith(keypath, prefix, split) {
+  if (keypath === prefix || string.startsWith(keypath, prefix += SEPARATOR_KEY)) {
+    return split
+      ? [ prefix, string.slice(keypath, prefix.length) ]
+      : env.TRUE
   }
-  else if (string.startsWith(keypath, prefix += SEPARATOR_KEY)) {
-    return string.slice(keypath, prefix.length)
+  else {
+    return env.FALSE
   }
 }
 
