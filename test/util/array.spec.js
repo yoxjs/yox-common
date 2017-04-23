@@ -55,46 +55,16 @@ describe('util/array', () => {
     let result = array.toArray(faker)
     expect(result).toBe(faker)
   })
-  it('toObject', () => {
-    let array1 = [
-      {
-        key: 'key1',
-        value: 'value1'
-      },
-      {
-        key: 'key2',
-        value: 'value2'
-      }
-    ]
-    let object1 = array.toObject(array1, 'key', 'value')
-    expect(object1.key1).toBe('value1')
-    expect(object1.key2).toBe('value2')
-
-    let object2 = array.toObject(array1, 'value')
-    expect(object2.value1).toBe(array1[0])
-    expect(object2.value2).toBe(array1[1])
-
-    let object3 = array.toObject(array1, 'key', true)
-    expect(object3.key1).toBe(true)
-    expect(object3.key2).toBe(true)
-
-    let object4 = array.toObject(array1, 'value', true)
-    expect(object4.value1).toBe(true)
-    expect(object4.value2).toBe(true)
-  })
   it('merge', () => {
     let array1 = [1, 2, 3]
     let array2 = [4, 5, 6]
-    let array3 = [7, 8, 9]
-    let newArray = array.merge(array1, array2, array3)
+    let newArray = array.merge(array1, array2)
 
     expect(newArray).not.toBe(array1)
     expect(newArray).not.toBe(array2)
-    expect(newArray).not.toBe(array3)
     expect(array1.length).toBe(3)
     expect(array2.length).toBe(3)
-    expect(array3.length).toBe(3)
-    expect(newArray.length).toBe(9)
+    expect(newArray.length).toBe(6)
 
     array.each(
       newArray,
@@ -107,13 +77,11 @@ describe('util/array', () => {
   it('push', () => {
     let array1 = [1, 2, 3]
     let array2 = [4, 5, 6]
-    let array3 = [7, 8, 9]
-    let newArray = array.push(array1, array2, array3)
+    let newArray = array.push(array1, array2)
 
     expect(newArray).toBe(undefined)
-    expect(array1.length).toBe(9)
+    expect(array1.length).toBe(6)
     expect(array2.length).toBe(3)
-    expect(array3.length).toBe(3)
 
     array.each(
       array1,
@@ -124,15 +92,13 @@ describe('util/array', () => {
 
   })
   it('unshift', () => {
-    let array1 = [7, 8, 9]
-    let array2 = [6, 5, 4]
-    let array3 = [3, 2, 1]
-    let newArray = array.unshift(array1, array2, array3)
+    let array1 = [4, 5, 6]
+    let array2 = [3, 2, 1]
+    let newArray = array.unshift(array1, array2)
 
     expect(newArray).toBe(undefined)
-    expect(array1.length).toBe(9)
+    expect(array1.length).toBe(6)
     expect(array2.length).toBe(3)
-    expect(array3.length).toBe(3)
 
     array.each(
       array1,

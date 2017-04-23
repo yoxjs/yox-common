@@ -107,7 +107,7 @@ describe('util/object', () => {
         }
       }
     }
-    expect(object.get(test, 'toString')).toBe(undefined)
+    expect(object.get(test, 'toString').value).toBe(Object.prototype.toString)
     expect(object.get(test, 'user').value).toBe(test.user)
     expect(object.get(test, 'user.name').value).toBe(test.user.name)
     expect(object.get(test, 'user.haha')).toBe(undefined)

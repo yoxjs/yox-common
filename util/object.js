@@ -72,7 +72,9 @@ export function has(object, key) {
  * @return {boolean}
  */
 export function exists(object, key) {
-  return key in object
+  return is.primitive(object)
+    ? has(object, key)
+    : (key in object)
 }
 
 /**
