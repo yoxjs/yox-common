@@ -56,6 +56,15 @@ export function startsWith(keypath, prefix) {
   return keypath === prefix || string.startsWith(keypath, prefix + SEPARATOR_KEY)
 }
 
+export function subpath(keypath, prefix) {
+  if (keypath === prefix) {
+    return char.CHAR_BLANK
+  }
+  else if (string.startsWith(keypath, prefix += SEPARATOR_KEY)) {
+    return string.slice(keypath, prefix.length)
+  }
+}
+
 export function join(keypath1, keypath2) {
   if (keypath1 && keypath2) {
     return keypath1 + SEPARATOR_KEY + keypath2
