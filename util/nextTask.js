@@ -39,18 +39,7 @@ export function run() {
   array.each(
     tasks,
     function (task) {
-      // 不设置 i 默认直接执行
-      // 设置 i 会进行倒计时，当 i 变成 0 时执行
-      if (!task.i) {
-        task()
-      }
-      else {
-        task.i--
-        array.push(nextTasks, task)
-      }
+      task()
     }
   )
-  if (nextTasks.length) {
-    nextTick(run)
-  }
 }
