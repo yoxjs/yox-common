@@ -96,9 +96,9 @@ export function clear(object) {
  *
  * @return {Object}
  */
-export function extend(original, object1, object2) {
+export function extend(original, object1, object2, object3) {
   array.each(
-    [ object1, object2 ],
+    [ object1, object2, object3 ],
     function (object) {
       if (is.object(object)) {
         each(
