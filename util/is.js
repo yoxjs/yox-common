@@ -8,7 +8,7 @@ export function is(arg, type) {
 }
 
 export function func(arg) {
-  return is(arg, 'function')
+  return is(arg, env.RAW_FUNCTION)
 }
 
 export function array(arg) {

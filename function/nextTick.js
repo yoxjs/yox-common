@@ -4,7 +4,7 @@ import * as char from '../util/char'
 import * as object from '../util/object'
 
 let nextTick
-if (typeof MutationObserver === 'function') {
+if (typeof MutationObserver === env.RAW_FUNCTION) {
   nextTick = function (fn) {
     let observer = new MutationObserver(fn)
     let textNode = env.doc.createTextNode(char.CHAR_BLANK)
@@ -17,7 +17,7 @@ if (typeof MutationObserver === 'function') {
     textNode.data = char.CHAR_WHITESPACE
   }
 }
-else if (typeof setImmediate === 'function') {
+else if (typeof setImmediate === env.RAW_FUNCTION) {
   nextTick = setImmediate
 }
 else {

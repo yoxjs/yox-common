@@ -13,6 +13,7 @@ export const RAW_NULL = 'null'
 export const RAW_UNDEFINED = 'undefined'
 
 export const RAW_THIS = 'this'
+export const RAW_FUNCTION = 'function'
 
 /**
  * 浏览器环境下的 window 对象

@@ -2,7 +2,7 @@
 import * as is from '../util/is'
 
 /**
- * 放肆的执行一个函数，不管它有没有
+ * 任性地执行一个函数，不管它有没有、是不是
  *
  * @param {?Function} fn 调用的函数
  * @param {*} context 执行函数时的 this 指向

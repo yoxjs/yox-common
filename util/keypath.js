@@ -48,17 +48,13 @@ export function stringify(keypaths) {
     .join(SEPARATOR_KEY)
 }
 
-export function startsWith(keypath, prefix, split) {
+export function startsWith(keypath, prefix) {
   let temp
   if (keypath === prefix) {
-    return split
-      ? [ keypath, char.CHAR_BLANK ]
-      : env.TRUE
+    return prefix.length
   }
   else if (string.startsWith(keypath, temp = prefix + SEPARATOR_KEY)) {
-    return split
-      ? [ prefix, string.slice(keypath, temp.length) ]
-      : env.TRUE
+    return temp.length
   }
   else {
     return env.FALSE
