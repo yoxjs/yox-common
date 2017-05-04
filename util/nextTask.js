@@ -34,10 +34,10 @@ export function prepend(task) {
  * 立即执行已添加的任务
  */
 export function run() {
-  let tasks = nextTasks
+  let currentTasks = nextTasks
   nextTasks = [ ]
   array.each(
-    tasks,
+    currentTasks,
     function (task) {
       task()
     }

@@ -97,6 +97,8 @@ export function clear(object) {
  * @return {Object}
  */
 export function extend(original, object1, object2, object3) {
+  // 尽量不用 arguments
+  // 提供三个扩展对象足够了吧...
   array.each(
     [ object1, object2, object3 ],
     function (object) {

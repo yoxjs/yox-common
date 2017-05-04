@@ -1,36 +1,27 @@
 
 import * as env from '../util/env'
 import * as char from '../util/char'
-
-function byObserver(fn) {
-  let observer = new MutationObserver(fn)
-  let textNode = env.doc.createTextNode(char.CHAR_BLANK)
-  observer.observe(
-    textNode,
-    {
-      characterData: env.TRUE,
-    }
-  )
-  textNode.data = char.CHAR_WHITESPACE
-}
-
-function byImmediate(fn) {
-  setImmediate(fn)
-}
-
-function byTimeout(fn) {
-  setTimeout(fn)
-}
+import * as object from '../util/char'
 
 let nextTick
 if (typeof MutationObserver === 'function') {
-  nextTick = byObserver
+  nextTick = function (fn) {
+    let observer = new MutationObserver(fn)
+    let textNode = env.doc.createTextNode(char.CHAR_BLANK)
+    observer.observe(
+      textNode,
+      {
+        characterData: env.TRUE,
+      }
+    )
+    textNode.data = char.CHAR_WHITESPACE
+  }
 }
 else if (typeof setImmediate === 'function') {
-  nextTick = byImmediate
+  nextTick = setImmediate
 }
 else {
-  nextTick = byTimeout
+  nextTick = setTimeout
 }
 
 export default function (fn) {
@@ -38,8 +29,8 @@ export default function (fn) {
   // 因此当输入框是激活状态时，改用 setTimeout
   if (env.doc) {
     let { activeElement } = env.doc
-    if (activeElement && 'autofocus' in activeElement) {
-      byTimeout(fn)
+    if (activeElement && object.exists(activeElement, 'autofocus')) {
+      setTimeout(fn)
       return
     }
   }

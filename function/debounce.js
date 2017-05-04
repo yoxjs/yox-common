@@ -9,10 +9,10 @@ import * as array from '../util/array'
  *
  * @param {Function} fn 需要节制调用的函数
  * @param {number} delay 调用的时间间隔
- * @param {?boolean} immediate 是否立即触发
+ * @param {?boolean} sync 是否立即触发
  * @return {Function}
  */
-export default function (fn, delay, immediate) {
+export default function (fn, delay, sync) {
 
   let timer
 
@@ -21,23 +21,15 @@ export default function (fn, delay, immediate) {
     if (!timer) {
 
       let args = array.toArray(arguments)
-      if (immediate) {
-        execute(
-          fn,
-          env.NULL,
-          args
-        )
+      if (sync) {
+        execute(fn, env.NULL, args)
       }
 
       timer = setTimeout(
         function () {
           timer = env.NULL
-          if (!immediate) {
-            execute(
-              fn,
-              env.NULL,
-              args
-            )
+          if (!sync) {
+            execute(fn, env.NULL, args)
           }
         },
         delay

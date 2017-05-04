@@ -5,10 +5,7 @@ import * as array from './array'
 import * as object from './object'
 import * as string from './string'
 
-export const SEPARATOR_KEY = '.'
-export const SEPARATOR_PATH = '/'
-export const LEVEL_CURRENT = '.'
-export const LEVEL_PARENT = '..'
+const SEPARATOR_KEY = '.'
 
 const normalizeCache = { }
 
@@ -36,13 +33,12 @@ export function normalize(str) {
 
 function filter(term) {
   return term !== char.CHAR_BLANK
-    && term !== env.THIS
-    && term !== LEVEL_CURRENT
+    && term !== env.RAW_THIS
 }
 
 export function parse(str) {
-  return string
-    .split(normalize(str), SEPARATOR_KEY)
+  return normalize(str)
+    .split(SEPARATOR_KEY)
     .filter(filter)
 }
 
@@ -67,6 +63,12 @@ export function startsWith(keypath, prefix, split) {
   else {
     return env.FALSE
   }
+}
+
+export function has(keypath, part) {
+  return keypath === part
+    || string.has(keypath, SEPARATOR_KEY + part)
+    || string.has(keypath, part + SEPARATOR_KEY)
 }
 
 export function join(keypath1, keypath2) {

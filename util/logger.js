@@ -7,7 +7,7 @@ import * as env from './env'
  *
  * @type {boolean}
  */
-const hasConsole = typeof console !== 'undefined'
+const hasConsole = typeof console !== env.RAW_UNDEFINED
 
 const debug = /yox/.test(env.noop.toString())
 

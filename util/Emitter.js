@@ -43,8 +43,9 @@ export default class Emitter {
     let instance = this
     let addOnce = function (listener, type) {
       if (is.func(listener)) {
-        listener.$once = function () {
+        listener.$magic = function () {
           instance.off(type, listener)
+          delete listener.$magic
         }
       }
     }
@@ -103,10 +104,10 @@ export default class Emitter {
 
           let result = execute(listener, context, data)
 
-          let { $once } = listener
-          if (is.func($once)) {
-            $once()
-            delete listener.$once
+          let { $magic } = listener
+          if (is.func($magic)) {
+            $magic()
+
           }
 
           // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
