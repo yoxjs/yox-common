@@ -1,7 +1,7 @@
 
 import * as env from '../util/env'
 import * as char from '../util/char'
-import * as object from '../util/char'
+import * as object from '../util/object'
 
 let nextTick
 if (typeof MutationObserver === 'function') {
