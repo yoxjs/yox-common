@@ -32,7 +32,7 @@ export function each(array, callback, reversed) {
 }
 
 /**
- * 合并多个数组
+ * 合并两个数组
  *
  * @param {Array} array1
  * @param {Array} array2
@@ -46,23 +46,34 @@ export function merge(array1, array2) {
 }
 
 /**
+ * 添加
+ *
+ * @param {Array} original
+ * @param {*} value
+ * @param {string} action
+ */
+function addItem(original, value, action) {
+  if (is.array(value)) {
+    each(
+      value,
+      function (item) {
+        original[ action ](item)
+      }
+    )
+  }
+  else {
+    original[ action ](value)
+  }
+}
+
+/**
  * 往后加
  *
  * @param {Array} original
  * @param {*} value
  */
 export function push(original, value) {
-  if (is.array(value)) {
-    each(
-      value,
-      function (item) {
-        original.push(item)
-      }
-    )
-  }
-  else {
-    original.push(value)
-  }
+  addItem(original, value, 'push')
 }
 
 /**
@@ -72,17 +83,7 @@ export function push(original, value) {
  * @param {*} value
  */
 export function unshift(original, value) {
-  if (is.array(value)) {
-    each(
-      value,
-      function (item) {
-        original.unshift(item)
-      }
-    )
-  }
-  else {
-    original.unshift(value)
-  }
+  addItem(original, value, 'unshift')
 }
 
 /**

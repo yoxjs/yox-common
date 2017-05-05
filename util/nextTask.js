@@ -5,7 +5,7 @@ import * as array from './array'
 
 let nextTasks = [ ]
 
-function add(name, task) {
+function addTask(name, task) {
   if (!nextTasks.length) {
     nextTick(run)
   }
@@ -18,7 +18,7 @@ function add(name, task) {
  * @param {Function} task
  */
 export function append(task) {
-  add('push', task)
+  addTask('push', task)
 }
 
 /**
@@ -27,7 +27,7 @@ export function append(task) {
  * @param {Function} task
  */
 export function prepend(task) {
-  add('unshift', task)
+  addTask('unshift', task)
 }
 
 /**

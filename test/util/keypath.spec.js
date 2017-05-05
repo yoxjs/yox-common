@@ -121,6 +121,16 @@ describe('util/keypath', () => {
     )
     .toBe(2)
 
+    expect(
+      keypath.startsWith('a.b', 'a.')
+    )
+    .toBe(false)
+
+    expect(
+      keypath.startsWith('a.b', 'b')
+    )
+    .toBe(false)
+
   })
 
 })
