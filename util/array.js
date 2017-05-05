@@ -107,11 +107,11 @@ export function toArray(array) {
  * @return {Object}
  */
 export function toObject(array, key, value) {
-  let result = { }
+  let result = { }, hasValue = arguments.length === 3
   each(
     array,
     function (item, index) {
-      result[ key ? item[ key ] : item ] = value
+      result[ key ? item[ key ] : item ] = hasValue ? value : item
     }
   )
   return result
