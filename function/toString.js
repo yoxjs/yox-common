@@ -1,11 +1,10 @@
 
+import * as env from '../util/env'
 import * as char from '../util/char'
 
 export default function (str, defaultValue = char.CHAR_BLANK) {
-  try {
+  if (str != env.NULL && str.toString) {
     return str.toString()
   }
-  catch (e) {
-    return defaultValue
-  }
+  return defaultValue
 }

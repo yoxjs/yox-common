@@ -3,10 +3,8 @@ import execute from '../function/execute'
 
 import * as is from './is'
 import * as env from './env'
-import * as char from './char'
 import * as array from './array'
 import * as object from './object'
-import * as string from './string'
 
 import Event from './Event'
 

@@ -2,6 +2,18 @@
 import execute from '../../function/execute'
 
 describe('function/execute', () => {
+  it('execute not a function', () => {
+
+    execute(null)
+    execute(undefined)
+    execute(0)
+    execute('')
+    execute(true)
+    execute(false)
+    execute({})
+    execute([ ])
+
+  })
   it('execute context', () => {
 
     let context = { }
@@ -39,6 +51,18 @@ describe('function/execute', () => {
       context,
       1
     )
+
+  })
+  it('execute return value', () => {
+
+    expect(
+      execute(
+        function () {
+          return 1
+        }
+      )
+    )
+    .toBe(1)
 
   })
 })

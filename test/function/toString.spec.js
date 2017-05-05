@@ -30,7 +30,7 @@ describe('function/toString', () => {
     )
     .toBe('1.1')
   })
-  it('boolean to defaultValue', () => {
+  it('boolean', () => {
     expect(
       toString(true)
     )
@@ -40,16 +40,16 @@ describe('function/toString', () => {
     )
     .toBe('false')
   })
-  it('object to defaultValue', () => {
+  it('object', () => {
     expect(
       toString({})
     )
     .toBe('[object Object]')
   })
-  it('array to defaultValue', () => {
+  it('array', () => {
     expect(
-      toString({})
+      toString([ 1, 2, 3 ])
     )
-    .toBe('[object Object]')
+    .toBe('1,2,3')
   })
 })

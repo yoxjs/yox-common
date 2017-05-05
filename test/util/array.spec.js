@@ -5,19 +5,33 @@ import * as array from '../../util/array'
 describe('util/array', () => {
 
   it('each callback params', () => {
-    let test = [1]
+    let test = [1, 2, 3]
+    let index = 0;
     let firstIsItem = false
     let secondIsIndex = false
-    array.each(test, (item, index) => {
+    array.each(test, (item, i) => {
+      expect(i).toBe(index++)
       if (item === test[0]) {
         firstIsItem = true
       }
-      if (index === 0) {
+      if (i === 0) {
         secondIsIndex = true
       }
     })
     expect(firstIsItem).toBe(true)
     expect(secondIsIndex).toBe(true)
+  })
+
+  it('each callback reversed', () => {
+    let test = [1, 2, 3]
+    let index = test.length - 1
+    array.each(
+      test,
+      (item, i) => {
+        expect(i === index--)
+      },
+      true
+    )
   })
 
   it('each interrupt', () => {

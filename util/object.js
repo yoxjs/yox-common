@@ -16,6 +16,14 @@ export function keys(object) {
   return Object.keys(object)
 }
 
+function sortByAsc(a, b) {
+  return a.length - b.length
+}
+
+function sortByDesc(a, b) {
+  return b.length - a.length
+}
+
 /**
  * 排序对象的 key
  *
@@ -24,18 +32,7 @@ export function keys(object) {
  * @return {Array.<string>}
  */
 export function sort(object, desc) {
-  let sorter
-  if (desc) {
-    sorter = function (a, b) {
-      return b.length - a.length
-    }
-  }
-  else {
-    sorter = function (a, b) {
-      return a.length - b.length
-    }
-  }
-  return keys(object).sort(sorter)
+  return keys(object).sort(desc ? sortByDesc : sortByAsc)
 }
 
 /**
