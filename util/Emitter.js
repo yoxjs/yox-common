@@ -114,8 +114,7 @@ export default class Emitter {
           // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
           if (isEvent) {
             if (result === env.FALSE) {
-              event.prevent()
-              event.stop()
+              event.prevent().stop()
             }
             else if (event.isStoped) {
               result = env.FALSE

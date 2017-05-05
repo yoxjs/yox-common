@@ -2,14 +2,16 @@
 import * as is from './is'
 import * as env from './env'
 
+import toString from '../function/toString'
+
 /**
  * 是否有原生的日志特性，没有必要单独实现
  *
- * @type {boolean}
+ * @type {?Object}
  */
-const hasConsole = typeof console !== env.RAW_UNDEFINED
+const Console = typeof console !== env.RAW_UNDEFINED ? console : env.NULL
 
-const debug = /yox/.test(env.noop.toString())
+const debug = /yox/.test(toString(env.noop))
 
 // 全局可覆盖
 // 比如开发环境，开了 debug 模式，但是有时候觉得看着一堆日志特烦，想强制关掉
@@ -30,8 +32,8 @@ function isDebug() {
  * @param {string} msg
  */
 export function log(msg) {
-  if (hasConsole && isDebug()) {
-    console.log(`[Yox log]: ${msg}`)
+  if (Console && isDebug()) {
+    Console.log(`[Yox log]: ${msg}`)
   }
 }
 
@@ -41,8 +43,8 @@ export function log(msg) {
  * @param {string} msg
  */
 export function warn(msg) {
-  if (hasConsole && isDebug()) {
-    console.warn(`[Yox warn]: ${msg}`)
+  if (Console && isDebug()) {
+    Console.warn(`[Yox warn]: ${msg}`)
   }
 }
 
@@ -52,8 +54,8 @@ export function warn(msg) {
  * @param {string} msg
  */
 export function error(msg) {
-  if (hasConsole) {
-    console.error(`[Yox error]: ${msg}`)
+  if (Console) {
+    Console.error(`[Yox error]: ${msg}`)
   }
 }
 

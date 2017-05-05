@@ -32,7 +32,9 @@ function sortByDesc(a, b) {
  * @return {Array.<string>}
  */
 export function sort(object, desc) {
-  return keys(object).sort(desc ? sortByDesc : sortByAsc)
+  return keys(object).sort(
+    desc ? sortByDesc : sortByAsc
+  )
 }
 
 /**
@@ -166,7 +168,6 @@ export function get(object, keypath) {
 
   if (!string.falsy(keypath)
     && !exists(object, keypath)
-    // 不能以 . 开头
     && string.indexOf(keypath, char.CHAR_DOT) > 0
   ) {
     let list = keypathUtil.parse(keypath)
@@ -206,7 +207,7 @@ export function set(object, keypath, value, autofill) {
   ) {
     let originalObject = object
     let list = keypathUtil.parse(keypath)
-    let prop = array.pop(list)
+    let name = array.pop(list)
     array.each(
       list,
       function (item, index) {
@@ -222,7 +223,7 @@ export function set(object, keypath, value, autofill) {
       }
     )
     if (object && object !== originalObject) {
-      object[ prop ] = value
+      object[ name ] = value
     }
   }
   else {

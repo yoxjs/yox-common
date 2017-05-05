@@ -10,8 +10,8 @@ const normalizeCache = { }
 
 export function normalize(str) {
   if (!string.falsy(str)) {
-    let start = string.indexOf(str, '[')
-    if (start > 0 && string.indexOf(str, ']') > start) {
+    let start = string.indexOf(str, char.CHAR_OBRACK)
+    if (start > 0 && string.indexOf(str, char.CHAR_CBRACK) > start) {
       if (!normalizeCache[ str ]) {
         normalizeCache[ str ] = str.replace(
           /\[\s*?([^\]]+)\s*?\]/g,
