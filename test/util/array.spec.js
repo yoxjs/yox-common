@@ -69,6 +69,26 @@ describe('util/array', () => {
     let result = array.toArray(faker)
     expect(result).toBe(faker)
   })
+  it('toObject', () => {
+    var list = [
+      {
+        id: '1',
+        name: 'yox1'
+      },
+      {
+        id: '2',
+        name: 'yox2'
+      }
+    ]
+    var result = array.toObject(list, 'id');
+    expect(result['1']).toBe(list[0])
+    expect(result['2']).toBe(list[1])
+
+    result = array.toObject(list, 'id', true);
+    expect(result['1']).toBe(true)
+    expect(result['2']).toBe(true)
+
+  })
   it('merge', () => {
     let array1 = [1, 2, 3]
     let array2 = [4, 5, 6]
