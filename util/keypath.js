@@ -67,13 +67,15 @@ export function has(keypath, part) {
 }
 
 export function join(keypath1, keypath2) {
-  if (keypath1 && keypath2) {
-    return keypath1 + SEPARATOR_KEY + keypath2
+  // keypath 可以是两种
+  // 1. 非空字符串
+  // 2. 数字
+  let result = [ ]
+  if (!string.falsy(keypath1) || is.number(keypath1)) {
+    array.push(result, keypath1)
   }
-  else if (keypath1) {
-    return keypath1
+  if (!string.falsy(keypath2) || is.number(keypath2)) {
+    array.push(result, keypath2)
   }
-  else {
-    return keypath2 || char.CHAR_BLANK
-  }
+  return stringify(result)
 }
