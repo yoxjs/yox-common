@@ -1,6 +1,8 @@
 
+import * as is from './is'
 import * as env from './env'
 import * as char from './char'
+import * as array from './array'
 import * as object from './object'
 import * as string from './string'
 
@@ -30,21 +32,21 @@ export function normalize(str) {
   return str
 }
 
-function filter(term) {
-  return term !== char.CHAR_BLANK
-    && term !== env.RAW_THIS
-}
+
 
 export function parse(str) {
   return normalize(str)
     .split(SEPARATOR_KEY)
-    .filter(filter)
+    .filter(
+      function (term) {
+        return term !== char.CHAR_BLANK
+          && term !== env.RAW_THIS
+      }
+    )
 }
 
 export function stringify(keypaths) {
-  return keypaths
-    .filter(filter)
-    .join(SEPARATOR_KEY)
+  return keypaths.join(SEPARATOR_KEY)
 }
 
 export function startsWith(keypath, prefix) {
@@ -67,7 +69,7 @@ export function has(keypath, part) {
 }
 
 export function join(keypath1, keypath2) {
-  // keypath 可以是两种
+  // keypath 可以是两种形式
   // 1. 非空字符串
   // 2. 数字
   let result = [ ]
