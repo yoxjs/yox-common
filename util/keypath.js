@@ -32,20 +32,20 @@ export function normalize(str) {
   return str
 }
 
-
-
-export function parse(str) {
-  return normalize(str)
-    .split(SEPARATOR_KEY)
-    .filter(
-      function (term) {
-        return term !== char.CHAR_BLANK
-          && term !== env.RAW_THIS
-      }
-    )
+function filter(term) {
+  return term !== char.CHAR_BLANK
+    && term !== env.RAW_THIS
 }
 
-export function stringify(keypaths) {
+export function parse(str, filterable = env.TRUE) {
+  let result = normalize(str).split(SEPARATOR_KEY)
+  return filterable ? result.filter(filter) : result
+}
+
+export function stringify(keypaths, filterable = env.TRUE) {
+  if (filterable) {
+    keypaths = keypaths.filter(filter)
+  }
   return keypaths.join(SEPARATOR_KEY)
 }
 
@@ -79,5 +79,5 @@ export function join(keypath1, keypath2) {
   if (!string.falsy(keypath2) || is.number(keypath2)) {
     array.push(result, keypath2)
   }
-  return stringify(result)
+  return stringify(result, env.FALSE)
 }
