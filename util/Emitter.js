@@ -16,14 +16,16 @@ export default class Emitter {
 
   on(type, listener) {
 
-    let { listeners } = this
+    let { listeners } = this, hasNew
 
     let addListener = function (listener, type) {
       if (is.func(listener)) {
-        array.push(
-          listeners[ type ] || (listeners[ type ] = [ ]),
-          listener
-        )
+        let list = listeners[ type ]
+        if (!list) {
+          list = listeners[ type ] = [ ]
+          hasNew = env.TRUE
+        }
+        array.push(list, listener)
       }
     }
 
@@ -33,6 +35,8 @@ export default class Emitter {
     else if (is.string(type)) {
       addListener(listener, type)
     }
+
+    return hasNew
 
   }
 
@@ -68,11 +72,14 @@ export default class Emitter {
 
   off(type, listener) {
 
+    let instance = this
+    let { listeners } = instance
+    let keys = object.keys(listeners)
+
     if (type == env.NULL) {
-      this.listeners = { }
+      listeners = instance.listeners = { }
     }
     else {
-      let { listeners } = this
       let list = listeners[ type ]
       if (list) {
         if (listener == env.NULL) {
@@ -86,6 +93,8 @@ export default class Emitter {
         }
       }
     }
+
+    return keys.length === object.keys(listeners).length
 
   }
 
