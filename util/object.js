@@ -145,15 +145,6 @@ export function copy(object, deep) {
 }
 
 
-function getValue(object, key) {
-  // 如果函数改写了 toString，就调用 toString() 求值
-  let value = object[ key ]
-  if (is.func(value) && value.toString !== Function.prototype.toString) {
-    value = value.toString()
-  }
-  return value
-}
-
 /**
  * 从对象中查找一个 keypath
  *
@@ -173,7 +164,7 @@ export function get(object, keypath) {
     let list = keypathUtil.parse(keypath)
     for (let i = 0, len = list.length; i < len; i++) {
       if (i < len - 1) {
-        object = getValue(object, list[ i ])
+        object = object[ list[ i ] ]
         if (object == env.NULL) {
           return
         }
@@ -186,7 +177,7 @@ export function get(object, keypath) {
 
   if (exists(object, keypath)) {
     return {
-      value: getValue(object, keypath)
+      value: object[ keypath ],
     }
   }
 
