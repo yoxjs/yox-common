@@ -4,7 +4,7 @@ import * as char from './char'
 import * as array from './array'
 
 /**
- * 转成驼峰
+ * 连字符转成驼峰
  *
  * @param {string} str
  * @return {string}
@@ -22,31 +22,36 @@ export function camelCase(str) {
 }
 
 /**
- * 判断长度大于 0 的字符串
- *
- * @param {*} str
- * @return {boolean}
- */
-export function falsy(str) {
-  return !is.string(str) || str === char.CHAR_BLANK
-}
-
-/**
  * 删除两侧空白符
  *
  * @param {*} str
- * @return {boolean}
+ * @return {string}
  */
 export function trim(str) {
  return falsy(str) ? char.CHAR_BLANK : str.trim()
 }
 
+/**
+ * 截取字符串
+ *
+ * @param {string} str
+ * @param {number} start
+ * @param {?number} end
+ * @return {string}
+ */
 export function slice(str, start, end) {
   return is.number(end)
     ? str.slice(start, end)
     : str.slice(start)
 }
 
+/**
+ * 分割字符串
+ *
+ * @param {string} str
+ * @param {string} delimiter
+ * @return {Array}
+ */
 export function split(str, delimiter) {
   return falsy(str)
     ? [ ]
@@ -55,19 +60,57 @@ export function split(str, delimiter) {
       )
 }
 
+/**
+ * 获取子串的起始位置
+ *
+ * @param {string} str
+ * @param {string} part
+ * @return {number}
+ */
 export function indexOf(str, part) {
   return str.indexOf(part)
 }
 
+/**
+ * str 是否包含 part
+ *
+ * @param {string} str
+ * @param {string} part
+ * @return {boolean}
+ */
 export function has(str, part) {
   return indexOf(str, part) >= 0
 }
 
+/**
+ * str 是否以 part 开始
+ *
+ * @param {string} str
+ * @param {string} part
+ * @return {boolean}
+ */
 export function startsWith(str, part) {
   return indexOf(str, part) === 0
 }
 
+/**
+ * str 是否以 part 结束
+ *
+ * @param {string} str
+ * @param {string} part
+ * @return {boolean}
+ */
 export function endsWith(str, part) {
   let offset = str.length - part.length
   return offset >= 0 && str.lastIndexOf(part) === offset
+}
+
+/**
+ * 判断长度大于 0 的字符串
+ *
+ * @param {*} str
+ * @return {boolean}
+ */
+export function falsy(str) {
+  return !is.string(str) || str === char.CHAR_BLANK
 }

@@ -1,41 +1,41 @@
 
 import * as env from './env'
 
-export function is(arg, type) {
+export function is(value, type) {
   return type === 'numeric'
-    ? numeric(arg)
-    : Object.prototype.toString.call(arg).toLowerCase() === `[object ${type}]`
+    ? numeric(value)
+    : Object.prototype.toString.call(value).toLowerCase() === `[object ${type}]`
 }
 
-export function func(arg) {
-  return is(arg, env.RAW_FUNCTION)
+export function func(value) {
+  return is(value, env.RAW_FUNCTION)
 }
 
-export function array(arg) {
-  return is(arg, 'array')
+export function array(value) {
+  return is(value, 'array')
 }
 
-export function object(arg) {
+export function object(value) {
   // 低版本 IE 会把 null 和 undefined 当作 object
-  return arg && is(arg, 'object')
+  return value && is(value, 'object')
 }
 
-export function string(arg) {
-  return is(arg, 'string')
+export function string(value) {
+  return is(value, 'string')
 }
 
-export function number(arg) {
-  return is(arg, 'number')
+export function number(value) {
+  return is(value, 'number')
 }
 
-export function boolean(arg) {
-  return is(arg, 'boolean')
+export function boolean(value) {
+  return is(value, 'boolean')
 }
 
-export function primitive(arg) {
-  return string(arg) || number (arg) || boolean(arg) || arg == env.NULL
+export function numeric(value) {
+  return !isNaN(parseFloat(value)) && isFinite(value)
 }
 
-export function numeric(arg) {
-  return !isNaN(parseFloat(arg)) && isFinite(arg)
+export function primitive(value) {
+  return string(value) || number (value) || boolean(value) || value == env.NULL
 }

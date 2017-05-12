@@ -70,20 +70,20 @@ function addItem(original, value, action) {
  * 往后加
  *
  * @param {Array} original
- * @param {*} value
+ * @param {*} item
  */
-export function push(original, value) {
-  addItem(original, value, 'push')
+export function push(original, item) {
+  addItem(original, item, 'push')
 }
 
 /**
  * 往前加
  *
  * @param {Array} original
- * @param {*} value
+ * @param {*} item
  */
-export function unshift(original, value) {
-  addItem(original, value, 'unshift')
+export function unshift(original, item) {
+  addItem(original, item, 'unshift')
 }
 
 /**
@@ -179,15 +179,21 @@ export function pop(array) {
  * @param {Array} array 数组
  * @param {*} item 待删除项
  * @param {?boolean} strict 是否全等判断，默认是全等
- * @return {boolean} 是否删除成功
+ * @return {number} 删除的数量
  */
 export function remove(array, item, strict) {
-  let index = indexOf(array, item, strict)
-  if (index >= 0) {
-    array.splice(index, 1)
-    return env.TRUE
-  }
-  return env.FALSE
+  let result = 0
+  each(
+    array,
+    function (value, index) {
+      if (strict === env.FALSE ? value == item : value === item) {
+        array.splice(index, 1)
+        result++
+      }
+    },
+    env.TRUE
+  )
+  return result
 }
 
 /**

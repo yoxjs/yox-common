@@ -164,18 +164,22 @@ describe('util/array', () => {
     let unexisted = 4
 
     expect(array.has(test, unexisted)).toBe(false)
-    expect(array.remove(test, unexisted)).toBe(false)
+    expect(array.remove(test, unexisted)).toBe(0)
     expect(test.length).toBe(3)
 
     expect(array.has(test, removed1)).toBe(true)
-    expect(array.remove(test, removed1)).toBe(true)
+    expect(array.remove(test, removed1)).toBe(1)
     expect(array.has(test, removed1)).toBe(false)
     expect(test.length).toBe(2)
 
     expect(array.has(test, removed2, false)).toBe(true)
-    expect(array.remove(test, removed2, false)).toBe(true)
+    expect(array.remove(test, removed2, false)).toBe(1)
     expect(array.has(test, removed2, false)).toBe(false)
     expect(test.length).toBe(1)
+
+    test = [1, 2, 3, 2, 2, 2]
+    expect(array.remove(test, 2)).toBe(4)
+    expect(test.length).toBe(2)
 
   })
   it('falsy', () => {
