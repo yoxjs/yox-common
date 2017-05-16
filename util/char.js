@@ -3,12 +3,12 @@
  * 为了压缩，定义的常用字符
  */
 
-export function charAt(str, index = 0) {
-  return str.charAt(index)
+export function charAt(str, index) {
+  return str.charAt(index || 0)
 }
 
-export function codeAt(str, index = 0) {
-  return str.charCodeAt(index)
+export function codeAt(str, index) {
+  return str.charCodeAt(index || 0)
 }
 
 export const CHAR_BLANK = ''
