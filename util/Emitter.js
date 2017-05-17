@@ -3,6 +3,7 @@ import execute from '../function/execute'
 
 import * as is from './is'
 import * as env from './env'
+import * as char from './char'
 import * as array from './array'
 import * as object from './object'
 
@@ -14,111 +15,46 @@ export default class Emitter {
     this.listeners = { }
   }
 
-  on(type, listener) {
-
-    let { listeners } = this, hasNew
-
-    let addListener = function (listener, type) {
-      if (is.func(listener)) {
-        let list = listeners[ type ]
-        if (!list) {
-          list = listeners[ type ] = [ ]
-          hasNew = env.TRUE
-        }
-        array.push(list, listener)
-      }
-    }
-
-    if (is.object(type)) {
-      object.each(type, addListener)
-    }
-    else if (is.string(type)) {
-      addListener(listener, type)
-    }
-
-    return hasNew
-
-  }
-
-  once(type, listener) {
-
-    let instance = this
-    let addOnce = function (listener, type) {
-      if (is.func(listener)) {
-        let { $magic } = listener
-        listener.$magic = function () {
-          execute($magic)
-          instance.off(type, listener)
-          if ($magic) {
-            listener.$magic = $magic
-          }
-          else {
-            delete listener.$magic
-          }
-        }
-      }
-    }
-
-    if (is.object(type)) {
-      object.each(type, addOnce)
-    }
-    else if (is.string(type)) {
-      addOnce(listener, type)
-    }
-
-    instance.on(type, listener)
-
-  }
-
-  off(type, listener) {
-
-    let instance = this
-    let { listeners } = instance
-    let keys = object.keys(listeners)
-
-    if (type == env.NULL) {
-      listeners = instance.listeners = { }
-    }
-    else {
-      let list = listeners[ type ]
-      if (list) {
-        if (listener == env.NULL) {
-          list.length = 0
-        }
-        else {
-          array.remove(list, listener)
-        }
-        if (!list.length) {
-          delete listeners[ type ]
-        }
-      }
-    }
-
-    return keys.length === object.keys(listeners).length
-
-  }
-
   fire(type, data, context) {
 
-    let isComplete = env.TRUE
-
-    let list = this.listeners[ type ]
+    let isComplete = env.TRUE, listeners = this.listeners, list = listeners[ type ]
     if (list) {
 
-      let event = data
+      // 简单支持一下 jquery 的事件命名空间，即 type.namespace
+      // 不支持 a.b.namespace 这种多个 . 的情况
+      let event = data, namespace = type.split(char.CHAR_DOT)[ 1 ]
       if (is.array(data)) {
         event = data[ 0 ]
       }
 
-      let isEvent = Event.is(event)
+      let isEvent = Event.is(event), offQueue
 
       array.each(
         list,
-        function (listener) {
+        function (item, index) {
 
-          let result = execute(listener, context, data)
+          if (namespace && item.namespace && namespace !== item.namespace) {
+            return
+          }
 
-          execute(listener.$magic)
+          let result = execute(
+            item.func,
+            context !== env.UNDEFINED ? context : item.context,
+            data
+          )
+
+          // 执行次数
+          if (item.count > 0) {
+            item.count++
+          }
+          else {
+            item.count = 1
+          }
+
+          // 注册的 listener 可以指定最大执行次数
+          if (item.count === item.max) {
+            array.push(offQueue || (offQueue = [ ]), index)
+          }
 
           // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
           if (isEvent) {
@@ -135,6 +71,19 @@ export default class Emitter {
           }
         }
       )
+
+      if (offQueue) {
+        array.each(
+          offQueue,
+          function (index) {
+            list.splice(index, 1)
+          },
+          env.TRUE
+        )
+        if (!list.length) {
+          delete listeners[ type ]
+        }
+      }
     }
 
     return isComplete
@@ -148,9 +97,88 @@ export default class Emitter {
       return !array.falsy(list)
     }
     else if (list) {
-      return array.has(list, listener)
+      let result
+      array.each(
+        list,
+        function (item) {
+          if (result = item.func === listener) {
+            return env.FALSE
+          }
+        }
+      )
+      return result
     }
 
   }
 
+}
+
+object.extend(
+  Emitter.prototype,
+  {
+    on: on(),
+    once: on({ max: 1 }),
+    off(type, listener) {
+
+      let instance = this
+
+      if (type == env.NULL) {
+        instance.listeners = { }
+      }
+      else {
+        let { listeners } = instance
+        let list = listeners[ type ]
+        if (list) {
+          if (listener == env.NULL) {
+            list.length = 0
+          }
+          else {
+            array.each(
+              list,
+              function (item, index) {
+                if (item.func === listener) {
+                  list.splice(index, 1)
+                }
+              },
+              env.TRUE
+            )
+          }
+          if (!list.length) {
+            delete listeners[ type ]
+          }
+        }
+      }
+
+    }
+  }
+)
+
+function on(data) {
+  return function (type, listener) {
+
+    let { listeners } = this
+
+    let addListener = function (item, type) {
+      if (is.func(item)) {
+        item = { func: item }
+      }
+      if (is.object(item) && is.func(item.func)) {
+        if (data) {
+          object.extend(item, data)
+        }
+        array.push(
+          listeners[ type ] || (listeners[ type ] = [ ]),
+          item
+        )
+      }
+    }
+
+    if (is.object(type)) {
+      object.each(type, addListener)
+    }
+    else if (is.string(type)) {
+      addListener(listener, type)
+    }
+
+  }
 }
