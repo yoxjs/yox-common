@@ -128,7 +128,7 @@ export function copy(object, deep) {
     array.each(
       object,
       function (item, index) {
-        result[ index ] = deep ? copy(item) : item
+        result[ index ] = deep ? copy(item, deep) : item
       }
     )
   }
@@ -137,7 +137,7 @@ export function copy(object, deep) {
     each(
       object,
       function (value, key) {
-        result[ key ] = deep ? copy(value) : value
+        result[ key ] = deep ? copy(value, deep) : value
       }
     )
   }

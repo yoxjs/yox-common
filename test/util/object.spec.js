@@ -95,6 +95,18 @@ describe('util/object', () => {
 
     obj = { user: { name: 'a' }}
     expect(object.copy(obj, true).user).not.toBe(obj.user)
+
+    obj = {
+      list: [
+        { name: '1' },
+        { name: '2' }
+      ]
+    }
+    objCopy = object.copy(obj, true)
+    expect(obj).not.toBe(objCopy)
+    expect(obj.list).not.toBe(objCopy.list)
+    expect(obj.list[0]).not.toBe(objCopy.list[0])
+    expect(obj.list[1]).not.toBe(objCopy.list[1])
   })
 
   it('get', () => {
