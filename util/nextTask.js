@@ -7,7 +7,18 @@ let nextTasks = [ ]
 
 function addTask(name, task) {
   if (!nextTasks.length) {
-    nextTick(run)
+    nextTick(
+      function () {
+        let currentTasks = nextTasks
+        nextTasks = [ ]
+        array.each(
+          currentTasks,
+          function (task) {
+            task()
+          }
+        )
+      }
+    )
   }
   array[ name ](nextTasks, task)
 }
@@ -28,18 +39,4 @@ export function append(task) {
  */
 export function prepend(task) {
   addTask('unshift', task)
-}
-
-/**
- * 立即执行已添加的任务
- */
-export function run() {
-  let currentTasks = nextTasks
-  nextTasks = [ ]
-  array.each(
-    currentTasks,
-    function (task) {
-      task()
-    }
-  )
 }

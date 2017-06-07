@@ -1,4 +1,5 @@
 
+import isDef from '../function/isDef'
 import execute from '../function/execute'
 
 import * as is from './is'
@@ -39,7 +40,7 @@ export default class Emitter {
 
           let result = execute(
             item.func,
-            context !== env.UNDEFINED ? context : item.context,
+            isDef(context) ? context : item.context,
             data
           )
 
