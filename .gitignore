@@ -1,0 +1,5 @@
+node_modules
+*update.json
+*update.js
+.edp*
+edp-*
