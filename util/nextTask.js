@@ -5,20 +5,20 @@ import * as array from './array'
 
 let nextTasks = [ ]
 
+function runTasks() {
+  let currentTasks = nextTasks
+  nextTasks = [ ]
+  array.each(
+    currentTasks,
+    function (task) {
+      task()
+    }
+  )
+}
+
 function addTask(name, task) {
   if (!nextTasks.length) {
-    nextTick(
-      function () {
-        let currentTasks = nextTasks
-        nextTasks = [ ]
-        array.each(
-          currentTasks,
-          function (task) {
-            task()
-          }
-        )
-      }
-    )
+    nextTick(runTasks)
   }
   array[ name ](nextTasks, task)
 }
