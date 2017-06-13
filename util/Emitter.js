@@ -29,7 +29,7 @@ export default class Emitter {
       i = -1, item, result
 
       while (item = list[ ++i ]) {
-        if (space && item.space && space !== item.space) {
+        if (space && space !== item.space) {
           continue
         }
 
@@ -78,22 +78,33 @@ export default class Emitter {
 
   has(type, listener) {
 
-    let list = this.listeners[ type ]
-    if (listener == env.NULL) {
-      return !array.falsy(list)
-    }
-    else if (list) {
-      let result
+    let { name, space } = parseType(type), { listeners } = this, result = env.TRUE
+
+    let each = function (list) {
       array.each(
         list,
-        function (item) {
-          if (result = item.func === listener) {
-            return env.FALSE
+        function (item, index) {
+          if ((!space || space === item.space)
+            && (!listener || listener === item.func)
+          ) {
+            return result = env.FALSE
           }
         }
       )
       return result
     }
+
+    if (name) {
+      let list = listeners[ name ]
+      if (list) {
+        each(list)
+      }
+    }
+    else if (space) {
+      object.each(listeners, each)
+    }
+
+    return !result
 
   }
 
@@ -112,26 +123,33 @@ object.extend(
         instance.listeners = { }
       }
       else {
-        let { listeners } = instance
-        let list = listeners[ type ]
-        if (list) {
-          if (listener == env.NULL) {
-            list.length = 0
-          }
-          else {
-            array.each(
-              list,
-              function (item, index) {
-                if (item.func === listener) {
-                  list.splice(index, 1)
-                }
-              },
-              env.TRUE
-            )
-          }
+        let { name, space } = parseType(type)
+        let each = function (list, name) {
+          array.each(
+            list,
+            function (item, index) {
+              if ((!space || space === item.space)
+                && (!listener || listener === item.func)
+              ) {
+                list.splice(index, 1)
+              }
+            },
+            env.TRUE,
+          )
           if (!list.length) {
-            delete listeners[ type ]
+            delete listeners[ name ]
           }
+        }
+
+        let { listeners } = instance
+        if (name) {
+          let list = listeners[ name ]
+          if (list) {
+            each(list, name)
+          }
+        }
+        else if (space) {
+          object.each(listeners, each)
         }
       }
 
@@ -173,7 +191,7 @@ function on(data) {
 
 function parseType(type) {
   let index = string.indexOf(type, char.CHAR_DOT)
-  if (index > 0) {
+  if (index >= 0) {
     return {
       name: string.slice(type, 0, index),
       space: string.slice(type, index + 1),
