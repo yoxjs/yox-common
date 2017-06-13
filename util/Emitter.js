@@ -13,15 +13,21 @@ import Event from './Event'
 
 export default class Emitter {
 
-  constructor() {
+  /**
+   *
+   * @param {boolean} namespace 是否需要命名空间
+   */
+  constructor(namespace) {
+    this.namespace = namespace
     this.listeners = { }
   }
 
   fire(type, data, context) {
 
-    let { name, space } = parseType(type)
+    let { namespace, listeners } = this
+    let { name, space } = parseType(type, namespace)
 
-    let isComplete = env.TRUE, listeners = this.listeners, list = listeners[ name ]
+    let isComplete = env.TRUE, list = listeners[ name ]
     if (list) {
 
       let event = is.array(data) ? data[ 0 ] : data,
@@ -29,7 +35,8 @@ export default class Emitter {
       i = -1, item, result
 
       while (item = list[ ++i ]) {
-        if (space && space !== item.space) {
+
+        if (space && item.space && space !== item.space) {
           continue
         }
 
@@ -78,7 +85,7 @@ export default class Emitter {
 
   has(type, listener) {
 
-    let { name, space } = parseType(type), { listeners } = this, result = env.TRUE
+    let { namespace, listeners } = this, { name, space } = parseType(type, namespace), result = env.TRUE
 
     let each = function (list) {
       array.each(
@@ -123,7 +130,7 @@ object.extend(
         instance.listeners = { }
       }
       else {
-        let { name, space } = parseType(type)
+        let { name, space } = parseType(type, instance.namespace)
         let each = function (list, name) {
           array.each(
             list,
@@ -160,7 +167,7 @@ object.extend(
 function on(data) {
   return function (type, listener) {
 
-    let { listeners } = this
+    let { namespace, listeners } = this
 
     let addListener = function (item, type) {
       if (is.func(item)) {
@@ -170,7 +177,7 @@ function on(data) {
         if (data) {
           object.extend(item, data)
         }
-        let { name, space } = parseType(type)
+        let { name, space } = parseType(type, namespace)
         item.space = space
         array.push(
           listeners[ name ] || (listeners[ name ] = [ ]),
@@ -189,18 +196,17 @@ function on(data) {
   }
 }
 
-function parseType(type) {
-  let index = string.indexOf(type, char.CHAR_DOT)
-  if (index >= 0) {
-    return {
-      name: string.slice(type, 0, index),
-      space: string.slice(type, index + 1),
+function parseType(type, namespace) {
+  let result = {
+    name: type,
+    space: char.CHAR_BLANK,
+  }
+  if (namespace) {
+    let index = string.indexOf(type, char.CHAR_DOT)
+    if (index >= 0) {
+      result.name = string.slice(type, 0, index)
+      result.space = string.slice(type, index + 1)
     }
   }
-  else {
-    return {
-      name: type,
-      space: char.CHAR_BLANK,
-    }
-  }
+  return result
 }

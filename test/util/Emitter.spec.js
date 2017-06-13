@@ -68,7 +68,7 @@ describe('util/Emitter', () => {
 
   it('namespace', () => {
 
-    let emitter = new Emitter()
+    let emitter = new Emitter(true)
 
     let aValue = 0, aListener = function () {
       aValue++
