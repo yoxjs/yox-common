@@ -42,6 +42,8 @@ describe('util/Emitter', () => {
     emitter.fire('click')
     expect(i).toBe(1)
 
+    expect(emitter.has('click')).toBe(false)
+
   })
 
   it('off', () => {
@@ -61,6 +63,38 @@ describe('util/Emitter', () => {
 
     emitter.fire('click')
     expect(i).toBe(1)
+
+  })
+
+  it('namespace', () => {
+
+    let emitter = new Emitter()
+    let i = 0, m = 0, n = 0
+
+    emitter.on('click', function () {
+      i++
+    })
+    emitter.on('click.a', function () {
+      m++
+    })
+    emitter.on('click.a.b', function () {
+      n++
+    })
+
+    emitter.fire('click')
+    expect(i).toBe(1)
+    expect(m).toBe(1)
+    expect(n).toBe(1)
+
+    emitter.fire('click.a')
+    expect(i).toBe(2)
+    expect(m).toBe(2)
+    expect(n).toBe(1)
+
+    emitter.fire('click.a.b')
+    expect(i).toBe(3)
+    expect(m).toBe(2)
+    expect(n).toBe(2)
 
   })
 

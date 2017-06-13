@@ -39,10 +39,7 @@ export function each(array, callback, reversed) {
  * @return {Array}
  */
 export function merge(array1, array2) {
-  let result = [ ]
-  push(result, array1)
-  push(result, array2)
-  return result
+  return array1.concat(array2)
 }
 
 /**

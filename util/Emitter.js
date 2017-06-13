@@ -7,6 +7,7 @@ import * as env from './env'
 import * as char from './char'
 import * as array from './array'
 import * as object from './object'
+import * as string from './string'
 
 import Event from './Event'
 
@@ -18,72 +19,56 @@ export default class Emitter {
 
   fire(type, data, context) {
 
-    let isComplete = env.TRUE, listeners = this.listeners, list = listeners[ type ]
+    let { name, space } = parseType(type)
+
+    let isComplete = env.TRUE, listeners = this.listeners, list = listeners[ name ]
     if (list) {
 
-      // 简单支持一下 jquery 的事件命名空间，即 type.namespace
-      // 不支持 a.b.namespace 这种多个 . 的情况
-      let event = data, namespace = type.split(char.CHAR_DOT)[ 1 ]
-      if (is.array(data)) {
-        event = data[ 0 ]
+      let event = is.array(data) ? data[ 0 ] : data,
+      isEvent = Event.is(event),
+      i = -1, item, result
+
+      while (item = list[ ++i ]) {
+        if (space && item.space && space !== item.space) {
+          continue
+        }
+
+        result = execute(
+          item.func,
+          isDef(context) ? context : item.context,
+          data
+        )
+
+        // 执行次数
+        if (item.count > 0) {
+          item.count++
+        }
+        else {
+          item.count = 1
+        }
+
+        // 注册的 listener 可以指定最大执行次数
+        if (item.count === item.max) {
+          list.splice(i--, 1)
+        }
+
+        // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
+        if (isEvent) {
+          if (result === env.FALSE) {
+            event.prevent().stop()
+          }
+          else if (event.isStoped) {
+            result = env.FALSE
+          }
+        }
+
+        if (result === env.FALSE) {
+          return isComplete = env.FALSE
+        }
       }
 
-      let isEvent = Event.is(event), offQueue
-
-      array.each(
-        list,
-        function (item, index) {
-
-          if (namespace && item.namespace && namespace !== item.namespace) {
-            return
-          }
-
-          let result = execute(
-            item.func,
-            isDef(context) ? context : item.context,
-            data
-          )
-
-          // 执行次数
-          if (item.count > 0) {
-            item.count++
-          }
-          else {
-            item.count = 1
-          }
-
-          // 注册的 listener 可以指定最大执行次数
-          if (item.count === item.max) {
-            array.push(offQueue || (offQueue = [ ]), index)
-          }
-
-          // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
-          if (isEvent) {
-            if (result === env.FALSE) {
-              event.prevent().stop()
-            }
-            else if (event.isStoped) {
-              result = env.FALSE
-            }
-          }
-
-          if (result === env.FALSE) {
-            return isComplete = env.FALSE
-          }
-        }
-      )
-
-      if (offQueue) {
-        array.each(
-          offQueue,
-          function (index) {
-            list.splice(index, 1)
-          },
-          env.TRUE
-        )
-        if (!list.length) {
-          delete listeners[ type ]
-        }
+      if (!list.length) {
+        delete listeners[ name ]
       }
     }
 
@@ -167,8 +152,10 @@ function on(data) {
         if (data) {
           object.extend(item, data)
         }
+        let { name, space } = parseType(type)
+        item.space = space
         array.push(
-          listeners[ type ] || (listeners[ type ] = [ ]),
+          listeners[ name ] || (listeners[ name ] = [ ]),
           item
         )
       }
@@ -181,5 +168,21 @@ function on(data) {
       addListener(listener, type)
     }
 
+  }
+}
+
+function parseType(type) {
+  let index = string.indexOf(type, char.CHAR_DOT)
+  if (index > 0) {
+    return {
+      name: string.slice(type, 0, index),
+      space: string.slice(type, index + 1),
+    }
+  }
+  else {
+    return {
+      name: type,
+      space: char.CHAR_BLANK,
+    }
   }
 }
