@@ -1,10 +1,18 @@
 
+import isNative from './isNative'
+
 import * as env from '../util/env'
 import * as char from '../util/char'
-import * as object from '../util/object'
 
 let nextTick
-if (typeof MutationObserver === env.RAW_FUNCTION) {
+if (typeof Promise === env.RAW_FUNCTION && isNative(Promise)) {
+  let promise = Promise.resolve()
+  nextTick = function (fn) {
+    promise.then(fn)
+    setTimeout(env.noop)
+  }
+}
+else if (typeof MutationObserver === env.RAW_FUNCTION) {
   nextTick = function (fn) {
     let observer = new MutationObserver(fn)
     let textNode = env.doc.createTextNode(char.CHAR_BLANK)
@@ -25,14 +33,5 @@ else {
 }
 
 export default function (fn) {
-  // 移动端的输入法唤起时，貌似会影响 MutationObserver 的 nextTick 触发
-  // 因此当输入框是激活状态时，改用 setTimeout
-  if (env.doc) {
-    let { activeElement } = env.doc
-    if (activeElement && object.exists(activeElement, 'autofocus')) {
-      setTimeout(fn)
-      return
-    }
-  }
   nextTick(fn)
 }
