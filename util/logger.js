@@ -20,7 +20,7 @@ function isDebug() {
   if (env.win) {
     let { DEBUG } = env.win
     if (is.boolean(DEBUG)) {
-      return BEBUG
+      return DEBUG
     }
   }
   return debug
