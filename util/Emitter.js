@@ -11,6 +11,8 @@ import * as string from './string'
 
 import Event from './Event'
 
+let guid = 0
+
 export default class Emitter {
 
   /**
@@ -32,12 +34,13 @@ export default class Emitter {
 
       let event = is.array(data) ? data[ 0 ] : data,
       isEvent = Event.is(event),
-      timestamp = +new Date(),
+      fireId = guid++,
       i = -1, j, item, result
 
       while (item = list[ ++i ]) {
 
-        item.ts = timestamp
+        // 当前执行 id
+        item.id = fireId
 
         if (space && item.space && space !== item.space) {
           continue
@@ -79,16 +82,14 @@ export default class Emitter {
         // 解绑了一些 event handler
         // 则往回找最远的未执行的 item
         if (i >= 0 && item !== list[ i ]) {
-          j = -1
+          j = i
           while (item = list[ i ]) {
-            if (item.ts !== timestamp) {
+            if (item.id !== fireId) {
               j = i
             }
             i--
           }
-          if (j >= 0) {
-            i = j - 1
-          }
+          i = j - 1
         }
       }
 
