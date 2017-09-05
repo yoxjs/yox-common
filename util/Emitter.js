@@ -32,9 +32,12 @@ export default class Emitter {
 
       let event = is.array(data) ? data[ 0 ] : data,
       isEvent = Event.is(event),
-      i = -1, item, result
+      timestamp = +new Date(),
+      i = -1, j, item, result
 
       while (item = list[ ++i ]) {
+
+        item.ts = timestamp
 
         if (space && item.space && space !== item.space) {
           continue
@@ -71,6 +74,21 @@ export default class Emitter {
 
         if (result === env.FALSE) {
           return isComplete = env.FALSE
+        }
+
+        // 解绑了一些 event handler
+        // 则往回找最远的未执行的 item
+        if (i >= 0 && item !== list[ i ]) {
+          j = -1
+          while (item = list[ i ]) {
+            if (item.ts !== timestamp) {
+              j = i
+            }
+            i--
+          }
+          if (j >= 0) {
+            i = j - 1
+          }
         }
       }
 
