@@ -168,6 +168,9 @@ export function get(object, keypath) {
         if (object == env.NULL) {
           return
         }
+        else if (is.func(object) && object.getter) {
+          object = object()
+        }
       }
       else {
         keypath = list[ i ]
@@ -176,8 +179,12 @@ export function get(object, keypath) {
   }
 
   if (exists(object, keypath)) {
+    let value = object[ keypath ]
+    if (is.func(value) && value.getter) {
+      value = value()
+    }
     return {
-      value: object[ keypath ],
+      value,
     }
   }
 
