@@ -168,8 +168,8 @@ export function get(object, keypath) {
         if (object == env.NULL) {
           return
         }
-        else if (is.func(object) && object.getter) {
-          object = object()
+        else if (is.object(object) && object.get) {
+          object = object.get()
         }
       }
       else {
@@ -180,8 +180,8 @@ export function get(object, keypath) {
 
   if (exists(object, keypath)) {
     let value = object[ keypath ]
-    if (is.func(value) && value.getter) {
-      value = value()
+    if (is.object(value) && value.get) {
+      value = value.get()
     }
     return {
       value,

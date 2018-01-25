@@ -34,7 +34,7 @@ export default class Emitter {
 
       let event = is.array(data) ? data[ 0 ] : data,
       isEvent = Event.is(event),
-      fireId = guid++,
+      fireId = ++guid,
       i = -1, j, item, result
 
       while (item = list[ ++i ]) {
@@ -63,6 +63,7 @@ export default class Emitter {
         // 注册的 listener 可以指定最大执行次数
         if (item.count === item.max) {
           list.splice(i, 1)
+          execute(item.onRemove)
         }
 
         // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
@@ -143,31 +144,31 @@ object.extend(
     once: on({ max: 1 }),
     off(type, listener) {
 
-      let instance = this
+      let instance = this, filter
+      let { listeners } = instance
 
-      if (type == env.NULL) {
-        instance.listeners = { }
-      }
-      else {
-        let { name, space } = parseType(type, instance.namespace)
-        let each = function (list, name) {
-          array.each(
-            list,
-            function (item, index) {
-              if ((!space || space === item.space)
-                && (!listener || listener === item.func)
-              ) {
-                list.splice(index, 1)
-              }
-            },
-            env.TRUE,
-          )
-          if (!list.length) {
-            delete listeners[ name ]
-          }
+      let each = function (list, name) {
+        array.each(
+          list,
+          function (item, index) {
+            if (filter(item)) {
+              list.splice(index, 1)
+              execute(item.onRemove)
+            }
+          },
+          env.TRUE,
+        )
+        if (!list.length) {
+          delete listeners[ name ]
         }
+      }
 
-        let { listeners } = instance
+      if (type) {
+        let { name, space } = parseType(type, instance.namespace)
+        filter = function (item) {
+          return (!space || space === item.space)
+            && (!listener || listener === item.func)
+        }
         if (name) {
           let list = listeners[ name ]
           if (list) {
@@ -177,6 +178,12 @@ object.extend(
         else if (space) {
           object.each(listeners, each)
         }
+      }
+      else {
+        filter = function () {
+          return env.TRUE
+        }
+        object.each(listeners, each)
       }
 
     }
@@ -202,6 +209,7 @@ function on(data) {
           listeners[ name ] || (listeners[ name ] = [ ]),
           item
         )
+        execute(item.onAdd)
       }
     }
 
