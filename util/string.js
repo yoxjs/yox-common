@@ -65,10 +65,27 @@ export function split(str, delimiter) {
  *
  * @param {string} str
  * @param {string} part
+ * @param {?number} startIndex
  * @return {number}
  */
-export function indexOf(str, part) {
-  return str.indexOf(part)
+export function indexOf(str, part, startIndex) {
+  return is.number(startIndex)
+    ? str.indexOf(part, startIndex)
+    : str.indexOf(part)
+}
+
+/**
+ * 获取子串的起始位置
+ *
+ * @param {string} str
+ * @param {string} part
+ * @param {?number} endIndex
+ * @return {number}
+ */
+export function lastIndexOf(str, part, endIndex) {
+  return is.number(endIndex)
+    ? str.lastIndexOf(part, endIndex)
+    : str.lastIndexOf(part)
 }
 
 /**
@@ -102,7 +119,7 @@ export function startsWith(str, part) {
  */
 export function endsWith(str, part) {
   let offset = str.length - part.length
-  return offset >= 0 && str.lastIndexOf(part) === offset
+  return offset >= 0 && lastIndexOf(str, part) === offset
 }
 
 /**

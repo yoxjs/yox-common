@@ -6,8 +6,6 @@ import * as array from './array'
 import * as object from './object'
 import * as string from './string'
 
-const SEPARATOR_KEY = '.'
-
 const normalizeCache = { }
 
 export function normalize(str) {
@@ -22,7 +20,7 @@ export function normalize(str) {
             if (code === char.CODE_SQUOTE || code === char.CODE_DQUOTE) {
               $1 = string.slice($1, 1, -1)
             }
-            return `${SEPARATOR_KEY}${$1}`
+            return `${env.KEYPATH_SEPARATOR}${$1}`
           }
         )
       }
@@ -38,7 +36,7 @@ function filter(term) {
 }
 
 export function parse(str, filterable = env.TRUE) {
-  let result = normalize(str).split(SEPARATOR_KEY)
+  let result = normalize(str).split(env.KEYPATH_SEPARATOR)
   return filterable ? result.filter(filter) : result
 }
 
@@ -46,7 +44,7 @@ export function stringify(keypaths, filterable = env.TRUE) {
   if (filterable) {
     keypaths = keypaths.filter(filter)
   }
-  return keypaths.join(SEPARATOR_KEY)
+  return keypaths.join(env.KEYPATH_SEPARATOR)
 }
 
 export function startsWith(keypath, prefix) {
@@ -54,18 +52,12 @@ export function startsWith(keypath, prefix) {
   if (keypath === prefix) {
     return prefix.length
   }
-  else if (string.startsWith(keypath, temp = prefix + SEPARATOR_KEY)) {
+  else if (string.startsWith(keypath, temp = prefix + env.KEYPATH_SEPARATOR)) {
     return temp.length
   }
   else {
     return env.FALSE
   }
-}
-
-export function has(keypath, part) {
-  return keypath === part
-    || string.has(keypath, SEPARATOR_KEY + part)
-    || string.has(keypath, part + SEPARATOR_KEY)
 }
 
 export function join(keypath1, keypath2) {

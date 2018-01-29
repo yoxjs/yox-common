@@ -15,6 +15,8 @@ export const RAW_UNDEFINED = 'undefined'
 export const RAW_THIS = 'this'
 export const RAW_FUNCTION = 'function'
 
+export const KEYPATH_SEPARATOR = '.'
+
 /**
  * 浏览器环境下的 window 对象
  *

@@ -4,7 +4,6 @@ import * as env from './env'
 import * as char from './char'
 import * as array from './array'
 import * as string from './string'
-import * as keypathUtil from './keypath'
 
 /**
  * 获取对象的 key 的数组
@@ -144,6 +143,39 @@ export function copy(object, deep) {
   return result
 }
 
+function eachKeypath(keypath, callback) {
+  if (string.falsy(keypath)) {
+    callback(keypath, env.TRUE)
+  }
+  else {
+    let startIndex = 0, endIndex = 0
+    while (env.TRUE) {
+      endIndex = string.indexOf(keypath, env.KEYPATH_SEPARATOR, startIndex)
+      if (endIndex > 0) {
+        callback(string.slice(keypath, startIndex, endIndex))
+        startIndex = endIndex + 1
+      }
+      else {
+        callback(string.slice(keypath, startIndex), env.TRUE)
+        break
+      }
+    }
+  }
+}
+
+function getValue(object, key) {
+  if (object != env.NULL) {
+    let value = object[ key ]
+    if (value != env.NULL) {
+      if (is.object(value) && value.get) {
+        value = value.get()
+      }
+      return {
+        value,
+      }
+    }
+  }
+}
 
 /**
  * 从对象中查找一个 keypath
@@ -157,36 +189,26 @@ export function copy(object, deep) {
  */
 export function get(object, keypath) {
 
-  if (!string.falsy(keypath)
-    && !exists(object, keypath)
-    && string.indexOf(keypath, char.CHAR_DOT) > 0
-  ) {
-    let list = keypathUtil.parse(keypath)
-    for (let i = 0, len = list.length; i < len; i++) {
-      if (i < len - 1) {
-        object = object[ list[ i ] ]
-        if (object == env.NULL) {
-          return
-        }
-        else if (is.object(object) && object.get) {
-          object = object.get()
-        }
-      }
-      else {
-        keypath = list[ i ]
-      }
-    }
+  if (exists(object, keypath)) {
+    return getValue(object, keypath)
   }
 
-  if (exists(object, keypath)) {
-    let value = object[ keypath ]
-    if (is.object(value) && value.get) {
-      value = value.get()
+  eachKeypath(
+    keypath,
+    function (key, isLast) {
+      object = getValue(object, key)
+      if (!isLast) {
+        if (object) {
+          object = object.value
+        }
+        else {
+          return env.FALSE
+        }
+      }
     }
-    return {
-      value,
-    }
-  }
+  )
+
+  return object
 
 }
 
@@ -199,32 +221,23 @@ export function get(object, keypath) {
  * @param {?boolean} autofill 是否自动填充不存在的对象，默认自动填充
  */
 export function set(object, keypath, value, autofill) {
-  if (!string.falsy(keypath)
-    && !exists(object, keypath)
-    && string.indexOf(keypath, char.CHAR_DOT) > 0
-  ) {
-    let originalObject = object
-    let list = keypathUtil.parse(keypath)
-    let name = array.pop(list)
-    array.each(
-      list,
-      function (item, index) {
-        if (object[ item ]) {
-          object = object[ item ]
+  eachKeypath(
+    keypath,
+    function (key, isLast) {
+      if (isLast) {
+        object[ key ] = value
+      }
+      else {
+        if (object[ key ]) {
+          object = object[ key ]
         }
         else if (autofill !== env.FALSE) {
-          object = object[ item ] = { }
+          object = object[ key ] = { }
         }
         else {
-          return object = env.FALSE
+          return env.FALSE
         }
       }
-    )
-    if (object && object !== originalObject) {
-      object[ name ] = value
     }
-  }
-  else {
-    object[ keypath ] = value
-  }
+  )
 }
