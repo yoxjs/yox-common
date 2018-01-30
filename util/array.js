@@ -43,6 +43,17 @@ export function merge(array1, array2) {
 }
 
 /**
+ * 把数组合并成字符串
+ *
+ * @param {Array} array
+ * @param {string} separator
+ * @return {string}
+ */
+export function join(array, separator) {
+  return array.join(separator)
+}
+
+/**
  * 添加
  *
  * @param {Array} original
