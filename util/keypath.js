@@ -36,8 +36,12 @@ function filter(term) {
 }
 
 export function parse(str, filterable = env.TRUE) {
-  let result = normalize(str).split(env.KEYPATH_SEPARATOR)
-  return filterable ? result.filter(filter) : result
+  str = normalize(str)
+  if (is.string(str) && string.has(env.KEYPATH_SEPARATOR)) {
+    let result = str.split(env.KEYPATH_SEPARATOR)
+    return filterable ? result.filter(filter) : result
+  }
+  return filterable && filter(str) ? [ str ] : [ ]
 }
 
 export function stringify(keypaths, filterable = env.TRUE) {
@@ -68,8 +72,11 @@ export function join(keypath1, keypath2) {
   if (!string.falsy(keypath1) || is.number(keypath1)) {
     array.push(result, keypath1)
   }
-  if (!string.falsy(keypath2) || is.number(keypath2)) {
+  if (is.number(keypath2)) {
     array.push(result, keypath2)
   }
-  return stringify(result, env.FALSE)
+  else if (is.string(keypath2) && filter(keypath2)) {
+    array.push(result, parse(keypath2))
+  }
+  return result.join(env.KEYPATH_SEPARATOR)
 }
