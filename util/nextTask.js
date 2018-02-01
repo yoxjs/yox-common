@@ -5,20 +5,9 @@ import * as array from './array'
 
 let nextTasks = [ ]
 
-function runTasks() {
-  let currentTasks = nextTasks
-  nextTasks = [ ]
-  array.each(
-    currentTasks,
-    function (task) {
-      task()
-    }
-  )
-}
-
 function addTask(name, task) {
   if (!nextTasks.length) {
-    nextTick(runTasks)
+    nextTick(run)
   }
   array[ name ](nextTasks, task)
 }
@@ -39,4 +28,18 @@ export function append(task) {
  */
 export function prepend(task) {
   addTask('unshift', task)
+}
+
+/**
+ * 立即执行任务
+ */
+export function run() {
+  let currentTasks = nextTasks
+  nextTasks = [ ]
+  array.each(
+    currentTasks,
+    function (task) {
+      task()
+    }
+  )
 }
