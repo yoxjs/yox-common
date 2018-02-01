@@ -53,45 +53,53 @@ export function join(array, separator) {
   return array.join(separator)
 }
 
+function nativePush(array, item) {
+  array[ array.length ] = item
+}
+
+function nativeUnshift(array, item) {
+  array.unshift(item)
+}
+
 /**
  * 添加
  *
- * @param {Array} original
+ * @param {Array} array
  * @param {*} value
- * @param {string} action
+ * @param {Function} action
  */
-function addItem(original, value, action) {
+function addItem(array, value, action) {
   if (is.array(value)) {
     each(
       value,
       function (item) {
-        original[ action ](item)
+        action(array, item)
       }
     )
   }
   else {
-    original[ action ](value)
+    action(array, value)
   }
 }
 
 /**
  * 往后加
  *
- * @param {Array} original
+ * @param {Array} array
  * @param {*} item
  */
-export function push(original, item) {
-  addItem(original, item, 'push')
+export function push(array, item) {
+  addItem(array, item, nativePush)
 }
 
 /**
  * 往前加
  *
- * @param {Array} original
+ * @param {Array} array
  * @param {*} item
  */
-export function unshift(original, item) {
-  addItem(original, item, 'unshift')
+export function unshift(array, item) {
+  addItem(array, item, nativeUnshift)
 }
 
 /**

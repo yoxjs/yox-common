@@ -4,32 +4,33 @@ import * as env from './env'
 export function is(value, type) {
   return type === 'numeric'
     ? numeric(value)
+    // 这个函数比较慢，所以下面都不用它
     : Object.prototype.toString.call(value).toLowerCase() === `[object ${type}]`
 }
 
 export function func(value) {
-  return is(value, env.RAW_FUNCTION)
+  return value && typeof value === env.RAW_FUNCTION
 }
 
 export function array(value) {
-  return is(value, 'array')
+  return value && Array.isArray(value)
 }
 
 export function object(value) {
   // 低版本 IE 会把 null 和 undefined 当作 object
-  return value && is(value, 'object')
+  return value && typeof value === 'object'
 }
 
 export function string(value) {
-  return is(value, 'string')
+  return typeof value === 'string'
 }
 
 export function number(value) {
-  return is(value, 'number')
+  return typeof value === 'number'
 }
 
 export function boolean(value) {
-  return is(value, 'boolean')
+  return typeof value === 'boolean'
 }
 
 export function numeric(value) {
