@@ -11,8 +11,6 @@ import * as string from './string'
 
 import Event from './Event'
 
-let guid = 0
-
 export default class Emitter {
 
   /**
@@ -33,66 +31,55 @@ export default class Emitter {
     if (list) {
 
       let event = is.array(data) ? data[ 0 ] : data,
-      isEvent = Event.is(event),
-      fireId = ++guid,
-      i = -1, j, item, result
+      isEvent = Event.is(event)
 
-      while (item = list[ ++i ]) {
+      array.each(
+        list.slice(),
+        function (item) {
 
-        // 当前执行 id
-        item.id = fireId
+          let index = array.indexOf(list, item)
 
-        if (space && item.space && space !== item.space) {
-          continue
-        }
-
-        result = execute(
-          item.func,
-          isDef(context) ? context : item.context,
-          data
-        )
-
-        // 执行次数
-        if (item.count > 0) {
-          item.count++
-        }
-        else {
-          item.count = 1
-        }
-
-        // 注册的 listener 可以指定最大执行次数
-        if (item.count === item.max) {
-          list.splice(i, 1)
-          execute(item.onRemove)
-        }
-
-        // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
-        if (isEvent) {
-          if (result === env.FALSE) {
-            event.prevent().stop()
+          // 在 fire 过程中被移除了
+          if (index < 0
+            || (space && item.space && space !== item.space)
+          ) {
+            return
           }
-          else if (event.isStoped) {
-            result = env.FALSE
+
+          let result = execute(
+            item.func,
+            isDef(context) ? context : item.context,
+            data
+          )
+
+          // 执行次数
+          if (item.count > 0) {
+            item.count++
           }
-        }
+          else {
+            item.count = 1
+          }
 
-        if (result === env.FALSE) {
-          return isComplete = env.FALSE
-        }
+          // 注册的 listener 可以指定最大执行次数
+          if (item.count === item.max) {
+            list.splice(index, 1)
+          }
 
-        // 解绑了一些 event handler
-        // 则往回找最远的未执行的 item
-        if (i >= 0 && item !== list[ i ]) {
-          j = i
-          while (item = list[ i ]) {
-            if (item.id !== fireId) {
-              j = i
+          // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
+          if (isEvent) {
+            if (result === env.FALSE) {
+              event.prevent().stop()
             }
-            i--
+            else if (event.isStoped) {
+              result = env.FALSE
+            }
           }
-          i = j - 1
+
+          if (result === env.FALSE) {
+            return isComplete = env.FALSE
+          }
         }
-      }
+      )
 
       if (!list.length) {
         delete listeners[ name ]
@@ -151,9 +138,8 @@ object.extend(
         array.each(
           list,
           function (item, index) {
-            if (filter(item)) {
+            if (!filter || filter(item)) {
               list.splice(index, 1)
-              execute(item.onRemove)
             }
           },
           env.TRUE,
@@ -170,9 +156,8 @@ object.extend(
             && (!listener || listener === item.func)
         }
         if (name) {
-          let list = listeners[ name ]
-          if (list) {
-            each(list, name)
+          if (listeners[ name ]) {
+            each(listeners[ name ], name)
           }
         }
         else if (space) {
@@ -180,9 +165,6 @@ object.extend(
         }
       }
       else {
-        filter = function () {
-          return env.TRUE
-        }
         object.each(listeners, each)
       }
 
@@ -209,7 +191,6 @@ function on(data) {
           listeners[ name ] || (listeners[ name ] = [ ]),
           item
         )
-        execute(item.onAdd)
       }
     }
 
