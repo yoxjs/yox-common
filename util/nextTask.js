@@ -1,12 +1,13 @@
 
 import nextTick from '../function/nextTick'
 
+import * as env from './env'
 import * as array from './array'
 
 let nextTasks = [ ]
 
 function addTask(name, task) {
-  if (!nextTasks.length) {
+  if (!nextTasks[ env.RAW_LENGTH ]) {
     nextTick(run)
   }
   array[ name ](nextTasks, task)

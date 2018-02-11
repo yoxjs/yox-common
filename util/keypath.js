@@ -54,10 +54,10 @@ export function stringify(keypaths, filterable = env.TRUE) {
 export function startsWith(keypath, prefix) {
   let temp
   if (keypath === prefix) {
-    return prefix.length
+    return prefix[ env.RAW_LENGTH ]
   }
   else if (string.startsWith(keypath, temp = prefix + env.KEYPATH_SEPARATOR)) {
-    return temp.length
+    return temp[ env.RAW_LENGTH ]
   }
   else {
     return env.FALSE

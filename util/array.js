@@ -12,7 +12,7 @@ import execute from '../function/execute'
  * @param {?boolean} reversed 是否逆序遍历
  */
 export function each(array, callback, reversed) {
-  let { length } = array
+  let length = array[ env.RAW_LENGTH ]
   if (length) {
     if (reversed) {
       for (let i = length - 1; i >= 0; i--) {
@@ -54,7 +54,7 @@ export function join(array, separator) {
 }
 
 function nativePush(array, item) {
-  array[ array.length ] = item
+  array[ array[ env.RAW_LENGTH ] ] = item
 }
 
 function nativeUnshift(array, item) {
@@ -123,7 +123,7 @@ export function toArray(array) {
  * @return {Object}
  */
 export function toObject(array, key, value) {
-  let result = { }, hasValue = arguments.length === 3
+  let result = { }, hasValue = arguments[ env.RAW_LENGTH ] === 3
   each(
     array,
     function (item, index) {
@@ -146,7 +146,7 @@ export function indexOf(array, item, strict) {
     return array.indexOf(item)
   }
   else {
-    for (let i = 0, len = array.length; i < len; i++) {
+    for (let i = 0, len = array[ env.RAW_LENGTH ]; i < len; i++) {
       if (array[ i ] == item) {
         return i
       }
@@ -174,7 +174,7 @@ export function has(array, item, strict) {
  * @return {*}
  */
 export function last(array) {
-  return array[ array.length - 1 ]
+  return array[ array[ env.RAW_LENGTH ] - 1 ]
 }
 
 /**
@@ -219,5 +219,5 @@ export function remove(array, item, strict) {
  * @return {boolean}
  */
 export function falsy(array) {
-  return !is.array(array) || array.length === 0
+  return !is.array(array) || array[ env.RAW_LENGTH ] === 0
 }

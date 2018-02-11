@@ -1,5 +1,6 @@
 
 import * as is from './is'
+import * as env from './env'
 import * as char from './char'
 import * as array from './array'
 
@@ -118,7 +119,7 @@ export function startsWith(str, part) {
  * @return {boolean}
  */
 export function endsWith(str, part) {
-  let offset = str.length - part.length
+  let offset = str[ env.RAW_LENGTH ] - part[ env.RAW_LENGTH ]
   return offset >= 0 && lastIndexOf(str, part) === offset
 }
 

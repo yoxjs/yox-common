@@ -16,11 +16,11 @@ export function keys(object) {
 }
 
 function sortByAsc(a, b) {
-  return a.length - b.length
+  return a[ env.RAW_LENGTH ] - b[ env.RAW_LENGTH ]
 }
 
 function sortByDesc(a, b) {
-  return b.length - a.length
+  return b[ env.RAW_LENGTH ] - a[ env.RAW_LENGTH ]
 }
 
 /**

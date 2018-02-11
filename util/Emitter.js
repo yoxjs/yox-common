@@ -81,7 +81,7 @@ export default class Emitter {
         }
       )
 
-      if (!list.length) {
+      if (!list[ env.RAW_LENGTH ]) {
         delete listeners[ name ]
       }
     }
@@ -144,7 +144,7 @@ object.extend(
           },
           env.TRUE,
         )
-        if (!list.length) {
+        if (!list[ env.RAW_LENGTH ]) {
           delete listeners[ name ]
         }
       }
