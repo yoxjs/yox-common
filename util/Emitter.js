@@ -34,7 +34,7 @@ export default class Emitter {
       isEvent = Event.is(event)
 
       array.each(
-        list.slice(),
+        object.copy(list),
         function (item) {
 
           let index = array.indexOf(list, item)

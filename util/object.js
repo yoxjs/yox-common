@@ -123,13 +123,18 @@ export function extend(original, object1, object2, object3) {
 export function copy(object, deep) {
   let result = object
   if (is.array(object)) {
-    result = [ ]
-    array.each(
-      object,
-      function (item, index) {
-        result[ index ] = deep ? copy(item, deep) : item
-      }
-    )
+    if (deep) {
+      result = [ ]
+      array.each(
+        object,
+        function (item, index) {
+          result[ index ] = copy(item, deep)
+        }
+      )
+    }
+    else {
+      result = object.slice()
+    }
   }
   else if (is.object(object)) {
     result = { }

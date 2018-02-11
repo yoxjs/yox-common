@@ -34,7 +34,7 @@ export function boolean(value) {
 }
 
 export function numeric(value) {
-  return !isNaN(parseFloat(value)) && isFinite(value)
+  return number(value) || (string(value) && !isNaN(parseFloat(value)) && isFinite(value))
 }
 
 export function primitive(value) {
