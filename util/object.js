@@ -63,19 +63,6 @@ export function has(object, key) {
 }
 
 /**
- * 本来想用 in，无奈关键字...
- *
- * @param {Object} object
- * @param {string} key
- * @return {boolean}
- */
-export function exists(object, key) {
-  return is.primitive(object)
-    ? has(object, key)
-    : (key in object)
-}
-
-/**
  * 清空对象所有的值
  *
  * @param {Object} object
@@ -194,7 +181,7 @@ function getValue(object, key) {
  */
 export function get(object, keypath) {
 
-  if (exists(object, keypath)) {
+  if (has(object, keypath)) {
     return getValue(object, keypath)
   }
 

@@ -35,22 +35,6 @@ function filter(term) {
     && term !== env.RAW_THIS
 }
 
-export function parse(str, filterable = env.TRUE) {
-  str = normalize(str)
-  if (is.string(str) && string.has(str, env.KEYPATH_SEPARATOR)) {
-    let result = str.split(env.KEYPATH_SEPARATOR)
-    return filterable ? result.filter(filter) : result
-  }
-  return filterable && filter(str) ? [ str ] : [ ]
-}
-
-export function stringify(keypaths, filterable = env.TRUE) {
-  if (filterable) {
-    keypaths = keypaths.filter(filter)
-  }
-  return array.join(keypaths, env.KEYPATH_SEPARATOR)
-}
-
 export function startsWith(keypath, prefix) {
   let temp
   if (keypath === prefix) {
@@ -76,7 +60,7 @@ export function join(keypath1, keypath2) {
     array.push(result, keypath2)
   }
   else if (is.string(keypath2) && filter(keypath2)) {
-    array.push(result, parse(keypath2))
+    array.push(result, keypath2)
   }
   return array.join(result, env.KEYPATH_SEPARATOR)
 }

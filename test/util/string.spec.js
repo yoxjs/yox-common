@@ -31,18 +31,6 @@ describe('util/string', () => {
     expect(string.slice('123456', 2, -1)).toBe(str.slice(2, -1))
   })
 
-  it('split', () => {
-    let arr = string.split('123;456', ';')
-    expect(arr.length).toBe(2)
-    expect(arr[0]).toBe('123')
-    expect(arr[1]).toBe('456')
-
-    arr = string.split('123 ; 456', ';')
-    expect(arr.length).toBe(2)
-    expect(arr[0]).toBe('123')
-    expect(arr[1]).toBe('456')
-  })
-
   it('startsWith', () => {
     expect(string.startsWith('123', '12')).toBe(true)
     expect(string.startsWith('123', '1234')).toBe(false)

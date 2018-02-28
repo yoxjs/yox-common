@@ -32,17 +32,6 @@ export function each(array, callback, reversed) {
 }
 
 /**
- * 合并两个数组
- *
- * @param {Array} array1
- * @param {Array} array2
- * @return {Array}
- */
-export function merge(array1, array2) {
-  return array1.concat(array2)
-}
-
-/**
  * 把数组合并成字符串
  *
  * @param {Array} array

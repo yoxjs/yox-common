@@ -47,21 +47,6 @@ export function slice(str, start, end) {
 }
 
 /**
- * 分割字符串
- *
- * @param {string} str
- * @param {string} delimiter
- * @return {Array}
- */
-export function split(str, delimiter) {
-  return falsy(str)
-    ? [ ]
-    : str.split(
-        new RegExp(`\\s*${delimiter.replace(/[.*?]/g, '\\$&')}\\s*`)
-      )
-}
-
-/**
  * 获取子串的起始位置
  *
  * @param {string} str

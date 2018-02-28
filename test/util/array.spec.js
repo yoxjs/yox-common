@@ -89,25 +89,6 @@ describe('util/array', () => {
     expect(result['2']).toBe(true)
 
   })
-  it('merge', () => {
-    let array1 = [1, 2, 3]
-    let array2 = [4, 5, 6]
-    let newArray = array.merge(array1, array2)
-
-    expect(newArray).not.toBe(array1)
-    expect(newArray).not.toBe(array2)
-    expect(array1.length).toBe(3)
-    expect(array2.length).toBe(3)
-    expect(newArray.length).toBe(6)
-
-    array.each(
-      newArray,
-      function (value, index) {
-        expect(value).toBe(index + 1)
-      }
-    )
-
-  })
   it('push', () => {
     let array1 = [1, 2, 3]
     let array2 = [4, 5, 6]
