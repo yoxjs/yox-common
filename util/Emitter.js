@@ -84,9 +84,11 @@ export default class Emitter {
       // 这里可能出现 listeners[ name ] !== list 的情况
       // 比如在 fire 过程中，先 off 了，导致 delete listeners[ name ]
       // 然后又 on 一次，因此新创建了一个数组
-      if (!listeners[ name ][ env.RAW_LENGTH ]) {
+      list = listeners[ name ]
+      if (list && !list[ env.RAW_LENGTH ]) {
         delete listeners[ name ]
       }
+
     }
 
     return isComplete
