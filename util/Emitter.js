@@ -24,14 +24,14 @@ export default class Emitter {
 
   fire(type, data, context) {
 
-    let { namespace, listeners } = this
+    let instance = this
+    let { namespace, listeners } = instance
     let { name, space } = parseType(type, namespace)
 
     let isComplete = env.TRUE, list = listeners[ name ]
     if (list) {
 
-      let event = is.array(data) ? data[ 0 ] : data,
-      isEvent = Event.is(event)
+      let event = is.array(data) ? data[ 0 ] : data, isEvent = Event.is(event)
 
       array.each(
         object.copy(list),
@@ -62,7 +62,7 @@ export default class Emitter {
 
           // 注册的 listener 可以指定最大执行次数
           if (item.count === item.max) {
-            list.splice(index, 1)
+            instance.off(name, item)
           }
 
           // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
@@ -80,14 +80,6 @@ export default class Emitter {
           }
         }
       )
-
-      // 这里可能出现 listeners[ name ] !== list 的情况
-      // 比如在 fire 过程中，先 off 了，导致 delete listeners[ name ]
-      // 然后又 on 一次，因此新创建了一个数组
-      list = listeners[ name ]
-      if (list && !list[ env.RAW_LENGTH ]) {
-        delete listeners[ name ]
-      }
 
     }
 
@@ -136,30 +128,37 @@ object.extend(
     once: on({ max: 1 }),
     off(type, listener) {
 
-      let instance = this, filter
-      let { listeners } = instance
-
-      let each = function (list, name) {
-        array.each(
-          list,
-          function (item, index) {
-            if (!filter || filter(item)) {
-              list.splice(index, 1)
-            }
-          },
-          env.TRUE,
-        )
-        if (!list[ env.RAW_LENGTH ]) {
-          delete listeners[ name ]
-        }
-      }
+      let instance = this, listeners = instance.listeners
 
       if (type) {
+
         let { name, space } = parseType(type, instance.namespace)
-        filter = function (item) {
-          return (!space || space === item.space)
-            && (!listener || listener === item.func)
+
+        let each = function (list, name) {
+          if (is.object(listener)) {
+            let index = array.indexOf(list, listener)
+            if (index >= 0) {
+              list.splice(index, 1)
+            }
+          }
+          else {
+            array.each(
+              list,
+              function (item, index) {
+                if ((!space || space === item.space)
+                  && (!listener || listener === item.func)
+                ) {
+                  list.splice(index, 1)
+                }
+              },
+              env.TRUE,
+            )
+          }
+          if (!list[ env.RAW_LENGTH ]) {
+            delete listeners[ name ]
+          }
         }
+
         if (name) {
           if (listeners[ name ]) {
             each(listeners[ name ], name)
@@ -168,9 +167,11 @@ object.extend(
         else if (space) {
           object.each(listeners, each)
         }
+
       }
       else {
-        object.each(listeners, each)
+        // 清空
+        instance.listeners = { }
       }
 
     }
