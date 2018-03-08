@@ -44,13 +44,21 @@ export function startsWith(keypath, prefix) {
 }
 
 function isValidTerm(term) {
-  return is.number(term)
-    || (is.string(term) && term !== char.CHAR_BLANK)
+  return is.number(term) || is.string(term)
 }
 
 export function join(keypath1, keypath2) {
-  let keypath = isValidTerm(keypath1) ? keypath1 : char.CHAR_BLANK
-  return isValidTerm(keypath2)
-    ? (keypath + env.KEYPATH_SEPARATOR + keypath2)
-    : keypath
+
+  let keypath = keypath1 === char.CHAR_BLANK || isValidTerm(keypath1)
+    ? keypath1
+    : char.CHAR_BLANK
+
+  if (keypath2 !== char.CHAR_BLANK && isValidTerm(keypath2)) {
+    return keypath === char.CHAR_BLANK
+      ? keypath2
+      : (keypath + env.KEYPATH_SEPARATOR + keypath2)
+  }
+
+  return keypath
+
 }
