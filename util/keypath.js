@@ -20,7 +20,7 @@ export function normalize(str) {
             if (code === char.CODE_SQUOTE || code === char.CODE_DQUOTE) {
               $1 = string.slice($1, 1, -1)
             }
-            return `${env.KEYPATH_SEPARATOR}${$1}`
+            return env.KEYPATH_SEPARATOR + $1
           }
         )
       }
@@ -28,11 +28,6 @@ export function normalize(str) {
     }
   }
   return str
-}
-
-function filter(term) {
-  return term !== char.CHAR_BLANK
-    && term !== env.RAW_THIS
 }
 
 export function startsWith(keypath, prefix) {
@@ -48,19 +43,14 @@ export function startsWith(keypath, prefix) {
   }
 }
 
+function isValidTerm(term) {
+  return is.number(term)
+    || (is.string(term) && term !== char.CHAR_BLANK)
+}
+
 export function join(keypath1, keypath2) {
-  // keypath 可以是两种形式
-  // 1. 非空字符串
-  // 2. 数字
-  let result = [ ]
-  if (!string.falsy(keypath1) || is.number(keypath1)) {
-    array.push(result, keypath1)
-  }
-  if (is.number(keypath2)) {
-    array.push(result, keypath2)
-  }
-  else if (is.string(keypath2) && filter(keypath2)) {
-    array.push(result, keypath2)
-  }
-  return array.join(result, env.KEYPATH_SEPARATOR)
+  let keypath = isValidTerm(keypath1) ? keypath1 : char.CHAR_BLANK
+  return isValidTerm(keypath2)
+    ? (keypath + env.KEYPATH_SEPARATOR + keypath2)
+    : keypath
 }
