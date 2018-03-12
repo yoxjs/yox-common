@@ -156,15 +156,13 @@ function eachKeypath(keypath, callback) {
 }
 
 function getValue(object, key) {
-  if (object != env.NULL) {
+  if (object != env.NULL && has(object, key)) {
     let value = object[ key ]
-    if (value != env.NULL) {
-      if (is.object(value) && value.get) {
-        value = value.get()
-      }
-      return {
-        value,
-      }
+    if (is.object(value) && value.get) {
+      value = value.get()
+    }
+    return {
+      value,
     }
   }
 }
