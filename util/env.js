@@ -14,6 +14,7 @@ export const RAW_UNDEFINED = 'undefined'
 
 export const RAW_THIS = 'this'
 export const RAW_LENGTH = 'length'
+export const RAW_CHILDREN = 'children'
 export const RAW_FUNCTION = 'function'
 
 export const KEYPATH_SEPARATOR = '.'
