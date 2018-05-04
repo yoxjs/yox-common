@@ -18,7 +18,12 @@ export const RAW_CHILDREN = 'children'
 export const RAW_FUNCTION = 'function'
 
 export const KEYPATH_SEPARATOR = '.'
-export const KEYPATH_PARENT = '..'
+
+export const KEYPATH_PUBLIC_PARENT = '..'
+export const KEYPATH_PRIVATE_PARENT = '$parent'
+
+export const KEYPATH_PUBLIC_CURRENT = RAW_THIS
+export const KEYPATH_PRIVATE_CURRENT = '$this'
 
 /**
  * 浏览器环境下的 window 对象

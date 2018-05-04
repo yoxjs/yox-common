@@ -5,8 +5,6 @@ import * as char from './char'
 import * as array from './array'
 import * as string from './string'
 
-import * as config from 'yox-config'
-
 const normalizeCache = { }
 
 export function normalize(str) {
@@ -76,17 +74,21 @@ export function join(keypath1, keypath2) {
     if (keypath === char.CHAR_BLANK) {
       return keypath2
     }
-    if (isNumber || !string.has(keypath2, config.SPECIAL_PARENT)) {
+    if (isNumber
+      || (!string.has(keypath2, env.KEYPATH_PRIVATE_CURRENT)
+        && !string.has(keypath2, env.KEYPATH_PRIVATE_PARENT)
+        )
+    ) {
       return keypath + env.KEYPATH_SEPARATOR + keypath2
     }
     let result = keypath.split(env.KEYPATH_SEPARATOR)
     each(
       keypath2,
       function (key) {
-        if (key === config.SPECIAL_PARENT) {
+        if (key === env.KEYPATH_PRIVATE_PARENT) {
           array.pop(result)
         }
-        else {
+        else if (key !== env.KEYPATH_PRIVATE_CURRENT) {
           array.push(result, key)
         }
       }
