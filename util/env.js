@@ -18,6 +18,7 @@ export const RAW_CHILDREN = 'children'
 export const RAW_FUNCTION = 'function'
 
 export const KEYPATH_SEPARATOR = '.'
+export const KEYPATH_PARENT = '..'
 
 /**
  * 浏览器环境下的 window 对象

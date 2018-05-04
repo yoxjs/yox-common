@@ -13,10 +13,9 @@ if (typeof setImmediate === env.RAW_FUNCTION) {
 // 原理是将新的 message 事件加入到原有的 dom events 之后
 else if (typeof MessageChannel === env.RAW_FUNCTION) {
   nextTick = function (fn) {
-    var channel = new MessageChannel()
-    var port = channel.port2
+    let channel = new MessageChannel()
     channel.port1.onmessage = fn
-    port.postMessage(1)
+    channel.port2.postMessage(1)
   }
 }
 else if (typeof Promise === env.RAW_FUNCTION && isNative(Promise)) {
