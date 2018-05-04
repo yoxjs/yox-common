@@ -4,6 +4,7 @@ import * as env from './env'
 import * as char from './char'
 import * as array from './array'
 import * as string from './string'
+import * as keypathUtil from './keypath'
 
 /**
  * 获取对象的 key 的数组
@@ -135,26 +136,6 @@ export function copy(object, deep) {
   return result
 }
 
-function eachKeypath(keypath, callback) {
-  if (string.falsy(keypath)) {
-    callback(keypath, env.TRUE)
-  }
-  else {
-    let startIndex = 0, endIndex = 0
-    while (env.TRUE) {
-      endIndex = string.indexOf(keypath, env.KEYPATH_SEPARATOR, startIndex)
-      if (endIndex > 0) {
-        callback(string.slice(keypath, startIndex, endIndex))
-        startIndex = endIndex + 1
-      }
-      else {
-        callback(string.slice(keypath, startIndex), env.TRUE)
-        break
-      }
-    }
-  }
-}
-
 function getValue(object, key) {
   if (object != env.NULL && has(object, key)) {
     let value = object[ key ]
@@ -183,7 +164,7 @@ export function get(object, keypath) {
     return getValue(object, keypath)
   }
 
-  eachKeypath(
+  keypathUtil.each(
     keypath,
     function (key, isLast) {
       object = getValue(object, key)
@@ -211,7 +192,7 @@ export function get(object, keypath) {
  * @param {?boolean} autofill 是否自动填充不存在的对象，默认自动填充
  */
 export function set(object, keypath, value, autofill) {
-  eachKeypath(
+  keypathUtil.each(
     keypath,
     function (key, isLast) {
       if (isLast) {

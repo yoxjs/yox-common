@@ -3,8 +3,9 @@ import * as is from './is'
 import * as env from './env'
 import * as char from './char'
 import * as array from './array'
-import * as object from './object'
 import * as string from './string'
+
+import * as config from 'yox-config'
 
 const normalizeCache = { }
 
@@ -43,20 +44,54 @@ export function startsWith(keypath, prefix) {
   }
 }
 
-function isValidTerm(term) {
-  return is.number(term) || is.string(term)
+export function each(keypath, callback) {
+  if (string.falsy(keypath)) {
+    callback(keypath, env.TRUE)
+  }
+  else {
+    let startIndex = 0, endIndex = 0
+    while (env.TRUE) {
+      endIndex = string.indexOf(keypath, env.KEYPATH_SEPARATOR, startIndex)
+      if (endIndex > 0) {
+        callback(string.slice(keypath, startIndex, endIndex))
+        startIndex = endIndex + 1
+      }
+      else {
+        callback(string.slice(keypath, startIndex), env.TRUE)
+        break
+      }
+    }
+  }
 }
 
 export function join(keypath1, keypath2) {
 
-  let keypath = keypath1 === char.CHAR_BLANK || isValidTerm(keypath1)
+  let keypath = is.number(keypath1) || is.string(keypath1)
     ? keypath1
     : char.CHAR_BLANK
 
-  if (keypath2 !== char.CHAR_BLANK && isValidTerm(keypath2)) {
-    return keypath === char.CHAR_BLANK
-      ? keypath2
-      : (keypath + env.KEYPATH_SEPARATOR + keypath2)
+  let isNumber, isString
+
+  if ((isNumber = is.number(keypath2)) || (isString = is.string(keypath2))) {
+    if (keypath === char.CHAR_BLANK) {
+      return keypath2
+    }
+    if (isNumber || !string.has(keypath2, config.SPECIAL_PARENT)) {
+      return keypath + env.KEYPATH_SEPARATOR + keypath2
+    }
+    let result = keypath.split(env.KEYPATH_SEPARATOR)
+    each(
+      keypath2,
+      function (key) {
+        if (key === config.SPECIAL_PARENT) {
+          array.pop(result)
+        }
+        else {
+          array.push(result, key)
+        }
+      }
+    )
+    return array.join(result, env.KEYPATH_SEPARATOR)
   }
 
   return keypath

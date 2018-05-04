@@ -1,6 +1,6 @@
 {
   "name": "yox-common",
-  "version": "0.14.9",
+  "version": "0.15.0",
   "description": "Common code for Yox.js",
   "directories": {
     "example": "example",
@@ -25,5 +25,8 @@
     "babel-polyfill": "^6.23.0",
     "babel-preset-es2015": "^6.24.0",
     "babel-register": "^6.24.0"
+  },
+  "dependencies": {
+    "yox-config": "0.0.6"
   }
 }
