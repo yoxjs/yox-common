@@ -74,26 +74,9 @@ export function join(keypath1, keypath2) {
     if (keypath === char.CHAR_BLANK) {
       return keypath2
     }
-    if (isNumber
-      || (!string.has(keypath2, env.KEYPATH_PRIVATE_CURRENT)
-        && !string.has(keypath2, env.KEYPATH_PRIVATE_PARENT)
-        )
-    ) {
+    if (isNumber || keypath2 !== char.CHAR_BLANK) {
       return keypath + env.KEYPATH_SEPARATOR + keypath2
     }
-    let result = keypath.split(env.KEYPATH_SEPARATOR)
-    each(
-      keypath2,
-      function (key) {
-        if (key === env.KEYPATH_PRIVATE_PARENT) {
-          array.pop(result)
-        }
-        else if (key !== env.KEYPATH_PRIVATE_CURRENT) {
-          array.push(result, key)
-        }
-      }
-    )
-    return array.join(result, env.KEYPATH_SEPARATOR)
   }
 
   return keypath
