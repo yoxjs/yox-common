@@ -46,6 +46,16 @@ export default class Emitter {
             return
           }
 
+          // 为 event 对象加上当前正在处理的 listener
+          // 这样方便业务层移除事件绑定
+          // 比如 on('xx', function) 这样定义了匿名 listener
+          // 在这个 listener 里面获取不到当前 listener 的引用
+          // 为了能引用到，有时候会先定义 var listener = function,
+          // 然后再 on('xx', listener) 这样其实是没有必要的
+          if (isEvent) {
+            event.listener = item.func
+          }
+
           let result = execute(
             item.func,
             isDef(context) ? context : item.context,
