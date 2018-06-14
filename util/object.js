@@ -170,7 +170,7 @@ export function get(object, keypath) {
       object = getValue(object, key)
       if (!isLast) {
         if (object) {
-          object = object.value
+          object = object[ env.RAW_VALUE ]
         }
         else {
           return env.FALSE
