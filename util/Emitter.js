@@ -210,9 +210,10 @@ function on(data) {
           object.extend(item, data)
         }
         let target = parseType(type, namespace),
+        name = target[ env.RAW_NAME ]
         item.space = target.space
         array.push(
-          listeners[ target[ env.RAW_NAME ] ] || (listeners[ target[ env.RAW_NAME ] ] = [ ]),
+          listeners[ name ] || (listeners[ name ] = [ ]),
           item
         )
       }
