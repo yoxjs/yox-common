@@ -5,17 +5,6 @@ import * as char from './char'
 import * as array from './array'
 import * as string from './string'
 
-export function normalize(str) {
-  if (!string.falsy(str)) {
-    let start = string.indexOf(str, char.CHAR_OBRACK)
-    if (start > 0 && string.indexOf(str, char.CHAR_CBRACK) > start) {
-      // 临时代码，提醒一段时间就删掉
-      console.error('不支持 "${str}" 写法')
-    }
-  }
-  return str
-}
-
 export function startsWith(keypath, prefix) {
   let temp
   if (keypath === prefix) {

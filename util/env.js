@@ -13,6 +13,7 @@ export const RAW_NULL = 'null'
 export const RAW_UNDEFINED = 'undefined'
 
 export const RAW_THIS = 'this'
+export const RAW_NAME = 'name'
 export const RAW_VALUE = 'value'
 export const RAW_LENGTH = 'length'
 export const RAW_CHILDREN = 'children'

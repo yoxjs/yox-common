@@ -24,11 +24,13 @@ export default class Emitter {
 
   fire(type, data, context) {
 
-    let instance = this
-    let { namespace, listeners } = instance
-    let { name, space } = parseType(type, namespace)
+    let instance = this,
+    { namespace, listeners } = instance,
+    target = parseType(type, namespace),
+    list = listeners[ target[ env.RAW_NAME ] ],
+    space = target.space,
+    isComplete = env.TRUE
 
-    let isComplete = env.TRUE, list = listeners[ name ]
     if (list) {
 
       let event = is.array(data) ? data[ 0 ] : data, isEvent = Event.is(event)
@@ -99,7 +101,11 @@ export default class Emitter {
 
   has(type, listener) {
 
-    let { namespace, listeners } = this, { name, space } = parseType(type, namespace), result = env.TRUE
+    let { namespace, listeners } = this,
+    target = parseType(type, namespace),
+    name = target[ env.RAW_NAME ],
+    space = target.space,
+    result = env.TRUE
 
     let each = function (list) {
       array.each(
@@ -142,7 +148,9 @@ object.extend(
 
       if (type) {
 
-        let { name, space } = parseType(type, instance.namespace)
+        let target = parseType(type, instance.namespace),
+        name = target[ env.RAW_NAME ],
+        space = target.space
 
         let each = function (list, name) {
           if (is.object(listener)) {
@@ -201,10 +209,10 @@ function on(data) {
         if (data) {
           object.extend(item, data)
         }
-        let { name, space } = parseType(type, namespace)
-        item.space = space
+        let target = parseType(type, namespace),
+        item.space = target.space
         array.push(
-          listeners[ name ] || (listeners[ name ] = [ ]),
+          listeners[ target[ env.RAW_NAME ] ] || (listeners[ target[ env.RAW_NAME ] ] = [ ]),
           item
         )
       }
@@ -228,7 +236,7 @@ function parseType(type, namespace) {
   if (namespace) {
     let index = string.indexOf(type, char.CHAR_DOT)
     if (index >= 0) {
-      result.name = string.slice(type, 0, index)
+      result[ env.RAW_NAME ] = string.slice(type, 0, index)
       result.space = string.slice(type, index + 1)
     }
   }
