@@ -5,12 +5,12 @@ import * as env from './env'
 export default class Event {
 
   constructor(event) {
-    if (event.type) {
-      this.type = event.type
+    if (event[ env.RAW_TYPE ]) {
+      this[ env.RAW_TYPE ] = event[ env.RAW_TYPE ]
       this.originalEvent = event
     }
     else {
-      this.type = event
+      this[ env.RAW_TYPE ] = event
     }
   }
 
