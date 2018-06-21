@@ -27,8 +27,9 @@ export default class Emitter {
     let instance = this,
     { namespace, listeners } = instance,
     target = parseType(type, namespace),
-    list = listeners[ target[ env.RAW_NAME ] ],
+    name = target[ env.RAW_NAME ],
     space = target.space,
+    list = listeners[ name ],
     isComplete = env.TRUE
 
     if (list) {
