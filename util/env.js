@@ -14,6 +14,8 @@ export const RAW_UNDEFINED = 'undefined'
 
 export const RAW_THIS = 'this'
 export const RAW_TYPE = 'type'
+export const RAW_TEXT = 'text'
+export const RAW_EXPR = 'expr'
 export const RAW_NAME = 'name'
 export const RAW_VALUE = 'value'
 export const RAW_LENGTH = 'length'
