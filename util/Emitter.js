@@ -11,10 +11,11 @@ import * as string from './string'
 
 import Event from './Event'
 
+const RAW_SPACE = 'space'
+
 export default class Emitter {
 
   /**
-   *
    * @param {boolean} namespace 是否需要命名空间
    */
   constructor(namespace) {
@@ -28,23 +29,22 @@ export default class Emitter {
     { namespace, listeners } = instance,
     target = parseType(type, namespace),
     name = target[ env.RAW_NAME ],
-    space = target.space,
+    space = target[ RAW_SPACE ],
     list = listeners[ name ],
     isComplete = env.TRUE
 
     if (list) {
 
-      let event = is.array(data) ? data[ 0 ] : data, isEvent = Event.is(event)
+      let event = is.array(data) ? data[ 0 ] : data,
+      isEvent = Event.is(event)
 
       array.each(
         object.copy(list),
         function (item) {
 
-          let index = array.indexOf(list, item)
-
           // 在 fire 过程中被移除了
-          if (index < 0
-            || (space && item.space && space !== item.space)
+          if (!array.has(list, item)
+            || (space && item[ RAW_SPACE ] && space !== item[ RAW_SPACE ])
           ) {
             return
           }
@@ -66,12 +66,7 @@ export default class Emitter {
           )
 
           // 执行次数
-          if (item.count > 0) {
-            item.count++
-          }
-          else {
-            item.count = 1
-          }
+          item.count = item.count > 0 ? (item.count + 1) : 1
 
           // 注册的 listener 可以指定最大执行次数
           if (item.count === item.max) {
@@ -105,14 +100,14 @@ export default class Emitter {
     let { namespace, listeners } = this,
     target = parseType(type, namespace),
     name = target[ env.RAW_NAME ],
-    space = target.space,
+    space = target[ RAW_SPACE ],
     result = env.TRUE
 
     let each = function (list) {
       array.each(
         list,
         function (item, index) {
-          if ((!space || space === item.space)
+          if ((!space || space === item[ RAW_SPACE ])
             && (!listener || listener === item.func)
           ) {
             return result = env.FALSE
@@ -145,13 +140,14 @@ object.extend(
     once: on({ max: 1 }),
     off(type, listener) {
 
-      let instance = this, listeners = instance.listeners
+      let instance = this,
+      listeners = instance.listeners
 
       if (type) {
 
         let target = parseType(type, instance.namespace),
         name = target[ env.RAW_NAME ],
-        space = target.space
+        space = target[ RAW_SPACE ]
 
         let each = function (list, name) {
           if (is.object(listener)) {
@@ -164,7 +160,7 @@ object.extend(
             array.each(
               list,
               function (item, index) {
-                if ((!space || space === item.space)
+                if ((!space || space === item[ RAW_SPACE ])
                   && (!listener || listener === item.func)
                 ) {
                   list.splice(index, 1)
@@ -211,8 +207,8 @@ function on(data) {
           object.extend(item, data)
         }
         let target = parseType(type, namespace),
-        name = target[ env.RAW_NAME ]
-        item.space = target.space
+        name = target[ env.RAW_NAME ],
+        item[ RAW_SPACE ] = target[ RAW_SPACE ]
         array.push(
           listeners[ name ] || (listeners[ name ] = [ ]),
           item
@@ -231,15 +227,14 @@ function on(data) {
 }
 
 function parseType(type, namespace) {
-  let result = {
-    name: type,
-    space: char.CHAR_BLANK,
-  }
+  let result = { }
+  result[ env.RAW_NAME ] = type
+  result[ RAW_SPACE ] = char.CHAR_BLANK
   if (namespace) {
     let index = string.indexOf(type, char.CHAR_DOT)
     if (index >= 0) {
       result[ env.RAW_NAME ] = string.slice(type, 0, index)
-      result.space = string.slice(type, index + 1)
+      result[ RAW_SPACE ] = string.slice(type, index + 1)
     }
   }
   return result
