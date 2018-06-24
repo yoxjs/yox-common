@@ -207,7 +207,7 @@ function on(data) {
           object.extend(item, data)
         }
         let target = parseType(type, namespace),
-        name = target[ env.RAW_NAME ],
+        name = target[ env.RAW_NAME ]
         item[ RAW_SPACE ] = target[ RAW_SPACE ]
         array.push(
           listeners[ name ] || (listeners[ name ] = [ ]),
