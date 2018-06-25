@@ -6,6 +6,7 @@ import * as char from '../util/char'
 
 let nextTick
 
+// 实现为 macrotask
 if (typeof setImmediate === env.RAW_FUNCTION) {
   nextTick = setImmediate
 }
@@ -16,11 +17,6 @@ else if (typeof MessageChannel === env.RAW_FUNCTION) {
     let channel = new MessageChannel()
     channel.port1.onmessage = fn
     channel.port2.postMessage(1)
-  }
-}
-else if (typeof Promise === env.RAW_FUNCTION && isNative(Promise)) {
-  nextTick = function (fn) {
-    Promise.resolve().then(fn)
   }
 }
 else {
