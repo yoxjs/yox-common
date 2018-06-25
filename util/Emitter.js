@@ -12,6 +12,8 @@ import * as string from './string'
 import Event from './Event'
 
 const RAW_SPACE = 'space'
+const RAW_NAMESPACE = 'namespace'
+const RAW_LISTENERS = 'listeners'
 
 export default class Emitter {
 
@@ -19,14 +21,15 @@ export default class Emitter {
    * @param {boolean} namespace 是否需要命名空间
    */
   constructor(namespace) {
-    this.namespace = namespace
-    this.listeners = { }
+    this[ RAW_NAMESPACE ] = namespace
+    this[ RAW_LISTENERS ] = { }
   }
 
   fire(type, data, context) {
 
     let instance = this,
-    { namespace, listeners } = instance,
+    namespace = instance[ RAW_NAMESPACE ],
+    listeners = instance[ RAW_LISTENERS ],
     target = parseType(type, namespace),
     name = target[ env.RAW_NAME ],
     space = target[ RAW_SPACE ],
@@ -97,7 +100,8 @@ export default class Emitter {
 
   has(type, listener) {
 
-    let { namespace, listeners } = this,
+    let namespace = this[ RAW_NAMESPACE ],
+    listeners = this[ RAW_LISTENERS ],
     target = parseType(type, namespace),
     name = target[ env.RAW_NAME ],
     space = target[ RAW_SPACE ],
@@ -141,15 +145,14 @@ object.extend(
     off(type, listener) {
 
       let instance = this,
-      listeners = instance.listeners
+      listeners = instance[ RAW_LISTENERS ]
 
       if (type) {
 
-        let target = parseType(type, instance.namespace),
+        let target = parseType(type, instance[ RAW_NAMESPACE ]),
         name = target[ env.RAW_NAME ],
-        space = target[ RAW_SPACE ]
-
-        let each = function (list, name) {
+        space = target[ RAW_SPACE ],
+        each = function (list, name) {
           if (is.object(listener)) {
             let index = array.indexOf(list, listener)
             if (index >= 0) {
@@ -186,7 +189,7 @@ object.extend(
       }
       else {
         // 清空
-        instance.listeners = { }
+        instance[ RAW_LISTENERS ] = { }
       }
 
     }
@@ -196,9 +199,9 @@ object.extend(
 function on(data) {
   return function (type, listener) {
 
-    let { namespace, listeners } = this
-
-    let addListener = function (item, type) {
+    let namespace = this[ RAW_NAMESPACE ],
+    listeners = this[ RAW_LISTENERS ],
+    addListener = function (item, type) {
       if (is.func(item)) {
         item = { func: item }
       }

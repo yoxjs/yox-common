@@ -6,16 +6,14 @@ import * as array from './array'
 import * as string from './string'
 
 export function startsWith(keypath, prefix) {
-  let temp
   if (keypath === prefix) {
     return prefix[ env.RAW_LENGTH ]
   }
-  else if (string.startsWith(keypath, temp = prefix + env.KEYPATH_SEPARATOR)) {
+  let temp
+  if (string.startsWith(keypath, temp = prefix + env.KEYPATH_SEPARATOR)) {
     return temp[ env.RAW_LENGTH ]
   }
-  else {
-    return env.FALSE
-  }
+  return env.FALSE
 }
 
 export function each(keypath, callback) {
@@ -42,9 +40,9 @@ export function join(keypath1, keypath2) {
 
   let keypath = is.number(keypath1) || is.string(keypath1)
     ? keypath1
-    : char.CHAR_BLANK
-
-  let isNumber, isString
+    : char.CHAR_BLANK,
+  isNumber,
+  isString
 
   if ((isNumber = is.number(keypath2)) || (isString = is.string(keypath2))) {
     if (keypath === char.CHAR_BLANK) {
