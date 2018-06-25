@@ -1,6 +1,4 @@
 
-import isNative from './isNative'
-
 import * as env from '../util/env'
 import * as char from '../util/char'
 
