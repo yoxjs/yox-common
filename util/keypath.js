@@ -2,16 +2,15 @@
 import * as is from './is'
 import * as env from './env'
 import * as char from './char'
-import * as array from './array'
 import * as string from './string'
 
 export function startsWith(keypath, prefix) {
   if (keypath === prefix) {
     return prefix[ env.RAW_LENGTH ]
   }
-  let temp
-  if (string.startsWith(keypath, temp = prefix + env.KEYPATH_SEPARATOR)) {
-    return temp[ env.RAW_LENGTH ]
+  prefix += env.KEYPATH_SEPARATOR
+  if (string.startsWith(keypath, prefix)) {
+    return prefix[ env.RAW_LENGTH ]
   }
   return env.FALSE
 }
@@ -38,11 +37,10 @@ export function each(keypath, callback) {
 
 export function join(keypath1, keypath2) {
 
-  let keypath = is.number(keypath1) || is.string(keypath1)
+  let isNumber, isString,
+  keypath = is.number(keypath1) || is.string(keypath1)
     ? keypath1
-    : char.CHAR_BLANK,
-  isNumber,
-  isString
+    : char.CHAR_BLANK
 
   if ((isNumber = is.number(keypath2)) || (isString = is.string(keypath2))) {
     if (keypath === char.CHAR_BLANK) {

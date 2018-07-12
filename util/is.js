@@ -1,11 +1,13 @@
 
 import * as env from './env'
 
+const { toString } = Object.prototype
+
 export function is(value, type) {
   return type === 'numeric'
     ? numeric(value)
     // 这个函数比较慢，所以下面都不用它
-    : Object.prototype.toString.call(value).toLowerCase() === `[object ${type}]`
+    : toString.call(value).toLowerCase() === `[object ${type}]`
 }
 
 export function func(value) {
