@@ -115,7 +115,7 @@ export function toObject(array, key, value) {
   let result = { }, hasValue = arguments[ env.RAW_LENGTH ] === 3
   each(
     array,
-    function (item, index) {
+    function (item) {
       result[ key ? item[ key ] : item ] = hasValue ? value : item
     }
   )
