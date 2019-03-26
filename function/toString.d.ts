@@ -1,1 +1,1 @@
-export default function (str: any, defaultValue?: string): string;
+export default function (target: any, defaultValue?: string): string;
