@@ -8,15 +8,15 @@ describe('function/toString', () => {
     )
     .toBe('')
     expect(
-      toString()
+      toString(undefined)
     )
     .toBe('')
   })
   it('custom defaultValue', () => {
     expect(
-      toString(null, 1)
+      toString(null, '1')
     )
-    .toBe(1)
+    .toBe('1')
   })
   it('string', () => {
     expect(
