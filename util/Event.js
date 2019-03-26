@@ -1,55 +1,63 @@
-
-import * as is from './is'
-import * as env from './env'
-
+import * as is from './is';
+import * as env from './env';
 export default class Event {
-
-  constructor(event) {
-    if (event[ env.RAW_TYPE ]) {
-      this[ env.RAW_TYPE ] = event[ env.RAW_TYPE ]
-      this.originalEvent = event
+    /**
+     * target 是否是 Event 实例
+     */
+    static is(target) {
+        return target instanceof Event;
     }
-    else {
-      this[ env.RAW_TYPE ] = event
+    /**
+     * 构造函数
+     *
+     * 可以传事件名称，也可以传原生事件对象
+     */
+    constructor(event) {
+        let instance = this;
+        if (is.string(event)) {
+            instance.type = event;
+        }
+        else {
+            instance.type = event.type;
+            instance.originalEvent = event;
+        }
     }
-  }
-
-  prevent() {
-    let instance = this
-    if (!instance.isPrevented) {
-      let { originalEvent } = instance
-      if (originalEvent) {
-        if (is.func(originalEvent.prevent)) {
-          originalEvent.prevent()
+    /**
+     * 阻止事件的默认行为
+     */
+    prevent() {
+        let instance = this;
+        if (!instance.isPrevented) {
+            let { originalEvent } = instance;
+            if (originalEvent) {
+                if (is.func(originalEvent.prevent)) {
+                    originalEvent.prevent();
+                }
+                else if (is.func(originalEvent.preventDefault)) {
+                    originalEvent.preventDefault();
+                }
+            }
+            instance.isPrevented = env.TRUE;
         }
-        else if (is.func(originalEvent.preventDefault)) {
-          originalEvent.preventDefault()
-        }
-      }
-      instance.isPrevented = env.TRUE
+        return instance;
     }
-    return instance
-  }
-
-  stop() {
-    let instance = this
-    if (!instance.isStoped) {
-      let { originalEvent } = instance
-      if (originalEvent) {
-        if (is.func(originalEvent.stop)) {
-          originalEvent.stop()
+    /**
+     * 停止事件广播
+     */
+    stop() {
+        let instance = this;
+        if (!instance.isStoped) {
+            let { originalEvent } = instance;
+            if (originalEvent) {
+                if (is.func(originalEvent.stop)) {
+                    originalEvent.stop();
+                }
+                else if (is.func(originalEvent.stopPropagation)) {
+                    originalEvent.stopPropagation();
+                }
+            }
+            instance.isStoped = env.TRUE;
         }
-        else if (is.func(originalEvent.stopPropagation)) {
-          originalEvent.stopPropagation()
-        }
-      }
-      instance.isStoped = env.TRUE
+        return instance;
     }
-    return instance
-  }
-
-}
-
-Event.is = function (target) {
-  return target instanceof Event
 }

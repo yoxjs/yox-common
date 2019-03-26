@@ -1,46 +1,38 @@
-
-import nextTick from '../function/nextTick'
-
-import * as env from './env'
-import * as array from './array'
-
-let nextTasks = [ ]
-
-function addTask(name, task) {
-  if (!nextTasks[ env.RAW_LENGTH ]) {
-    nextTick(run)
-  }
-  array[ name ](nextTasks, task)
-}
-
+import * as array from './array';
+import nextTick from '../function/nextTick';
+/**
+ * 异步队列
+ */
+let nextTasks = [];
 /**
  * 在队尾添加异步任务
  *
- * @param {Function} task
+ * @param task
  */
 export function append(task) {
-  addTask('push', task)
+    array.push(nextTasks, task);
+    if (nextTasks.length === 1) {
+        nextTick(run);
+    }
 }
-
 /**
  * 在队首添加异步任务
  *
- * @param {Function} task
+ * @param task
  */
 export function prepend(task) {
-  addTask('unshift', task)
+    array.unshift(nextTasks, task);
+    if (nextTasks.length === 1) {
+        nextTick(run);
+    }
 }
-
 /**
- * 立即执行任务
+ * 清空任务队列，立即执行
  */
 export function run() {
-  let currentTasks = nextTasks
-  nextTasks = [ ]
-  array.each(
-    currentTasks,
-    function (task) {
-      task()
-    }
-  )
+    let currentTasks = nextTasks;
+    nextTasks = [];
+    array.each(currentTasks, function (task) {
+        task();
+    });
 }

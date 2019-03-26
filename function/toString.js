@@ -1,12 +1,7 @@
-
-import * as env from '../util/env'
-import * as char from '../util/char'
-
-export default function (str, defaultValue) {
-  if (str != env.NULL && str.toString) {
-    return str.toString()
-  }
-  return arguments[ env.RAW_LENGTH ] === 1
-    ? char.CHAR_BLANK
-    : defaultValue
+import * as env from '../util/env';
+import * as char from '../util/char';
+export default function (target, defaultValue = char.CHAR_BLANK) {
+    return target != env.NULL && target.toString
+        ? target.toString()
+        : defaultValue;
 }

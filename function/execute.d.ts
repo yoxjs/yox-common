@@ -1,4 +1,3 @@
-import * as is from '../util/is';
 /**
  * 任性地执行一个函数，不管它有没有、是不是
  *
@@ -7,10 +6,4 @@ import * as is from '../util/is';
  * @param args 调用函数的参数，多参数时传入数组
  * @return 调用函数的返回值
  */
-export default function (fn, context, args) {
-    if (is.func(fn)) {
-        return is.array(args)
-            ? fn.apply(context, args)
-            : fn.call(context, args);
-    }
-}
+export default function (fn?: Function, context?: any, args?: any): any;

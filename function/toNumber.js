@@ -1,12 +1,6 @@
-
-import * as is from '../util/is'
-import * as env from '../util/env'
-
-export default function (str, defaultValue) {
-  if (is.numeric(str)) {
-    return +str
-  }
-  return arguments[ env.RAW_LENGTH ] === 1
-    ? 0
-    : defaultValue
+import * as is from '../util/is';
+export default function (target, defaultValue = 0) {
+    return is.numeric(target)
+        ? +target
+        : defaultValue;
 }

@@ -1,119 +1,102 @@
-
-import * as is from './is'
-import * as env from './env'
-import * as char from './char'
-import * as array from './array'
-
+import * as is from './is';
+import * as env from './env';
+import * as char from './char';
 /**
  * 连字符转成驼峰
  *
- * @param {string} str
- * @return {string}
+ * @param str
+ * @return 驼峰格式的字符串
  */
 export function camelCase(str) {
-  if (has(str, char.CHAR_DASH)) {
-    return str.replace(
-      /-([a-z])/gi,
-      function ($0, $1) {
-        return $1.toUpperCase()
-      }
-    )
-  }
-  return str
+    return has(str, char.CHAR_DASH)
+        ? str.replace(/-([a-z])/gi, function ($0, $1) {
+            return $1.toUpperCase();
+        })
+        : str;
 }
-
 /**
- * 删除两侧空白符
+ * 清除两侧空白符
  *
- * @param {*} str
- * @return {string}
+ * @param str
+ * @return 清除两侧空白符的字符串
  */
 export function trim(str) {
- return falsy(str) ? char.CHAR_BLANK : str.trim()
+    return falsy(str)
+        ? char.CHAR_BLANK
+        : str.trim();
 }
-
 /**
  * 截取字符串
  *
- * @param {string} str
- * @param {number} start
- * @param {?number} end
- * @return {string}
+ * @param str
+ * @param start
+ * @param end
+ * @return
  */
 export function slice(str, start, end) {
-  return is.number(end)
-    ? str.slice(start, end)
-    : str.slice(start)
+    return is.number(end)
+        ? str.slice(start, end)
+        : str.slice(start);
 }
-
 /**
  * 获取子串的起始位置
  *
- * @param {string} str
- * @param {string} part
- * @param {?number} startIndex
- * @return {number}
+ * @param str
+ * @param part
+ * @param start
+ * @return
  */
-export function indexOf(str, part, startIndex) {
-  return is.number(startIndex)
-    ? str.indexOf(part, startIndex)
-    : str.indexOf(part)
+export function indexOf(str, part, start = 0) {
+    return str.indexOf(part, start);
 }
-
 /**
  * 获取子串的起始位置
  *
- * @param {string} str
- * @param {string} part
- * @param {?number} endIndex
- * @return {number}
+ * @param str
+ * @param part
+ * @param end
+ * @return
  */
-export function lastIndexOf(str, part, endIndex) {
-  return is.number(endIndex)
-    ? str.lastIndexOf(part, endIndex)
-    : str.lastIndexOf(part)
+export function lastIndexOf(str, part, end = str[env.RAW_LENGTH]) {
+    return str.lastIndexOf(part, end);
 }
-
 /**
  * str 是否包含 part
  *
- * @param {string} str
- * @param {string} part
- * @return {boolean}
+ * @param str
+ * @param part
+ * @return 是否包含
  */
 export function has(str, part) {
-  return indexOf(str, part) >= 0
+    return indexOf(str, part) >= 0;
 }
-
 /**
- * str 是否以 part 开始
+ * str 是否以 part 开头
  *
- * @param {string} str
- * @param {string} part
- * @return {boolean}
+ * @param str
+ * @param part
+ * @return
  */
 export function startsWith(str, part) {
-  return indexOf(str, part) === 0
+    return indexOf(str, part) === 0;
 }
-
 /**
  * str 是否以 part 结束
  *
- * @param {string} str
- * @param {string} part
- * @return {boolean}
+ * @param str
+ * @param part
+ * @return
  */
 export function endsWith(str, part) {
-  let offset = str[ env.RAW_LENGTH ] - part[ env.RAW_LENGTH ]
-  return offset >= 0 && lastIndexOf(str, part) === offset
+    let offset = str[env.RAW_LENGTH] - part[env.RAW_LENGTH];
+    return offset >= 0 && lastIndexOf(str, part) === offset;
 }
-
 /**
  * 判断长度大于 0 的字符串
  *
- * @param {*} str
- * @return {boolean}
+ * @param str
+ * @return
  */
 export function falsy(str) {
-  return !is.string(str) || str === char.CHAR_BLANK
+    return !is.string(str) || !str[env.RAW_LENGTH];
 }

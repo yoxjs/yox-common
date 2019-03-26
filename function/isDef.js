@@ -1,6 +1,4 @@
-
-import * as env from '../util/env'
-
+import * as env from '../util/env';
 export default function (target) {
-  return target !== env.UNDEFINED
+    return target !== env.UNDEFINED;
 }
