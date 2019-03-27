@@ -40,11 +40,11 @@ export function join(array: string[], separator: string): string {
   return array.join(separator)
 }
 
-function nativeAppend(array: any[], item: any) {
+function nativePush(array: any[], item: any) {
   array[array[env.RAW_LENGTH]] = item
 }
 
-function nativePrepend(array: any[], item: any) {
+function nativeUnshift(array: any[], item: any) {
   array.unshift(item)
 }
 
@@ -76,7 +76,7 @@ function addItem(array: any[], value: any, action: Function) {
  * @param target
  */
 export function push(array: any[], target: any) {
-  addItem(array, target, nativeAppend)
+  addItem(array, target, nativePush)
 }
 
 /**
@@ -86,7 +86,7 @@ export function push(array: any[], target: any) {
  * @param target
  */
 export function unshift(array: any[], target: any) {
-  addItem(array, target, nativePrepend)
+  addItem(array, target, nativeUnshift)
 }
 
 /**
@@ -105,16 +105,16 @@ export function toArray(array: Array<any> | ArrayLike<any>): Array<any> {
  * 把数组转成对象
  *
  * @param array 数组
- * @param {?string} key 数组项包含的字段名称，如果数组项是基本类型，可不传
- * @param {?*} value
- * @return {Object}
+ * @param key 数组项包含的字段名称，如果数组项是基本类型，可不传
+ * @param value
+ * @return
  */
-export function toObject(array: any[], key: string, value: any) {
-  let result = {}, hasValue = arguments[env.RAW_LENGTH] === 3
+export function toObject(array: any[], key?: string | null, value?: any) {
+  let result = {}
   each(
     array,
     function (item: any) {
-      result[key ? item[key] : item] = hasValue ? value : item
+      result[key ? item[key] : item] = value || item
     }
   )
   return result

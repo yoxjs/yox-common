@@ -27,7 +27,7 @@ export default function (fn: Function, delay: number, sync = env.FALSE) {
 
       timer = setTimeout(
         function () {
-          timer = env.NULL
+          timer = 0
           if (!sync) {
             execute(fn, env.NULL, args)
           }

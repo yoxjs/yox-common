@@ -20,9 +20,9 @@ const useSource = /yox/.test(toString(env.noop))
  */
 function isDebug() {
   if (env.win) {
-    let { DEBUG } = env.win
-    if (is.boolean(DEBUG)) {
-      return DEBUG
+    let debug = env.win['DEBUG']
+    if (is.boolean(debug)) {
+      return debug
     }
   }
   return useSource

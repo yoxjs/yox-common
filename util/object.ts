@@ -129,29 +129,21 @@ export function copy(object: any, deep = env.FALSE): any {
   return result
 }
 
-function getValue(object: any, key: string | number) {
-  if (object != env.NULL && has(object, key)) {
-    let value = object[key]
-    if (value != env.NULL && is.func(value.get)) {
-      value = value.get()
-    }
-    return {
-      value,
-    }
-  }
-}
+/**
+ * 辅助 get 函数，持有最后找到的值，避免频繁的创建临时对象
+ */
+export const valueHolder = { }
 
 /**
  * 从对象中查找一个 keypath
  *
- * 返回值是对象时，表示找了值
  * 返回值是空时，表示没找到值
  *
  * @param object
  * @param keypath
  * @return
  */
-export function get(object: Object, keypath: string | number): Object | void {
+export function get(object: any, keypath: string | number): any {
 
   /**
    * 考虑以下情况:
@@ -171,15 +163,27 @@ export function get(object: Object, keypath: string | number): Object | void {
   keypathUtil.each(
     keypath,
     function (key, isLast) {
-      object = getValue(object, key)
-      if (!isLast) {
-        if (object) {
-          object = object[env.RAW_VALUE]
+
+      // 支持原型获取，如 {}.toString
+      // 原型上的属性或方法无法通过 has 方法判断，因此用 in 操作符
+      if (is.object(object) && key in object) {
+        let value = object[key]
+        if (value && is.func(value.get)) {
+          value = value.get()
         }
-        else {
-          return env.FALSE
-        }
+        valueHolder[env.RAW_VALUE] = value
       }
+      // 基本类型，如获取 ''.length 等
+      else if (object != env.NULL && has(object, key)) {
+        valueHolder[env.RAW_VALUE] = object[key]
+      }
+      else {
+        object = env.UNDEFINED
+        return env.FALSE
+      }
+
+      object = isLast ? valueHolder : valueHolder[env.RAW_VALUE]
+
     }
   )
 

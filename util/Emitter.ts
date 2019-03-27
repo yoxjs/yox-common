@@ -17,6 +17,22 @@ export default class Emitter {
 
   /**
    * 是否开启命名空间
+   *
+   * 命名空间格式为  name.space
+   *
+   * 典型的场景是在一个组件创建时绑定全局事件，销毁时解绑事件，如下
+   *
+   * create:
+   *
+   *    component.on('a.space', listener)
+   *    component.on('b.space', listener)
+   *
+   * destroy:
+   *
+   *    component.off('.space') // 无需依次解绑，费时费力
+   *
+   * a.space 会响应全局 a 事件，原因正如上面这个例子，否则无法实现快捷解绑
+   * a 不会响应 a.space 事件，因为命名空间不匹配
    */
   namespace: boolean
 
@@ -25,7 +41,7 @@ export default class Emitter {
    */
   listeners: Object
 
-  constructor(namespace: boolean) {
+  constructor(namespace = false) {
     this.namespace = namespace
     this.listeners = { }
   }
@@ -37,7 +53,7 @@ export default class Emitter {
    * @param data 事件数据
    * @param context 执行事件处理函数的 context
    */
-  fire(type: string, data: Object, context?: any) {
+  fire(type: string, data?: Object, context?: any) {
 
     let instance = this,
       target = instance.parse(type),
@@ -115,7 +131,7 @@ export default class Emitter {
    * @param type
    * @param listener
    */
-  has(type: string, listener: any): boolean {
+  has(type: string, listener?: Object | Function): boolean {
 
     let instance = this,
       listeners = instance.listeners,
@@ -157,7 +173,7 @@ export default class Emitter {
    * @param listener
    * @param data
    */
-  on(type: any, listener: any, data?: Object) {
+  on(type: any, listener: Object | Function, data?: Object) {
 
     let instance = this,
       listeners = instance.listeners,
@@ -193,7 +209,7 @@ export default class Emitter {
    * @param type
    * @param listener
    */
-  once(type: any, listener: any) {
+  once(type: any, listener: Object | Function) {
     this.on(type, listener, { max: 1 })
   }
 
@@ -203,7 +219,7 @@ export default class Emitter {
    * @param type
    * @param listener
    */
-  off(type: string, listener: any) {
+  off(type: string, listener: Object | Function) {
 
     let instance = this,
       listeners = instance.listeners

@@ -4,12 +4,12 @@ import * as env from './env'
 export default class Event {
 
   type: string
-  originalEvent?: any
 
   isPrevented: boolean
   isStoped: boolean
 
-  listener?: Function
+  originalEvent: any
+  listener: Function
 
   /**
    * target 是否是 Event 实例

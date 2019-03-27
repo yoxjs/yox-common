@@ -7,6 +7,8 @@ export const FALSE = false
 export const NULL = null
 export const UNDEFINED = undefined
 
+export const NAN = NaN
+
 export const RAW_TRUE = 'true'
 export const RAW_FALSE = 'false'
 export const RAW_NULL = 'null'
