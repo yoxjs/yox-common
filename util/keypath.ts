@@ -2,6 +2,7 @@ import * as is from './is'
 import * as env from './env'
 import * as char from './char'
 import * as string from './string'
+import toString from '../function/toString'
 
 /**
  * 判断 keypath 是否以 prefix 开头，如果是，返回匹配上的前缀长度，否则返回 -1
@@ -60,10 +61,12 @@ export function each(keypath: any, callback: (key: string | number, isLast: bool
 }
 
 
-function formatKeypath(keypath: string | number): string | number {
-  return is.number(keypath) || is.string(keypath)
+function formatKeypath(keypath: any): string {
+  return is.string(keypath)
     ? keypath
-    : char.CHAR_BLANK
+    : is.number(keypath)
+      ? toString(keypath)
+      : char.CHAR_BLANK
 }
 
 /**
@@ -72,7 +75,7 @@ function formatKeypath(keypath: string | number): string | number {
  * @param keypath1
  * @param keypath2
  */
-export function join(keypath1: string | number, keypath2: string | number): string | number {
+export function join(keypath1: string | number, keypath2: string | number): string {
 
   keypath1 = formatKeypath(keypath1)
   keypath2 = formatKeypath(keypath2)

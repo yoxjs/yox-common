@@ -132,7 +132,7 @@ export function copy(object: any, deep = env.FALSE): any {
 /**
  * 辅助 get 函数，持有最后找到的值，避免频繁的创建临时对象
  */
-export const valueHolder = { }
+const valueHolder = { }
 
 /**
  * 从对象中查找一个 keypath

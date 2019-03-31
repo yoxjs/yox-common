@@ -66,6 +66,6 @@ export function error(msg: string) {
  *
  * @param msg
  */
-export function fatal(msg: string) {
+export function fatal(msg: string): never {
   throw new Error(`[Yox fatal]: ${msg}`)
 }

@@ -219,7 +219,7 @@ export default class Emitter {
    * @param type
    * @param listener
    */
-  off(type: string, listener: Object | Function) {
+  off(type?: string, listener?: Object | Function) {
 
     let instance = this,
       listeners = instance.listeners
@@ -286,7 +286,7 @@ export default class Emitter {
 
   }
 
-  private matchListener(listener: any): Function {
+  private matchListener(listener?: any): Function {
     return is.object(listener)
       ? function (item: any) {
         return listener === item
