@@ -3,13 +3,13 @@ import * as env from './env'
 
 export default class Event {
 
-  type: string
+  type?: string
 
-  isPrevented: boolean
-  isStoped: boolean
+  isPrevented?: boolean
+  isStoped?: boolean
 
-  originalEvent: any
-  listener: Function
+  originalEvent?: any
+  listener?: Function
 
   /**
    * target 是否是 Event 实例
@@ -24,7 +24,7 @@ export default class Event {
    * 可以传事件名称，也可以传原生事件对象
    */
   constructor(event: any) {
-    let instance = this
+    const instance = this
     if (is.string(event)) {
       instance.type = event
     }
@@ -38,9 +38,9 @@ export default class Event {
    * 阻止事件的默认行为
    */
   prevent() {
-    let instance = this
+    const instance = this
     if (!instance.isPrevented) {
-      let { originalEvent } = instance
+      const { originalEvent } = instance
       if (originalEvent) {
         if (is.func(originalEvent.prevent)) {
           originalEvent.prevent()
@@ -58,9 +58,9 @@ export default class Event {
    * 停止事件广播
    */
   stop() {
-    let instance = this
+    const instance = this
     if (!instance.isStoped) {
-      let { originalEvent } = instance
+      const { originalEvent } = instance
       if (originalEvent) {
         if (is.func(originalEvent.stop)) {
           originalEvent.stop()

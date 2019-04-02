@@ -1,3 +1,4 @@
+import * as env from './env'
 import * as array from './array'
 import nextTick from '../function/nextTick'
 
@@ -13,7 +14,7 @@ let nextTasks: Function[] = []
  */
 export function append(task: Function) {
   array.push(nextTasks, task)
-  if (nextTasks.length === 1) {
+  if (nextTasks[env.RAW_LENGTH] === 1) {
     nextTick(run)
   }
 }
@@ -25,7 +26,7 @@ export function append(task: Function) {
  */
 export function prepend(task: Function) {
   array.unshift(nextTasks, task)
-  if (nextTasks.length === 1) {
+  if (nextTasks[env.RAW_LENGTH] === 1) {
     nextTick(run)
   }
 }

@@ -64,20 +64,17 @@ export default class Emitter {
 
     if (list) {
 
-      let event = is.array(data) ? data[0] : data,
-      isEvent = Event.is(event)
-
-      if (!filter) {
-        filter = function (item: Object, data?: Object): boolean | void {
-          return instance.matchSpace(space, item)
-        }
+      let event = data && is.array(data) ? data[0] : data,
+      isEvent = Event.is(event),
+      filterItem = filter || function (item: Object) {
+        return instance.matchSpace(space, item)
       }
 
       array.each(
         object.copy(list),
         function (item, _, list) {
 
-          if (!filter(item, data)
+          if (!filterItem(item, data)
             // 在 fire 过程中被移除了
             || !array.has(list, item)
           ) {
