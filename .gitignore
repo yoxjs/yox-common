@@ -3,4 +3,5 @@ node_modules
 *update.js
 .edp*
 edp-*
+dist
 package-lock.json

@@ -53,7 +53,7 @@ export default class Emitter {
    * @param data 事件数据
    * @param context 执行事件处理函数的 context
    */
-  fire(type: string, data?: Object, context?: any, filter?: (item: Object) => boolean) {
+  fire(type: string, data?: Object, context?: any, filter?: (item: Object, data?: Object) => boolean | void) {
 
     let instance = this,
     target = instance.parse(type),
@@ -68,7 +68,7 @@ export default class Emitter {
       isEvent = Event.is(event)
 
       if (!filter) {
-        filter = function (item: Object): boolean {
+        filter = function (item: Object, data?: Object): boolean | void {
           return instance.matchSpace(space, item)
         }
       }
@@ -77,8 +77,10 @@ export default class Emitter {
         object.copy(list),
         function (item, _, list) {
 
-          // 在 fire 过程中被移除了
-          if (!array.has(list, item) || !filter(item)) {
+          if (!filter(item, data)
+            // 在 fire 过程中被移除了
+            || !array.has(list, item)
+          ) {
             return
           }
 
