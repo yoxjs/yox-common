@@ -41,12 +41,11 @@ export function sort(object: Object, desc = env.FALSE): string[] {
  * @param callback 返回 false 可停止遍历
  */
 export function each(object: Object, callback: (value: any, key: string) => boolean | void) {
-  array.each(
-    keys(object),
-    function (key) {
-      return callback(object[key], key)
+  for (let key in object) {
+    if (callback(object[key], key) === env.FALSE) {
+      break
     }
-  )
+  }
 }
 
 /**

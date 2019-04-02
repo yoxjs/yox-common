@@ -53,29 +53,32 @@ export default class Emitter {
    * @param data 事件数据
    * @param context 执行事件处理函数的 context
    */
-  fire(type: string, data?: Object, context?: any) {
+  fire(type: string, data?: Object, context?: any, filter?: (item: Object) => boolean) {
 
     let instance = this,
-      target = instance.parse(type),
-      name = target[RAW_NAME],
-      space = target[RAW_SPACE],
-      list = instance.listeners[name],
-      isComplete = env.TRUE
+    target = instance.parse(type),
+    name = target[RAW_NAME],
+    space = target[RAW_SPACE],
+    list = instance.listeners[name],
+    isComplete = env.TRUE
 
     if (list) {
 
       let event = is.array(data) ? data[0] : data,
-        isEvent = Event.is(event)
+      isEvent = Event.is(event)
+
+      if (!filter) {
+        filter = function (item: Object): boolean {
+          return instance.matchSpace(space, item)
+        }
+      }
 
       array.each(
         object.copy(list),
         function (item, _, list) {
 
           // 在 fire 过程中被移除了
-          if (!array.has(list, item)
-            // 命名空间不匹配
-            || !instance.matchSpace(space, item)
-          ) {
+          if (!array.has(list, item) || !filter(item)) {
             return
           }
 
@@ -134,24 +137,24 @@ export default class Emitter {
   has(type: string, listener?: Object | Function): boolean {
 
     let instance = this,
-      listeners = instance.listeners,
-      target = instance.parse(type),
-      name = target[RAW_NAME],
-      space = target[RAW_SPACE],
-      result = env.TRUE,
+    listeners = instance.listeners,
+    target = instance.parse(type),
+    name = target[RAW_NAME],
+    space = target[RAW_SPACE],
+    result = env.TRUE,
 
-      matchListener = instance.matchListener(listener),
-      each = function (list: Object[]) {
-        array.each(
-          list,
-          function (item) {
-            if (matchListener(item) && instance.matchSpace(space, item)) {
-              return result = env.FALSE
-            }
+    matchListener = instance.matchListener(listener),
+    each = function (list: Object[]) {
+      array.each(
+        list,
+        function (item) {
+          if (matchListener(item) && instance.matchSpace(space, item)) {
+            return result = env.FALSE
           }
-        )
-        return result
-      }
+        }
+      )
+      return result
+    }
 
     if (name) {
       if (listeners[name]) {
@@ -176,23 +179,23 @@ export default class Emitter {
   on(type: any, listener: Object | Function, data?: Object) {
 
     let instance = this,
-      listeners = instance.listeners,
-      addListener = function (item: any, type: string) {
-        if (is.func(item)) {
-          item = { func: item }
-        }
-        if (is.object(item) && is.func(item.func)) {
-          if (data) {
-            object.extend(item, data)
-          }
-          let target = instance.parse(type)
-          item[RAW_SPACE] = target[RAW_SPACE]
-          array.push(
-            listeners[target[RAW_NAME]] || (listeners[target[RAW_NAME]] = []),
-            item
-          )
-        }
+    listeners = instance.listeners,
+    addListener = function (item: any, type: string) {
+      if (is.func(item)) {
+        item = { func: item }
       }
+      if (is.object(item) && is.func(item.func)) {
+        if (data) {
+          object.extend(item, data)
+        }
+        const target = instance.parse(type)
+        item[RAW_SPACE] = target[RAW_SPACE]
+        array.push(
+          listeners[target[RAW_NAME]] || (listeners[target[RAW_NAME]] = []),
+          item
+        )
+      }
+    }
 
     if (is.object(type)) {
       object.each(type, addListener)
@@ -222,29 +225,29 @@ export default class Emitter {
   off(type?: string, listener?: Object | Function) {
 
     let instance = this,
-      listeners = instance.listeners
+    listeners = instance.listeners
 
     if (type) {
 
       let target = instance.parse(type),
-        name = target[RAW_NAME],
-        space = target[RAW_SPACE],
+      name = target[RAW_NAME],
+      space = target[RAW_SPACE],
 
-        matchListener = instance.matchListener(listener),
-        each = function (list: Object[], name: string) {
-          array.each(
-            list,
-            function (item: any, index: number, array: any[]) {
-              if (matchListener(item) && instance.matchSpace(space, item)) {
-                array.splice(index, 1)
-              }
-            },
-            env.TRUE
-          )
-          if (!list[env.RAW_LENGTH]) {
-            delete listeners[name]
-          }
+      matchListener = instance.matchListener(listener),
+      each = function (list: Object[], name: string) {
+        array.each(
+          list,
+          function (item: any, index: number, array: any[]) {
+            if (matchListener(item) && instance.matchSpace(space, item)) {
+              array.splice(index, 1)
+            }
+          },
+          env.TRUE
+        )
+        if (!list[env.RAW_LENGTH]) {
+          delete listeners[name]
         }
+      }
 
       if (name) {
         if (listeners[name]) {

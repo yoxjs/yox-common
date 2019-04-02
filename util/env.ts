@@ -60,3 +60,8 @@ export const doc = typeof document !== RAW_UNDEFINED ? document : NULL
 export function noop() {
   /** yox */
 }
+
+/**
+ * 空对象，很多地方会用到，比如 `a || plain` 确保是个对象
+ */
+export const plain = { }

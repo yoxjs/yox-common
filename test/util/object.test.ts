@@ -152,4 +152,10 @@ test('set', () => {
   object.set(test, 'a.b', 'haha', true)
   expect(object.get(test, 'a.b').value).toBe('haha')
 
+  let test1 = [ { age: 1 } ]
+
+  expect(object.get(test1, '0.age').value).toBe(1)
+  object.set(test1, '0.age', 2)
+  expect(object.get(test1, '0.age').value).toBe(2)
+
 })
