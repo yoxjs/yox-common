@@ -13,6 +13,16 @@ export function keys(object: Object): string[] {
   return Object.keys(object)
 }
 
+/**
+ * 是否是空对象
+ *
+ * @param object
+ * @return
+ */
+export function empty(object: Object): boolean {
+  return keys(object).length === 0
+}
+
 function sortKeyByAsc(a: string, b: string): number {
   return a[env.RAW_LENGTH] - b[env.RAW_LENGTH]
 }

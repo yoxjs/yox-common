@@ -41,7 +41,9 @@ export function trim(str: any): string {
  */
 export function slice(str: string, start: number, end?: number) {
   return is.number(end)
-    ? str.slice(start, end)
+    ? start === end
+      ? char.CHAR_BLANK
+      : str.slice(start, end)
     : str.slice(start)
 }
 

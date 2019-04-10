@@ -75,7 +75,7 @@ function formatKeypath(keypath: any): string {
  * @param keypath1
  * @param keypath2
  */
-export function join(keypath1: string | number, keypath2: string | number): string {
+export function join(keypath1: any, keypath2: any): string {
 
   keypath1 = formatKeypath(keypath1)
   keypath2 = formatKeypath(keypath2)
