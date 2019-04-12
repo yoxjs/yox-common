@@ -7,8 +7,6 @@ export const FALSE = false
 export const NULL = null
 export const UNDEFINED = undefined
 
-export const NAN = NaN
-
 export const RAW_TRUE = 'true'
 export const RAW_FALSE = 'false'
 export const RAW_NULL = 'null'
@@ -18,6 +16,7 @@ export const RAW_KEY = 'key'
 export const RAW_REF = 'ref'
 export const RAW_TAG = 'tag'
 export const RAW_SLOT = 'slot'
+export const RAW_TRANSITION = 'transition'
 
 export const RAW_THIS = 'this'
 export const RAW_TYPE = 'type'
@@ -57,11 +56,21 @@ export const doc = typeof document !== RAW_UNDEFINED ? document : NULL
 /**
  * Single instance for noop function
  */
-export function noop() {
+export function EMPTY_FUNCTION() {
   /** yox */
 }
 
 /**
  * 空对象，很多地方会用到，比如 `a || plain` 确保是个对象
  */
-export const plain = { }
+export const EMPTY_OBJECT = {}
+
+/**
+ * 空数组
+ */
+export const EMPTY_ARRAY = []
+
+/**
+ * 空字符串
+ */
+export const EMPTY_STRING = ''

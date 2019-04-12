@@ -3,7 +3,6 @@ import execute from '../function/execute'
 
 import * as is from './is'
 import * as env from './env'
-import * as char from './char'
 import * as array from './array'
 import * as object from './object'
 import * as string from './string'
@@ -274,10 +273,10 @@ export default class Emitter {
 
     let result = {}
     result[RAW_NAME] = type
-    result[RAW_SPACE] = char.CHAR_BLANK
+    result[RAW_SPACE] = env.EMPTY_STRING
 
     if (this.namespace) {
-      let index = string.indexOf(type, char.CHAR_DOT)
+      let index = string.indexOf(type, '.')
       if (index >= 0) {
         result[RAW_NAME] = string.slice(type, 0, index)
         result[RAW_SPACE] = string.slice(type, index + 1)

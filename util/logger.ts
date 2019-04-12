@@ -8,9 +8,9 @@ import toString from '../function/toString'
 const nativeConsole: Console | null = typeof console !== env.RAW_UNDEFINED ? console : env.NULL
 
 /**
- * 当前是否是源码调试，如果开启了代码压缩，noop 里的注释会被干掉
+ * 当前是否是源码调试，如果开启了代码压缩，empty function 里的注释会被干掉
  */
-const useSource = /yox/.test(toString(env.noop))
+const useSource = /yox/.test(toString(env.EMPTY_FUNCTION))
 
 /**
  * 全局调试开关

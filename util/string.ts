@@ -1,6 +1,5 @@
 import * as is from './is'
 import * as env from './env'
-import * as char from './char'
 
 /**
  * 连字符转成驼峰
@@ -9,7 +8,7 @@ import * as char from './char'
  * @return 驼峰格式的字符串
  */
 export function camelCase(str: string): string {
-  return has(str, char.CHAR_DASH)
+  return has(str, '-')
     ? str.replace(
       /-([a-z])/gi,
       function ($0, $1) {
@@ -27,7 +26,7 @@ export function camelCase(str: string): string {
  */
 export function trim(str: any): string {
   return falsy(str)
-    ? char.CHAR_BLANK
+    ? env.EMPTY_STRING
     : str.trim()
 }
 
@@ -42,7 +41,7 @@ export function trim(str: any): string {
 export function slice(str: string, start: number, end?: number) {
   return is.number(end)
     ? start === end
-      ? char.CHAR_BLANK
+      ? env.EMPTY_STRING
       : str.slice(start, end)
     : str.slice(start)
 }
@@ -103,6 +102,20 @@ export function startsWith(str: string, part: string): boolean {
 export function endsWith(str: string, part: string): boolean {
   let offset = str[env.RAW_LENGTH] - part[env.RAW_LENGTH]
   return offset >= 0 && lastIndexOf(str, part) === offset
+}
+
+/**
+ * 获取某个位置的字符
+ */
+export function charAt(str: string, index?: number): string {
+  return str.charAt(index || 0)
+}
+
+/**
+ * 获取某个位置的字符编码
+ */
+export function codeAt(str: string, index?: number): number {
+  return str.charCodeAt(index || 0)
 }
 
 /**

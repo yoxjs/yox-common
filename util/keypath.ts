@@ -1,6 +1,5 @@
 import * as is from './is'
 import * as env from './env'
-import * as char from './char'
 import * as string from './string'
 import toString from '../function/toString'
 
@@ -66,7 +65,7 @@ function formatKeypath(keypath: any): string {
     ? keypath
     : is.number(keypath)
       ? toString(keypath)
-      : char.CHAR_BLANK
+      : env.EMPTY_STRING
 }
 
 /**
@@ -80,9 +79,9 @@ export function join(keypath1: any, keypath2: any): string {
   keypath1 = formatKeypath(keypath1)
   keypath2 = formatKeypath(keypath2)
 
-  return keypath1 === char.CHAR_BLANK
+  return keypath1 === env.EMPTY_STRING
     ? keypath2
-    : keypath2 !== char.CHAR_BLANK
+    : keypath2 !== env.EMPTY_STRING
       ? keypath1 + env.KEYPATH_SEPARATOR + keypath2
       : keypath1
 
