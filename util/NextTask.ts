@@ -56,15 +56,24 @@ export default class NextTask {
   }
 
   /**
-   * 清空任务队列，立即执行
+   * 清空异步队列
+   */
+  clear() {
+    this.nextTasks.length = 0
+  }
+
+  /**
+   * 立即执行异步任务，并清空队列
    */
   run() {
-    const currentTasks = this.nextTasks
-    this.nextTasks = []
-    array.each(
-      currentTasks,
-      execute
-    )
+    const { nextTasks } = this
+    if (nextTasks.length) {
+      this.nextTasks = []
+      array.each(
+        nextTasks,
+        execute
+      )
+    }
   }
 
 }
