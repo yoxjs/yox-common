@@ -1,10 +1,11 @@
 
-import * as nextTask from '../../util/nextTask'
+import NextTask from '../../util/NextTask'
 
 test('add', done => {
 
   let i = 0
 
+  let nextTask = new NextTask()
   nextTask.append(
     function () {
       i += 5
