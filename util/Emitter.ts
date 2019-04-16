@@ -52,7 +52,7 @@ export default class Emitter {
    * @param data 事件数据
    * @param context 执行事件处理函数的 context
    */
-  fire(type: string, data?: Object, context?: any, filter?: (item: Object, data?: Object) => boolean | void) {
+  fire(type: string, data?: Record<string, any> | any[], context?: any, filter?: (item: Record<string, any>, data?: Record<string, any> | any[]) => boolean | void) {
 
     let instance = this,
     target = instance.parse(type),
@@ -64,16 +64,14 @@ export default class Emitter {
     if (list) {
 
       let event = data && is.array(data) ? data[0] : data,
-      isEvent = Event.is(event),
-      filterItem = filter || function (item: Object) {
-        return instance.matchSpace(space, item)
-      }
+      isEvent = Event.is(event)
 
       array.each(
         object.copy(list),
-        function (item, _, list) {
+        function (item: Record<string, any>, _: number, list: any[]) {
 
-          if (!filterItem(item, data)
+          // 传了 filter，则用 filter 测试是否继续往下执行
+          if ((filter ? !filter(item, data) : !instance.matchSpace(space, item))
             // 在 fire 过程中被移除了
             || !array.has(list, item)
           ) {
