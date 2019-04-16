@@ -86,3 +86,35 @@ export function join(keypath1: any, keypath2: any): string {
       : keypath1
 
 }
+
+/**
+ * 是否模糊匹配
+ *
+ * @param keypath
+ */
+export function isFuzzy(keypath: string): boolean {
+  return string.has(keypath, '*')
+}
+
+const patternCache = {}
+
+/**
+ * 模糊匹配 keypath
+ *
+ * @param keypath
+ * @param pattern
+ */
+export function matchFuzzy(keypath: string, pattern: string): string | void {
+  let cache = patternCache[pattern]
+  if (!cache) {
+    cache = pattern
+      .replace(/\./g, '\\.')
+      .replace(/\*\*/g, '([\.\\w]+?)')
+      .replace(/\*/g, '(\\w+)')
+    cache = patternCache[pattern] = new RegExp(`^${cache}$`)
+  }
+  const result = keypath.match(cache)
+  if (result) {
+    return result[1]
+  }
+}

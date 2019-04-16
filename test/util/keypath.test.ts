@@ -59,3 +59,31 @@ test('match', () => {
   .toBe(-1)
 
 })
+
+test('isFuzzy', () => {
+
+  expect(
+    keypath.isFuzzy('a.b')
+  )
+  .toBe(false)
+
+  expect(
+    keypath.isFuzzy('a.*')
+  )
+  .toBe(true)
+
+})
+
+test('matchFuzzy', () => {
+
+  expect(
+    keypath.matchFuzzy('a.b', 'a.*')
+  )
+  .toBe('b')
+
+  expect(
+    keypath.matchFuzzy('a.b', 'b.*')
+  )
+  .toBe(undefined)
+
+})
