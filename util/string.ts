@@ -38,7 +38,7 @@ export function hyphenate(str: string): string {
     hyphenateCache[str] = str.replace(
       hyphenatePattern,
       function ($0, $1) {
-        return $1.toLowerCase()
+        return '-' + $1.toLowerCase()
       }
     )
   }
