@@ -49,12 +49,12 @@ export const KEYPATH_PRIVATE_CURRENT = '$this'
 /**
  * Single instance for window in browser
  */
-export const win = typeof window !== RAW_UNDEFINED ? window : NULL
+export const win = typeof window !== RAW_UNDEFINED ? window : UNDEFINED
 
 /**
  * Single instance for document in browser
  */
-export const doc = typeof document !== RAW_UNDEFINED ? document : NULL
+export const doc = typeof document !== RAW_UNDEFINED ? document : UNDEFINED
 
 /**
  * Single instance for noop function

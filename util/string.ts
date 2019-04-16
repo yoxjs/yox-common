@@ -1,21 +1,48 @@
 import * as is from './is'
 import * as env from './env'
 
+const camelizePattern = /-([a-z])/gi,
+
+hyphenatePattern = /\B([A-Z])/g,
+
+camelizeCache: Record<string, string> = {},
+
+hyphenateCache: Record<string, string> = {}
+
 /**
  * 连字符转成驼峰
  *
  * @param str
  * @return 驼峰格式的字符串
  */
-export function camelCase(str: string): string {
-  return has(str, '-')
-    ? str.replace(
-      /-([a-z])/gi,
+export function camelize(str: string): string {
+  if (!camelizeCache[str]) {
+    camelizeCache[str] = str.replace(
+      camelizePattern,
       function ($0, $1) {
         return $1.toUpperCase()
       }
     )
-    : str
+  }
+  return camelizeCache[str]
+}
+
+/**
+ * 驼峰转成连字符
+ *
+ * @param str
+ * @return 连字符格式的字符串
+ */
+export function hyphenate(str: string): string {
+  if (!hyphenateCache[str]) {
+    hyphenateCache[str] = str.replace(
+      hyphenatePattern,
+      function ($0, $1) {
+        return $1.toLowerCase()
+      }
+    )
+  }
+  return hyphenateCache[str]
 }
 
 /**

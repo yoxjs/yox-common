@@ -1,10 +1,19 @@
 
 import * as string from '../../util/string'
 
-it('camelCase', () => {
-  expect(string.camelCase('a-b')).toBe('aB')
-  expect(string.camelCase('a_b')).toBe('a_b')
-  expect(string.camelCase('ab')).toBe('ab')
+it('camelize', () => {
+  expect(string.camelize('a-b')).toBe('aB')
+  expect(string.camelize('a-B')).toBe('aB')
+  expect(string.camelize('a_b')).toBe('a_b')
+  expect(string.camelize('ab')).toBe('ab')
+  expect(string.camelize('1-a')).toBe('1A')
+})
+
+it('hyphenate', () => {
+  expect(string.hyphenate('aB')).toBe('a-b')
+  expect(string.hyphenate('a_b')).toBe('a_b')
+  expect(string.hyphenate('ab')).toBe('ab')
+  expect(string.hyphenate('1A')).toBe('1-a')
 })
 
 it('falsy', () => {
