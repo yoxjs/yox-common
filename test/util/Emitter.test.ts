@@ -1,5 +1,6 @@
 
 import Emitter from '../../util/Emitter'
+import Event from '../../util/Event';
 
 test('on', () => {
 
@@ -11,16 +12,16 @@ test('on', () => {
     expect(this).toBe(listener)
   }
 
-  emitter.on('click', listener)
+  emitter.on('click', listener, { ctx: listener })
   expect(i).toBe(0)
 
   expect(emitter.has('click')).toBe(true)
   expect(emitter.has('click', listener)).toBe(true)
 
-  emitter.fire('click', null, listener)
+  emitter.fire('click', null)
   expect(i).toBe(1)
 
-  emitter.fire('click', null, listener)
+  emitter.fire('click', null)
   expect(i).toBe(2)
 
 })
@@ -86,7 +87,7 @@ test('namespace', () => {
   emitter.on('a.b.c', cListener)
 
   // 全局 a 事件
-  emitter.fire('a')
+  emitter.fire(new Event('a'))
   expect(aValue).toBe(1)
   expect(bValue).toBe(1)
   expect(cValue).toBe(1)

@@ -7,7 +7,7 @@ import * as array from './array'
 import * as object from './object'
 import * as string from './string'
 
-import Event from './Event'
+import CustomEvent from './Event'
 
 const RAW_NAME = env.RAW_NAME
 const RAW_SPACE = 'space'
@@ -38,21 +38,35 @@ export default class Emitter {
   /**
    * 已注册的事件监听
    */
-  listeners: Object
+  listeners: Record<string, Record<string, any>[]>
 
-  constructor(namespace = false) {
+  /**
+   * 原生事件监听，一个事件对应一个 listener
+   */
+  nativeListeners?: Record<string, Function>
+
+  constructor(namespace = env.FALSE) {
     this.namespace = namespace
-    this.listeners = { }
+    this.listeners = {}
   }
 
   /**
    * 发射事件
    *
-   * @param type 事件名称
+   * @param bullet 事件或事件名称
    * @param data 事件数据
-   * @param context 执行事件处理函数的 context
    */
-  fire(type: string, data?: Record<string, any> | any[], context?: any, filter?: (item: Record<string, any>, data?: Record<string, any> | any[]) => boolean | void) {
+  fire(bullet: string | CustomEvent, data?: Record<string, any> | any[], filter?: (item: Record<string, any>, data?: Record<string, any> | any[]) => boolean | void) {
+
+    let event: CustomEvent | void, type: string
+
+    if (bullet instanceof CustomEvent) {
+      event = bullet
+      type = bullet.type
+    }
+    else {
+      type = bullet
+    }
 
     let instance = this,
     target = instance.parse(type),
@@ -62,9 +76,6 @@ export default class Emitter {
     isComplete = env.TRUE
 
     if (list) {
-
-      let event = data && is.array(data) ? data[0] : data,
-      isEvent = Event.is(event)
 
       array.each(
         object.copy(list),
@@ -84,15 +95,11 @@ export default class Emitter {
           // 在这个 listener 里面获取不到当前 listener 的引用
           // 为了能引用到，有时候会先定义 var listener = function,
           // 然后再 on('xx', listener) 这样其实是没有必要的
-          if (isEvent) {
+          if (event) {
             event.listener = item.func
           }
 
-          let result = execute(
-            item.func,
-            isDef(context) ? context : item.context,
-            data
-          )
+          let result = execute(item.func, item.ctx, data)
 
           // 执行次数
           item.count = item.count > 0 ? (item.count + 1) : 1
@@ -103,7 +110,7 @@ export default class Emitter {
           }
 
           // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
-          if (isEvent) {
+          if (event) {
             if (result === env.FALSE) {
               event.prevent().stop()
             }
@@ -174,7 +181,7 @@ export default class Emitter {
    */
   on(type: any, listener: Object | Function, data?: Object) {
 
-    let instance = this,
+    const instance = this,
     listeners = instance.listeners,
     addListener = function (item: any, type: string) {
       if (is.func(item)) {
@@ -220,12 +227,12 @@ export default class Emitter {
    */
   off(type?: string, listener?: Object | Function) {
 
-    let instance = this,
+    const instance = this,
     listeners = instance.listeners
 
     if (type) {
 
-      let target = instance.parse(type),
+      const target = instance.parse(type),
       name = target[RAW_NAME],
       space = target[RAW_SPACE],
 
@@ -269,12 +276,12 @@ export default class Emitter {
    */
   private parse(type: string): Object {
 
-    let result = {}
+    const result = {}
     result[RAW_NAME] = type
     result[RAW_SPACE] = env.EMPTY_STRING
 
     if (this.namespace) {
-      let index = string.indexOf(type, '.')
+      const index = string.indexOf(type, '.')
       if (index >= 0) {
         result[RAW_NAME] = string.slice(type, 0, index)
         result[RAW_SPACE] = string.slice(type, index + 1)

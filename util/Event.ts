@@ -4,7 +4,7 @@ import * as env from './env'
 export default class Event {
 
   // 事件名称
-  type?: string
+  type: string
 
   // 谁发出的事件
   target?: any
@@ -22,25 +22,17 @@ export default class Event {
   listener?: Function
 
   /**
-   * target 是否是 Event 实例
-   */
-  public static is(target: any): boolean {
-    return target instanceof Event
-  }
-
-  /**
    * 构造函数
    *
    * 可以传事件名称，也可以传原生事件对象
    */
   constructor(event: any) {
-    const instance = this
     if (is.string(event)) {
-      instance.type = event
+      this.type = event
     }
     else {
-      instance.type = event.type
-      instance.originalEvent = event
+      this.type = event.type
+      this.originalEvent = event
     }
   }
 

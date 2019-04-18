@@ -1,6 +1,6 @@
 {
   "name": "yox-common",
-  "version": "0.18.2",
+  "version": "0.18.3",
   "description": "Common code for Yox.js",
   "directories": {
     "example": "example",
