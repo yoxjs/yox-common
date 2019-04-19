@@ -26,14 +26,9 @@ export default class Event {
    *
    * 可以传事件名称，也可以传原生事件对象
    */
-  constructor(event: any) {
-    if (is.string(event)) {
-      this.type = event
-    }
-    else {
-      this.type = event.type
-      this.originalEvent = event
-    }
+  constructor(type: string, originalEvent?: any) {
+    this.type = type
+    this.originalEvent = originalEvent
   }
 
   /**

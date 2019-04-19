@@ -56,7 +56,7 @@ export default class Emitter {
    * @param bullet 事件或事件名称
    * @param data 事件数据
    */
-  fire(bullet: string | CustomEvent, data?: Record<string, any> | any[], filter?: (item: Record<string, any>, data?: Record<string, any> | any[]) => boolean | void) {
+  fire(bullet: string | CustomEvent, data: Record<string, any> | any[] | void, filter?: (item: Record<string, any>, data: Record<string, any> | any[] | void) => boolean | void) {
 
     let event: CustomEvent | void, type: string
 
