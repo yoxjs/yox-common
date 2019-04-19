@@ -1,7 +1,8 @@
-import * as is from './is'
+import CustomEventInterface from 'yox-type/src/Event'
+
 import * as env from './env'
 
-export default class Event {
+export default class CustomEvent implements CustomEventInterface {
 
   // 事件名称
   type: string
@@ -10,7 +11,7 @@ export default class Event {
   target?: any
 
   // 原始事件，比如 dom 事件
-  originalEvent?: any
+  originalEvent?: CustomEventInterface | Event
 
   // 是否已阻止事件的默认行为
   isPrevented?: boolean
@@ -26,7 +27,7 @@ export default class Event {
    *
    * 可以传事件名称，也可以传原生事件对象
    */
-  constructor(type: string, originalEvent?: any) {
+  constructor(type: string, originalEvent?: CustomEventInterface | Event) {
     this.type = type
     this.originalEvent = originalEvent
   }
@@ -34,17 +35,12 @@ export default class Event {
   /**
    * 阻止事件的默认行为
    */
-  prevent() {
+  preventDefault(): CustomEventInterface {
     const instance = this
     if (!instance.isPrevented) {
       const { originalEvent } = instance
       if (originalEvent) {
-        if (is.func(originalEvent.prevent)) {
-          originalEvent.prevent()
-        }
-        else if (is.func(originalEvent.preventDefault)) {
-          originalEvent.preventDefault()
-        }
+        originalEvent.preventDefault()
       }
       instance.isPrevented = env.TRUE
     }
@@ -54,21 +50,24 @@ export default class Event {
   /**
    * 停止事件广播
    */
-  stop() {
+  stopPropagation(): CustomEventInterface {
     const instance = this
     if (!instance.isStoped) {
       const { originalEvent } = instance
       if (originalEvent) {
-        if (is.func(originalEvent.stop)) {
-          originalEvent.stop()
-        }
-        else if (is.func(originalEvent.stopPropagation)) {
-          originalEvent.stopPropagation()
-        }
+        originalEvent.stopPropagation()
       }
       instance.isStoped = env.TRUE
     }
     return instance
+  }
+
+  prevent(): CustomEventInterface {
+    return this.preventDefault()
+  }
+
+  stop(): CustomEventInterface {
+    return this.stopPropagation()
   }
 
 }

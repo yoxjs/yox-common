@@ -1,6 +1,6 @@
 {
   "name": "yox-common",
-  "version": "0.18.4",
+  "version": "0.18.5",
   "description": "Common code for Yox.js",
   "directories": {
     "example": "example",
@@ -26,5 +26,8 @@
     "@babel/preset-typescript": "^7.3.3",
     "babel-jest": "^24.6.0",
     "jest": "^24.5.0"
+  },
+  "dependencies": {
+    "yox-type": "^0.0.17"
   }
 }

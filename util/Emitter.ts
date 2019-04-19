@@ -1,4 +1,3 @@
-import isDef from '../function/isDef'
 import execute from '../function/execute'
 
 import * as is from './is'
@@ -7,6 +6,7 @@ import * as array from './array'
 import * as object from './object'
 import * as string from './string'
 
+import * as type from 'yox-type/src/type'
 import CustomEvent from './Event'
 
 const RAW_NAME = env.RAW_NAME
@@ -56,7 +56,7 @@ export default class Emitter {
    * @param bullet 事件或事件名称
    * @param data 事件数据
    */
-  fire(bullet: string | CustomEvent, data: Record<string, any> | any[] | void, filter?: (item: Record<string, any>, data: Record<string, any> | any[] | void) => boolean | void) {
+  fire(bullet: string | CustomEvent, data: type.eventData | any[] | void, filter?: (item: Record<string, any>, data: type.eventData | any[] | void) => boolean | void) {
 
     let event: CustomEvent | void, type: string
 
