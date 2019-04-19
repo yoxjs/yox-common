@@ -15,6 +15,8 @@ export default function (fn: any, context?: any, args?: any): any {
       ? fn.apply(context, args)
       : isDef(context)
         ? fn.call(context, args)
-        : fn(args)
+        : isDef(args)
+          ? fn(args)
+          : fn()
   }
 }

@@ -55,6 +55,12 @@ test('execute arguments', () => {
     arg
   )
 
+  execute(
+    function () {
+      expect(arguments.length).toBe(0)
+    }
+  )
+
 })
 
 test('execute return value', () => {
