@@ -5,35 +5,39 @@ import * as env from './env'
 import * as array from './array'
 import * as object from './object'
 import * as string from './string'
+import * as logger from './logger'
 
 import * as type from 'yox-type/src/type'
+import EmitterOptions from 'yox-type/src/options/Emitter'
 import CustomEvent from './Event'
 
-const RAW_NAME = env.RAW_NAME
-const RAW_SPACE = 'space'
+interface Namespace {
+  name: string
+  ns: string
+}
 
 export default class Emitter {
 
   /**
    * 是否开启命名空间
    *
-   * 命名空间格式为  name.space
+   * 命名空间格式为  name.namespace
    *
    * 典型的场景是在一个组件创建时绑定全局事件，销毁时解绑事件，如下
    *
    * create:
    *
-   *    component.on('a.space', listener)
-   *    component.on('b.space', listener)
+   *    component.on('a.namespace', listener)
+   *    component.on('b.namespace', listener)
    *
    * destroy:
    *
-   *    component.off('.space') // 无需依次解绑，费时费力
+   *    component.off('.namespace') // 无需依次解绑，费时费力
    *
-   * a.space 会响应全局 a 事件，原因正如上面这个例子，否则无法实现快捷解绑
-   * a 不会响应 a.space 事件，因为命名空间不匹配
+   * a.namespace 会响应全局 a 事件，原因正如上面这个例子，否则无法实现快捷解绑
+   * a 不会响应 a.namespace 事件，因为命名空间不匹配
    */
-  namespace: boolean
+  ns: boolean
 
   /**
    * 已注册的事件监听
@@ -45,8 +49,8 @@ export default class Emitter {
    */
   nativeListeners?: Record<string, Function>
 
-  constructor(namespace = env.FALSE) {
-    this.namespace = namespace
+  constructor(ns?: boolean) {
+    this.ns = ns || env.FALSE
     this.listeners = {}
   }
 
@@ -56,7 +60,7 @@ export default class Emitter {
    * @param bullet 事件或事件名称
    * @param data 事件数据
    */
-  fire(bullet: string | CustomEvent, data: type.eventData | any[] | void, filter?: (item: Record<string, any>, data: type.eventData | any[] | void) => boolean | void) {
+  fire(bullet: string | CustomEvent, data: type.eventData | any[] | void, filter?: (options: EmitterOptions, data: type.eventData | any[] | void) => boolean | void) {
 
     let event: CustomEvent | void, type: string
 
@@ -69,22 +73,23 @@ export default class Emitter {
     }
 
     let instance = this,
-    target = instance.parse(type),
-    name = target[RAW_NAME],
-    space = target[RAW_SPACE],
+
+    { name, ns } = instance.parse(type),
+
     list = instance.listeners[name],
+
     isComplete = env.TRUE
 
     if (list) {
 
       array.each(
         object.copy(list),
-        function (item: Record<string, any>, _: number, list: any[]) {
+        function (options: EmitterOptions, _: number, list: EmitterOptions[]) {
 
           // 传了 filter，则用 filter 测试是否继续往下执行
-          if ((filter ? !filter(item, data) : !instance.matchSpace(space, item))
+          if ((filter ? !filter(options, data) : !instance.matchNamespace(ns, options))
             // 在 fire 过程中被移除了
-            || !array.has(list, item)
+            || !array.has(list, options)
           ) {
             return
           }
@@ -96,17 +101,17 @@ export default class Emitter {
           // 为了能引用到，有时候会先定义 var listener = function,
           // 然后再 on('xx', listener) 这样其实是没有必要的
           if (event) {
-            event.listener = item.func
+            event.listener = options.fn
           }
 
-          let result = execute(item.func, item.ctx, data)
+          let result = execute(options.fn, options.ctx, data)
 
           // 执行次数
-          item.count = item.count > 0 ? (item.count + 1) : 1
+          options.num = options.num ? (options.num + 1) : 1
 
           // 注册的 listener 可以指定最大执行次数
-          if (item.count === item.max) {
-            instance.off(type, item)
+          if (options.num === options.max) {
+            instance.off(type, options)
           }
 
           // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
@@ -137,21 +142,23 @@ export default class Emitter {
    * @param type
    * @param listener
    */
-  has(type: string, listener?: Object | Function): boolean {
+  has(type: string, listener?: Function | EmitterOptions): boolean {
 
     let instance = this,
+
     listeners = instance.listeners,
-    target = instance.parse(type),
-    name = target[RAW_NAME],
-    space = target[RAW_SPACE],
+
+    { name, ns } = instance.parse(type),
+
     result = env.TRUE,
 
     matchListener = instance.matchListener(listener),
+
     each = function (list: Object[]) {
       array.each(
         list,
-        function (item) {
-          if (matchListener(item) && instance.matchSpace(space, item)) {
+        function (options: EmitterOptions) {
+          if (matchListener(options) && instance.matchNamespace(ns, options)) {
             return result = env.FALSE
           }
         }
@@ -164,7 +171,7 @@ export default class Emitter {
         each(listeners[name])
       }
     }
-    else if (space) {
+    else if (ns) {
       object.each(listeners, each)
     }
 
@@ -179,32 +186,36 @@ export default class Emitter {
    * @param listener
    * @param data
    */
-  on(type: any, listener: Object | Function, data?: Object) {
+  on(type: string | Record<string, Function | EmitterOptions>, listener?: Function | EmitterOptions, data?: EmitterOptions) {
 
     const instance = this,
+
     listeners = instance.listeners,
-    addListener = function (item: any, type: string) {
-      if (is.func(item)) {
-        item = { func: item }
-      }
-      if (is.object(item) && is.func(item.func)) {
-        if (data) {
-          object.extend(item, data)
+
+    addListener = function (item: Function | EmitterOptions | void, type: string) {
+      if (item) {
+        const options: EmitterOptions = is.func(item) ? { fn: item as Function } : item as EmitterOptions
+        if (is.object(options) && is.func(options.fn)) {
+          if (data) {
+            object.extend(options, data)
+          }
+          const { name, ns } = instance.parse(type)
+          options.ns = ns
+          array.push(
+            listeners[name] || (listeners[name] = []),
+            options
+          )
+          return
         }
-        const target = instance.parse(type)
-        item[RAW_SPACE] = target[RAW_SPACE]
-        array.push(
-          listeners[target[RAW_NAME]] || (listeners[target[RAW_NAME]] = []),
-          item
-        )
       }
+      logger.fatal(`注册 ${type} 事件失败`)
     }
 
-    if (is.object(type)) {
-      object.each(type, addListener)
+    if (is.string(type)) {
+      addListener(listener, type as string)
     }
-    else if (is.string(type)) {
-      addListener(listener, type)
+    else {
+      object.each(type, addListener)
     }
 
   }
@@ -215,7 +226,7 @@ export default class Emitter {
    * @param type
    * @param listener
    */
-  once(type: any, listener: Object | Function) {
+  once(type: string | Record<string, Function | EmitterOptions>, listener?: Function | EmitterOptions) {
     this.on(type, listener, { max: 1 })
   }
 
@@ -225,29 +236,29 @@ export default class Emitter {
    * @param type
    * @param listener
    */
-  off(type?: string, listener?: Object | Function) {
+  off(type?: string, listener?: Function | EmitterOptions) {
 
     const instance = this,
+
     listeners = instance.listeners
 
     if (type) {
 
-      const target = instance.parse(type),
-      name = target[RAW_NAME],
-      space = target[RAW_SPACE],
+      const { name, ns } = instance.parse(type),
 
       matchListener = instance.matchListener(listener),
+
       each = function (list: Object[], name: string) {
         array.each(
           list,
-          function (item: any, index: number, array: any[]) {
-            if (matchListener(item) && instance.matchSpace(space, item)) {
+          function (options: EmitterOptions, index: number, array: any[]) {
+            if (matchListener(options) && instance.matchNamespace(ns, options)) {
               array.splice(index, 1)
             }
           },
           env.TRUE
         )
-        if (!list[env.RAW_LENGTH]) {
+        if (!list.length) {
           delete listeners[name]
         }
       }
@@ -257,7 +268,7 @@ export default class Emitter {
           each(listeners[name], name)
         }
       }
-      else if (space) {
+      else if (ns) {
         object.each(listeners, each)
       }
 
@@ -274,17 +285,18 @@ export default class Emitter {
    *
    * @param type
    */
-  private parse(type: string): Object {
+  private parse(type: string): Namespace {
 
-    const result = {}
-    result[RAW_NAME] = type
-    result[RAW_SPACE] = env.EMPTY_STRING
+    const result = {
+      name: type,
+      ns: env.EMPTY_STRING,
+    }
 
-    if (this.namespace) {
+    if (this.ns) {
       const index = string.indexOf(type, '.')
       if (index >= 0) {
-        result[RAW_NAME] = string.slice(type, 0, index)
-        result[RAW_SPACE] = string.slice(type, index + 1)
+        result.name = string.slice(type, 0, index)
+        result.ns = string.slice(type, index + 1)
       }
     }
 
@@ -292,18 +304,43 @@ export default class Emitter {
 
   }
 
-  private matchListener(listener?: any): Function {
+  /**
+   * 外部会传入 Function 或 EmitterOptions 或 空
+   *
+   * 这里根据传入值的不同类型，创建不同的判断函数
+   *
+   * 如果传入的是 EmitterOptions，则全等判断
+   *
+   * 如果传入的是 Function，则判断函数是否全等
+   *
+   * 如果传入的是空，则直接返回 true
+   *
+   * @param listener
+   */
+  private matchListener(listener: Function | EmitterOptions | void): (options: EmitterOptions) => boolean {
     return is.object(listener)
-      ? function (item: any) {
-        return listener === item
-      }
-      : function (item: any) {
-        return !listener || listener === item.func
-      }
+      ? function (options: EmitterOptions) {
+          return listener === options
+        }
+      : is.func(listener)
+        ? function (options: EmitterOptions) {
+            return listener === options.fn
+          }
+        : function (options: EmitterOptions) {
+            return env.TRUE
+          }
   }
 
-  private matchSpace(space: string, item: Object): boolean {
-    return !space || space === item[RAW_SPACE]
+  /**
+   * 判断 options 是否能匹配命名空间
+   *
+   * 如果 options 未指定命名空间，或 options.ns 和 namespace 一致，返回 true
+   *
+   * @param namespace
+   * @param options
+   */
+  private matchNamespace(namespace: string, options: EmitterOptions): boolean {
+    return !namespace.length || namespace === options.ns
   }
 
 }
