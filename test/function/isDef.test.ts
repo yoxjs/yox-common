@@ -1,5 +1,5 @@
 
-import isDef from '../../function/isDef'
+import isDef from '../../src/function/isDef'
 
 test('test all types', () => {
 

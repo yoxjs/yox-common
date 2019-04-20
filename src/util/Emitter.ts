@@ -7,7 +7,7 @@ import * as object from './object'
 import * as string from './string'
 import * as logger from './logger'
 
-import * as type from 'yox-type/src/type'
+import * as type from 'yox-type'
 import EmitterOptions from 'yox-type/src/options/Emitter'
 import CustomEvent from './Event'
 
@@ -74,7 +74,7 @@ export default class Emitter {
 
     let instance = this,
 
-    { name, ns } = instance.parse(type),
+    { name, ns } = parseNamespace(instance.ns, type),
 
     list = instance.listeners[name],
 
@@ -87,7 +87,7 @@ export default class Emitter {
         function (options: EmitterOptions, _: number, list: EmitterOptions[]) {
 
           // 传了 filter，则用 filter 测试是否继续往下执行
-          if ((filter ? !filter(options, data) : !instance.matchNamespace(ns, options))
+          if ((filter ? !filter(options, data) : !matchNamespace(ns, options))
             // 在 fire 过程中被移除了
             || !array.has(list, options)
           ) {
@@ -148,17 +148,17 @@ export default class Emitter {
 
     listeners = instance.listeners,
 
-    { name, ns } = instance.parse(type),
+    { name, ns } = parseNamespace(instance.ns, type),
 
     result = env.TRUE,
 
-    matchListener = instance.matchListener(listener),
+    matchListener = createMatchListener(listener),
 
     each = function (list: Object[]) {
       array.each(
         list,
         function (options: EmitterOptions) {
-          if (matchListener(options) && instance.matchNamespace(ns, options)) {
+          if (matchListener(options) && matchNamespace(ns, options)) {
             return result = env.FALSE
           }
         }
@@ -199,7 +199,7 @@ export default class Emitter {
           if (data) {
             object.extend(options, data)
           }
-          const { name, ns } = instance.parse(type)
+          const { name, ns } = parseNamespace(instance.ns, type)
           options.ns = ns
           array.push(
             listeners[name] || (listeners[name] = []),
@@ -244,15 +244,15 @@ export default class Emitter {
 
     if (type) {
 
-      const { name, ns } = instance.parse(type),
+      const { name, ns } = parseNamespace(instance.ns, type),
 
-      matchListener = instance.matchListener(listener),
+      matchListener = createMatchListener(listener),
 
       each = function (list: Object[], name: string) {
         array.each(
           list,
           function (options: EmitterOptions, index: number, array: any[]) {
-            if (matchListener(options) && instance.matchNamespace(ns, options)) {
+            if (matchListener(options) && matchNamespace(ns, options)) {
               array.splice(index, 1)
             }
           },
@@ -280,67 +280,68 @@ export default class Emitter {
 
   }
 
-  /**
-   * 把事件类型解析成命名空间格式
-   *
-   * @param type
-   */
-  private parse(type: string): Namespace {
+}
 
-    const result = {
-      name: type,
-      ns: env.EMPTY_STRING,
+/**
+ * 把事件类型解析成命名空间格式
+ *
+ * @param ns
+ * @param type
+ */
+function parseNamespace(ns: boolean, type: string): Namespace {
+
+  const result = {
+    name: type,
+    ns: env.EMPTY_STRING,
+  }
+
+  if (ns) {
+    const index = string.indexOf(type, '.')
+    if (index >= 0) {
+      result.name = string.slice(type, 0, index)
+      result.ns = string.slice(type, index + 1)
     }
+  }
 
-    if (this.ns) {
-      const index = string.indexOf(type, '.')
-      if (index >= 0) {
-        result.name = string.slice(type, 0, index)
-        result.ns = string.slice(type, index + 1)
+  return result
+
+}
+
+/**
+ * 外部会传入 Function 或 EmitterOptions 或 空
+ *
+ * 这里根据传入值的不同类型，创建不同的判断函数
+ *
+ * 如果传入的是 EmitterOptions，则全等判断
+ *
+ * 如果传入的是 Function，则判断函数是否全等
+ *
+ * 如果传入的是空，则直接返回 true
+ *
+ * @param listener
+ */
+function createMatchListener(listener: Function | EmitterOptions | void): (options: EmitterOptions) => boolean {
+  return is.object(listener)
+    ? function (options: EmitterOptions) {
+        return listener === options
       }
-    }
-
-    return result
-
-  }
-
-  /**
-   * 外部会传入 Function 或 EmitterOptions 或 空
-   *
-   * 这里根据传入值的不同类型，创建不同的判断函数
-   *
-   * 如果传入的是 EmitterOptions，则全等判断
-   *
-   * 如果传入的是 Function，则判断函数是否全等
-   *
-   * 如果传入的是空，则直接返回 true
-   *
-   * @param listener
-   */
-  private matchListener(listener: Function | EmitterOptions | void): (options: EmitterOptions) => boolean {
-    return is.object(listener)
+    : is.func(listener)
       ? function (options: EmitterOptions) {
-          return listener === options
+          return listener === options.fn
         }
-      : is.func(listener)
-        ? function (options: EmitterOptions) {
-            return listener === options.fn
-          }
-        : function (options: EmitterOptions) {
-            return env.TRUE
-          }
-  }
+      : function (options: EmitterOptions) {
+          return env.TRUE
+        }
+}
 
-  /**
-   * 判断 options 是否能匹配命名空间
-   *
-   * 如果 options 未指定命名空间，或 options.ns 和 namespace 一致，返回 true
-   *
-   * @param namespace
-   * @param options
-   */
-  private matchNamespace(namespace: string, options: EmitterOptions): boolean {
-    return !namespace.length || namespace === options.ns
-  }
-
+/**
+ * 判断 options 是否能匹配命名空间
+ *
+ * 如果 options 未指定命名空间，或 options.ns 和 namespace 一致，返回 true
+ *
+ * @param namespace
+ * @param options
+ */
+function matchNamespace(namespace: string, options: EmitterOptions): boolean {
+  return !namespace.length || namespace === options.ns
 }

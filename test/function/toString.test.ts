@@ -1,5 +1,5 @@
 
-import toString from '../../function/toString'
+import toString from '../../src/function/toString'
 
 describe('function/toString', () => {
   it('defaultValue is empty string', () => {

@@ -1,6 +1,6 @@
 
-import * as is from '../../util/is'
-import * as array from '../../util/array'
+import * as is from '../../src/util/is'
+import * as array from '../../src/util/array'
 
 it('each callback params', () => {
   let test = [1, 2, 3]

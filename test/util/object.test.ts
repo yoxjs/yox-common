@@ -1,5 +1,5 @@
 
-import * as object from '../../util/object'
+import * as object from '../../src/util/object'
 
 test('sort', () => {
   let target = {

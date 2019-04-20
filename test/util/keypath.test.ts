@@ -1,6 +1,6 @@
 
-import * as is from '../../util/is'
-import * as keypath from '../../util/keypath'
+import * as is from '../../src/util/is'
+import * as keypath from '../../src/util/keypath'
 
 test('join', () => {
 

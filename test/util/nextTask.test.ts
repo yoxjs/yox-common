@@ -1,5 +1,5 @@
 
-import NextTask from '../../util/NextTask'
+import NextTask from '../../src/util/NextTask'
 
 test('add', done => {
 

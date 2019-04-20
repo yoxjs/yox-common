@@ -1,4 +1,3 @@
-
 import execute from './execute'
 
 import * as env from '../util/env'
@@ -12,7 +11,7 @@ import * as array from '../util/array'
  * @param sync 是否立即触发
  * @return 节流函数
  */
-export default function (fn: Function, delay: number, sync = env.FALSE) {
+export default function (fn: Function, delay: number, sync?: boolean) {
 
   let timer: number
 
@@ -20,7 +19,7 @@ export default function (fn: Function, delay: number, sync = env.FALSE) {
 
     if (!timer) {
 
-      let args = array.toArray(arguments)
+      const args = array.toArray(arguments)
       if (sync) {
         execute(fn, env.NULL, args)
       }

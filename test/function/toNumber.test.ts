@@ -1,5 +1,5 @@
 
-import toNumber from '../../function/toNumber'
+import toNumber from '../../src/function/toNumber'
 
 it('defaultValue is 0', () => {
   expect(

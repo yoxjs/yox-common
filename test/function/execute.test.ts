@@ -1,5 +1,5 @@
 
-import execute from '../../function/execute'
+import execute from '../../src/function/execute'
 
 test('execute not a function', () => {
 

@@ -1,5 +1,5 @@
 
-import isNative from '../../function/isNative'
+import isNative from '../../src/function/isNative'
 
 test('test all types', () => {
 

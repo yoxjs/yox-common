@@ -1,5 +1,5 @@
 
-import toJSON from '../../function/toJSON'
+import toJSON from '../../src/function/toJSON'
 
 it('toJSON', () => {
   let obj = { a: 1 }

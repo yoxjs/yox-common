@@ -9,7 +9,7 @@ export default class NextTask {
   /**
    * 全局单例
    */
-  public static getInstance(): NextTask {
+  public static shared(): NextTask {
     if (!shared) {
       shared = new NextTask()
     }

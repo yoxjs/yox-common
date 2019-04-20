@@ -12,11 +12,11 @@ import toString from '../function/toString'
  */
 export function match(keypath: string, prefix: string): number {
   if (keypath === prefix) {
-    return prefix[env.RAW_LENGTH]
+    return prefix.length
   }
   prefix += env.KEYPATH_SEPARATOR
   return string.startsWith(keypath, prefix)
-    ? prefix[env.RAW_LENGTH]
+    ? prefix.length
     : -1
 }
 

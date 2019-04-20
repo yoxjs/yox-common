@@ -1,5 +1,5 @@
 
-import debounce from '../../function/debounce'
+import debounce from '../../src/function/debounce'
 
 test('set sync to true', done => {
   let i = 0

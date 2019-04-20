@@ -1,6 +1,6 @@
 
-import Emitter from '../../util/Emitter'
-import Event from '../../util/Event';
+import Emitter from '../../src/util/Emitter'
+import Event from '../../src/util/Event';
 
 test('on', () => {
 
