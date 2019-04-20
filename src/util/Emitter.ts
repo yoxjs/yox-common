@@ -7,7 +7,7 @@ import * as object from './object'
 import * as string from './string'
 import * as logger from './logger'
 
-import * as type from 'yox-type'
+import * as type from 'yox-type/index'
 import EmitterOptions from 'yox-type/src/options/Emitter'
 import CustomEvent from './Event'
 
