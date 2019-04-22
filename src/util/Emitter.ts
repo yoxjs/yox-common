@@ -62,14 +62,18 @@ export default class Emitter {
    */
   fire(bullet: string | CustomEvent, data: type.eventData | any[] | void, filter?: (options: EmitterOptions, data: type.eventData | any[] | void) => boolean | void) {
 
-    let event: CustomEvent | void, type: string
+    let event: CustomEvent | void, type: string, args: any
 
     if (bullet instanceof CustomEvent) {
       event = bullet
       type = bullet.type
+      args = is.object(data) ? [event, data] : event
     }
     else {
       type = bullet
+      if (data) {
+        args = data
+      }
     }
 
     let instance = this,
@@ -104,7 +108,7 @@ export default class Emitter {
             event.listener = options.fn
           }
 
-          let result = execute(options.fn, options.ctx, data)
+          let result = execute(options.fn, options.ctx, args)
 
           // 执行次数
           options.num = options.num ? (options.num + 1) : 1
@@ -218,16 +222,6 @@ export default class Emitter {
       object.each(type, addListener)
     }
 
-  }
-
-  /**
-   * 注册一次监听
-   *
-   * @param type
-   * @param listener
-   */
-  once(type: string | Record<string, Function | EmitterOptions>, listener?: Function | EmitterOptions) {
-    this.on(type, listener, { max: 1 })
   }
 
   /**

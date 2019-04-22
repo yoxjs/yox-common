@@ -31,9 +31,15 @@ test('once', () => {
   let emitter = new Emitter()
   let i = 0
 
-  emitter.once('click', function () {
-    i++
-  })
+  emitter.on(
+    'click',
+    function () {
+      i++
+    },
+    {
+      max: 1
+    }
+  )
   expect(i).toBe(0)
 
   emitter.fire('click')
