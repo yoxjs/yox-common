@@ -128,7 +128,7 @@ export function toObject(array: any[], key?: string | null, value?: any) {
  * @param strict 是否全等判断，默认是全等
  * @return 如果未找到，返回 -1
  */
-export function indexOf(array: any[], target: any, strict = env.TRUE): number {
+export function indexOf(array: any[], target: any, strict?: boolean): number {
   let result = -1
   each(
     array,
@@ -150,7 +150,7 @@ export function indexOf(array: any[], target: any, strict = env.TRUE): number {
  * @param strict 是否全等判断，默认是全等
  * @return
  */
-export function has(array: any[], target: any, strict = env.TRUE): boolean {
+export function has(array: any[], target: any, strict?: boolean): boolean {
   return indexOf(array, target, strict) >= 0
 }
 
@@ -187,7 +187,7 @@ export function pop(array: any[]): any {
  * @param strict 是否全等判断，默认是全等
  * @return 删除的数量
  */
-export function remove(array: any[], target: any, strict = env.TRUE): number {
+export function remove(array: any[], target: any, strict?: boolean): number {
   let result = 0
   each(
     array,
