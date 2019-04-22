@@ -40,11 +40,8 @@ export const RAW_ABSOLUTE_KEYPATH = 'absoluteKeypath'
 
 export const KEYPATH_SEPARATOR = '.'
 
-export const KEYPATH_PUBLIC_PARENT = '..'
-export const KEYPATH_PRIVATE_PARENT = '$parent'
-
-export const KEYPATH_PUBLIC_CURRENT = RAW_THIS
-export const KEYPATH_PRIVATE_CURRENT = '$this'
+export const KEYPATH_PARENT = '..'
+export const KEYPATH_CURRENT = RAW_THIS
 
 /**
  * Single instance for window in browser
