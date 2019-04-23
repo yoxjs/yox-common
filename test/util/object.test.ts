@@ -63,9 +63,9 @@ test('has', () => {
   let test1 = {}
   let test2 = { a: 1 }
   expect(object.has(test1, 'a')).toBe(false)
-  expect(object.has(test1, 'toString')).toBe(false)
+  expect(object.has(test1, 'toString')).toBe(true)
   expect(object.has(test2, 'a')).toBe(true)
-  expect(object.has(test2, 'toString')).toBe(false)
+  expect(object.has(test2, 'toString')).toBe(true)
 })
 
 test('extend', () => {

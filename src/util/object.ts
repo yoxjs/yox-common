@@ -3,6 +3,8 @@ import * as env from './env'
 import * as array from './array'
 import * as keypathUtil from './keypath'
 
+import isDef from 'yox-common/src/function/isDef'
+
 /**
  * 获取对象的 key 的数组
  *
@@ -19,8 +21,9 @@ export function keys(object: Object): string[] {
  * @param object
  * @return
  */
-export function empty(object: Object): boolean {
-  return keys(object).length === 0
+export function falsy(object: any): boolean {
+  return !is.object(object)
+    || !keys(object).length
 }
 
 function sortKeyByAsc(a: string, b: string): number {
@@ -38,7 +41,7 @@ function sortKeyByDesc(a: string, b: string): number {
  * @param desc 是否逆序，默认从小到大排序
  * @return
  */
-export function sort(object: Object, desc = env.FALSE): string[] {
+export function sort(object: Object, desc?: boolean): string[] {
   return keys(object).sort(
     desc ? sortKeyByDesc : sortKeyByAsc
   )
@@ -66,7 +69,8 @@ export function each(object: Object, callback: (value: any, key: string) => bool
  * @return
  */
 export function has(object: Object, key: string | number): boolean {
-  return object.hasOwnProperty(key)
+  // 优先不要用 hasOwnProperty，性能差
+  return isDef(object[key]) || object.hasOwnProperty(key)
 }
 
 /**
@@ -74,7 +78,7 @@ export function has(object: Object, key: string | number): boolean {
  *
  * @param object
  */
-export function clear(object: Object) {
+export function clear(object: Object): void {
   each(
     object,
     function (_, key) {
@@ -88,7 +92,7 @@ export function clear(object: Object) {
  *
  * @return
  */
-export function extend(original: Object, ...objects: Object[]) {
+export function extend(original: Object, ...objects: Object[]): Object {
   array.each(
     objects,
     function (object) {
@@ -110,7 +114,7 @@ export function extend(original: Object, ...objects: Object[]) {
  * @param deep 是否需要深拷贝
  * @return
  */
-export function copy(object: any, deep = env.FALSE): any {
+export function copy(object: any, deep?: boolean): any {
   let result = object
   if (is.array(object)) {
     if (deep) {
@@ -173,25 +177,40 @@ export function get(object: any, keypath: string | number): any {
     keypath,
     function (key, isLast) {
 
-      // 支持原型获取，如 {}.toString
-      // 原型上的属性或方法无法通过 has 方法判断，因此用 in 操作符
-      if (is.object(object) && key in object) {
-        let value = object[key]
+      if (object != env.NULL) {
+
+        // 这里主要目的是提升性能
+        // 因此不再调用 has 方法了
+
+        // 先直接取值
+        let value = object[key],
+
+        // 紧接着判断值是否存在
+        // 下面会处理计算属性的值，不能在它后面设置 hasValue
+        hasValue = isDef(value) || object.hasOwnProperty(key)
+
+        // 如果是计算属性，取计算属性的值
         if (value && is.func(value.get)) {
           value = value.get()
         }
-        valueHolder[env.RAW_VALUE] = value
-      }
-      // 基本类型，如获取 ''.length 等
-      else if (object != env.NULL && has(object, key)) {
-        valueHolder[env.RAW_VALUE] = object[key]
+
+        if (isLast) {
+          if (hasValue) {
+            valueHolder[env.RAW_VALUE] = value
+            object = valueHolder
+          }
+          else {
+            object = env.UNDEFINED
+          }
+        }
+        else {
+          object = value
+        }
       }
       else {
         object = env.UNDEFINED
         return env.FALSE
       }
-
-      object = isLast ? valueHolder : valueHolder[env.RAW_VALUE]
 
     }
   )
