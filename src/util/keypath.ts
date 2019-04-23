@@ -3,6 +3,8 @@ import * as env from './env'
 import * as string from './string'
 import toString from '../function/toString'
 
+const SEPARATOR = '.'
+
 /**
  * 判断 keypath 是否以 prefix 开头，如果是，返回匹配上的前缀长度，否则返回 -1
  *
@@ -14,7 +16,7 @@ export function match(keypath: string, prefix: string): number {
   if (keypath === prefix) {
     return prefix.length
   }
-  prefix += env.KEYPATH_SEPARATOR
+  prefix += SEPARATOR
   return string.startsWith(keypath, prefix)
     ? prefix.length
     : -1
@@ -36,7 +38,7 @@ export function each(keypath: any, callback: (key: string | number, isLast: bool
   else {
     let startIndex = 0, endIndex = 0
     while (env.TRUE) {
-      endIndex = string.indexOf(keypath, env.KEYPATH_SEPARATOR, startIndex)
+      endIndex = string.indexOf(keypath, SEPARATOR, startIndex)
       if (endIndex > 0) {
         if (
           callback(
@@ -82,7 +84,7 @@ export function join(keypath1: any, keypath2: any): string {
   return keypath1 === env.EMPTY_STRING
     ? keypath2
     : keypath2 !== env.EMPTY_STRING
-      ? keypath1 + env.KEYPATH_SEPARATOR + keypath2
+      ? keypath1 + SEPARATOR + keypath2
       : keypath1
 
 }

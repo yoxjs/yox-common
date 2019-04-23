@@ -16,29 +16,25 @@ export const RAW_KEY = 'key'
 export const RAW_REF = 'ref'
 export const RAW_TAG = 'tag'
 export const RAW_SLOT = 'slot'
+
+export const RAW_FILTER = 'filter'
+export const RAW_PARTIAL = 'partial'
 export const RAW_TRANSITION = 'transition'
 export const RAW_DIRECTIVE = 'directive'
-export const RAW_PARTIAL = 'partial'
-export const RAW_FILTER = 'filter'
+export const RAW_COMPONENT = 'component'
 
 export const RAW_THIS = 'this'
 export const RAW_TYPE = 'type'
 export const RAW_TEXT = 'text'
-export const RAW_EXPR = 'expr'
 export const RAW_NAME = 'name'
 export const RAW_VALUE = 'value'
-export const RAW_INDEX = 'index'
 export const RAW_LENGTH = 'length'
-export const RAW_CHILDREN = 'children'
 export const RAW_FUNCTION = 'function'
 export const RAW_TEMPLATE = 'template'
-export const RAW_COMPONENT = 'component'
 
 export const RAW_KEYPATH = 'keypath'
 export const RAW_STATIC_KEYPATH = 'staticKeypath'
 export const RAW_ABSOLUTE_KEYPATH = 'absoluteKeypath'
-
-export const KEYPATH_SEPARATOR = '.'
 
 export const KEYPATH_PARENT = '..'
 export const KEYPATH_CURRENT = RAW_THIS

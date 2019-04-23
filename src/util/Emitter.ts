@@ -47,7 +47,7 @@ export default class Emitter {
   /**
    * 原生事件监听，一个事件对应一个 listener
    */
-  nativeListeners?: Record<string, Function>
+  nativeListeners?: Record<string, (event: Event) => void>
 
   constructor(ns?: boolean) {
     this.ns = ns || env.FALSE
