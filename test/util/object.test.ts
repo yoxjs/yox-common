@@ -23,6 +23,23 @@ test('sort', () => {
 
 })
 
+test('falsy', () => {
+
+  expect(object.falsy([])).toBe(true)
+  expect(object.falsy([1,2])).toBe(true)
+  expect(object.falsy(new Date())).toBe(true)
+  expect(object.falsy(undefined)).toBe(true)
+  expect(object.falsy(null)).toBe(true)
+  expect(object.falsy(1)).toBe(true)
+  expect(object.falsy(0)).toBe(true)
+  expect(object.falsy(true)).toBe(true)
+  expect(object.falsy(false)).toBe(true)
+
+  expect(object.falsy({})).toBe(true)
+  expect(object.falsy({ name: 1 })).toBe(false)
+
+})
+
 test('each callback params', () => {
   let key = 'a'
   let value = 1

@@ -9,7 +9,7 @@ import execute from '../function/execute'
  * @param callback 返回 false 可停止遍历
  * @param reversed 是否逆序遍历
  */
-export function each(array: any[], callback: (item: any, index: number, array: any[]) => boolean | void, reversed = env.FALSE) {
+export function each(array: any[], callback: (item: any, index: number, array: any[]) => boolean | void, reversed?: boolean) {
   let length = array[env.RAW_LENGTH]
   if (length) {
     if (reversed) {

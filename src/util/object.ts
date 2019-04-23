@@ -23,15 +23,16 @@ export function keys(object: Object): string[] {
  */
 export function falsy(object: any): boolean {
   return !is.object(object)
+    || is.array(object)
     || !keys(object).length
 }
 
 function sortKeyByAsc(a: string, b: string): number {
-  return a[env.RAW_LENGTH] - b[env.RAW_LENGTH]
+  return a.length - b.length
 }
 
 function sortKeyByDesc(a: string, b: string): number {
-  return b[env.RAW_LENGTH] - a[env.RAW_LENGTH]
+  return b.length - a.length
 }
 
 /**
@@ -227,7 +228,7 @@ export function get(object: any, keypath: string | number): any {
  * @param value
  * @param autofill 是否自动填充不存在的对象，默认自动填充
  */
-export function set(object: Object, keypath: string | number, value: any, autofill = env.FALSE) {
+export function set(object: Object, keypath: string | number, value: any, autofill?: boolean) {
   keypathUtil.each(
     keypath,
     function (key, isLast) {
