@@ -10,7 +10,7 @@ import execute from '../function/execute'
  * @param reversed 是否逆序遍历
  */
 export function each(array: any[], callback: (item: any, index: number, array: any[]) => boolean | void, reversed?: boolean) {
-  let length = array[env.RAW_LENGTH]
+  const { length } = array
   if (length) {
     if (reversed) {
       for (let i = length - 1; i >= 0; i--) {
@@ -41,7 +41,7 @@ export function join(array: string[], separator: string): string {
 }
 
 function nativePush(array: any[], item: any) {
-  array[array[env.RAW_LENGTH]] = item
+  array[array.length] = item
 }
 
 function nativeUnshift(array: any[], item: any) {
@@ -161,7 +161,7 @@ export function has(array: any[], target: any, strict?: boolean): boolean {
  * @return
  */
 export function last(array: any[]): any {
-  let length = array[env.RAW_LENGTH]
+  const { length } = array
   if (length > 0) {
     return array[length - 1]
   }
@@ -209,5 +209,5 @@ export function remove(array: any[], target: any, strict?: boolean): number {
  * @return
  */
 export function falsy(array: any): boolean {
-  return !is.array(array) || !array[env.RAW_LENGTH]
+  return !is.array(array) || !array.length
 }

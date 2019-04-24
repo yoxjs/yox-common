@@ -1,6 +1,8 @@
 import * as is from './is'
 import * as env from './env'
 
+import isDef from '../function/isDef'
+
 const camelizePattern = /-([a-z])/gi,
 
 hyphenatePattern = /\B([A-Z])/g,
@@ -81,8 +83,8 @@ export function slice(str: string, start: number, end?: number) {
  * @param start
  * @return
  */
-export function indexOf(str: string, part: string, start = 0): number {
-  return str.indexOf(part, start)
+export function indexOf(str: string, part: string, start?: number): number {
+  return str.indexOf(part, isDef(start) ? start : 0)
 }
 
 /**
@@ -93,8 +95,8 @@ export function indexOf(str: string, part: string, start = 0): number {
  * @param end
  * @return
  */
-export function lastIndexOf(str: string, part: string, end = str[env.RAW_LENGTH]): number {
-  return str.lastIndexOf(part, end)
+export function lastIndexOf(str: string, part: string, end?: number): number {
+  return str.lastIndexOf(part, isDef(end) ? end : str.length)
 }
 
 /**
@@ -127,7 +129,7 @@ export function startsWith(str: string, part: string): boolean {
  * @return
  */
 export function endsWith(str: string, part: string): boolean {
-  let offset = str[env.RAW_LENGTH] - part[env.RAW_LENGTH]
+  const offset = str.length - part.length
   return offset >= 0 && lastIndexOf(str, part) === offset
 }
 
@@ -152,5 +154,5 @@ export function codeAt(str: string, index?: number): number {
  * @return
  */
 export function falsy(str: any): boolean {
-  return !is.string(str) || !str[env.RAW_LENGTH]
+  return !is.string(str) || !str.length
 }

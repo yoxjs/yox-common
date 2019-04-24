@@ -146,7 +146,7 @@ export function copy(object: any, deep?: boolean): any {
 /**
  * 辅助 get 函数，持有最后找到的值，避免频繁的创建临时对象
  */
-const valueHolder = { }
+const valueHolder: Record<string, any> = {}
 
 /**
  * 从对象中查找一个 keypath
@@ -197,7 +197,7 @@ export function get(object: any, keypath: string | number): any {
 
         if (isLast) {
           if (hasValue) {
-            valueHolder[env.RAW_VALUE] = value
+            valueHolder.value = value
             object = valueHolder
           }
           else {
