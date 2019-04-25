@@ -3,7 +3,7 @@ import * as env from './env'
 import * as string from './string'
 import toString from '../function/toString'
 
-const SEPARATOR = '.'
+const SEPARATOR = '.', patternCache = {}
 
 /**
  * 判断 keypath 是否以 prefix 开头，如果是，返回匹配上的前缀长度，否则返回 -1
@@ -97,8 +97,6 @@ export function join(keypath1: any, keypath2: any): string {
 export function isFuzzy(keypath: string): boolean {
   return string.has(keypath, '*')
 }
-
-const patternCache = {}
 
 /**
  * 模糊匹配 keypath

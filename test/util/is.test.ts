@@ -261,50 +261,6 @@ it('boolean', () => {
 
 })
 
-it('primitive', () => {
-
-  expect(
-    is.primitive(null)
-  )
-  .toBe(true)
-
-  expect(
-    is.primitive(undefined)
-  )
-  .toBe(true)
-
-  expect(
-    is.primitive('')
-  )
-  .toBe(true)
-
-  expect(
-    is.primitive(1)
-  )
-  .toBe(true)
-
-  expect(
-    is.primitive(true)
-  )
-  .toBe(true)
-
-  expect(
-    is.primitive(false)
-  )
-  .toBe(true)
-
-  expect(
-    is.primitive({ })
-  )
-  .toBe(false)
-
-  expect(
-    is.primitive([ ])
-  )
-  .toBe(false)
-
-})
-
 it('numeric', () => {
 
   expect(

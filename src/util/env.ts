@@ -19,15 +19,14 @@ export const RAW_NAME = 'name'
 
 export const RAW_FILTER = 'filter'
 export const RAW_PARTIAL = 'partial'
-export const RAW_TRANSITION = 'transition'
-export const RAW_DIRECTIVE = 'directive'
 export const RAW_COMPONENT = 'component'
+export const RAW_DIRECTIVE = 'directive'
+export const RAW_TRANSITION = 'transition'
 
 export const RAW_THIS = 'this'
 export const RAW_FUNCTION = 'function'
 export const RAW_TEMPLATE = 'template'
 
-export const RAW_KEYPATH = 'keypath'
 export const RAW_STATIC_KEYPATH = 'staticKeypath'
 export const RAW_ABSOLUTE_KEYPATH = 'absoluteKeypath'
 

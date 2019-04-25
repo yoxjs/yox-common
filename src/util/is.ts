@@ -1,10 +1,19 @@
 import * as env from './env'
 
+const { toString } = Object.prototype
+
+// 这个函数比较慢，所以下面都不用它，主要是给外部用
+export function is(value: any, type: string) {
+  return type === 'numeric'
+    ? numeric(value)
+    : toString.call(value).toLowerCase() === `[object ${type}]`
+}
+
 /**
  * Check if value is a function.
  *
  * @param value
- * @return {boolean}
+ * @return
  */
 export function func(value: any): boolean {
   return typeof value === env.RAW_FUNCTION
@@ -14,7 +23,7 @@ export function func(value: any): boolean {
  * Check if value is an array.
  *
  * @param value
- * @return {boolean}
+ * @return
  */
 export function array(value: any): boolean {
   return Array.isArray(value)
@@ -24,7 +33,7 @@ export function array(value: any): boolean {
  * Check if value is an object.
  *
  * @param value
- * @return {boolean}
+ * @return
  */
 export function object(value: any): boolean {
   // 低版本 IE 会把 null 和 undefined 当作 object
@@ -35,7 +44,7 @@ export function object(value: any): boolean {
  * Check if value is a string.
  *
  * @param value
- * @return {boolean}
+ * @return
  */
 export function string(value: any): boolean {
   return typeof value === 'string'
@@ -45,7 +54,7 @@ export function string(value: any): boolean {
  * Check if value is a number.
  *
  * @param value
- * @return {boolean}
+ * @return
  */
 export function number(value: any): boolean {
   return typeof value === 'number'
@@ -55,7 +64,7 @@ export function number(value: any): boolean {
  * Check if value is boolean.
  *
  * @param value
- * @return {boolean}
+ * @return
  */
 export function boolean(value: any): boolean {
   return typeof value === 'boolean'
@@ -65,22 +74,9 @@ export function boolean(value: any): boolean {
  * Check if value is numeric.
  *
  * @param value
- * @return {boolean}
+ * @return
  */
 export function numeric(value: any): boolean {
   return number(value)
     || (string(value) && !isNaN(parseFloat(value)) && isFinite(value))
-}
-
-/**
- * Check if value is primitive.
- *
- * @param value
- * @return {boolean}
- */
-export function primitive(value: any): boolean {
-  return string(value)
-    || number(value)
-    || boolean(value)
-    || value == env.NULL
 }
