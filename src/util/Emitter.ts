@@ -275,7 +275,9 @@ export default class Emitter {
       // 在开发阶段进行警告，比如传了 type 进来，type 是个空值
       // 但你不知道它是空值
       if (process.env.NODE_ENV === 'dev') {
-        logger.warn(`绑定的事件已被全部移除`)
+        if (arguments.length > 0) {
+          logger.warn(`绑定的事件已被全部移除`)
+        }
       }
     }
 
