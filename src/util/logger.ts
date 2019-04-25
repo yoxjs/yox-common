@@ -5,12 +5,12 @@ import toString from '../function/toString'
 /**
  * 是否有原生的日志特性，没有必要单独实现
  */
-const nativeConsole: Console | null = typeof console !== env.RAW_UNDEFINED ? console : env.NULL
+const nativeConsole: Console | null = typeof console !== env.RAW_UNDEFINED ? console : env.NULL,
 
 /**
  * 当前是否是源码调试，如果开启了代码压缩，empty function 里的注释会被干掉
  */
-const useSource = /yox/.test(toString(env.EMPTY_FUNCTION))
+useSource = /yox/.test(toString(env.EMPTY_FUNCTION))
 
 /**
  * 全局调试开关

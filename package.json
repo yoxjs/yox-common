@@ -1,6 +1,6 @@
 {
   "name": "yox-common",
-  "version": "0.18.22",
+  "version": "0.18.23",
   "description": "Common code for Yox.js",
   "directories": {
     "src": "src",
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/yoxjs/yox-common.git"
   },
   "scripts": {
-    "test": "jest"
+    "test": "export NODE_ENV=dev && jest"
   },
   "keywords": [],
   "author": "musicode",
@@ -25,9 +25,10 @@
     "@babel/preset-env": "^7.4.2",
     "@babel/preset-typescript": "^7.3.3",
     "babel-jest": "^24.6.0",
-    "jest": "^24.5.0"
+    "jest": "^24.5.0",
+    "@types/node": "^11.13.7"
   },
   "dependencies": {
-    "yox-type": "^0.0.37"
+    "yox-type": "^0.0.38"
   }
 }

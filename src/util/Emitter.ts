@@ -212,7 +212,9 @@ export default class Emitter {
           return
         }
       }
-      logger.fatal(`注册 ${type} 事件失败`)
+      if (process.env.NODE_ENV === 'dev') {
+        logger.fatal(`注册 ${type} 事件失败`)
+      }
     }
 
     if (is.string(type)) {
@@ -270,6 +272,11 @@ export default class Emitter {
     else {
       // 清空
       instance.listeners = {}
+      // 在开发阶段进行警告，比如传了 type 进来，type 是个空值
+      // 但你不知道它是空值
+      if (process.env.NODE_ENV === 'dev') {
+        logger.warn(`绑定的事件已被全部移除`)
+      }
     }
 
   }

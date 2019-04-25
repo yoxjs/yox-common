@@ -1,6 +1,6 @@
 import * as env from './env'
 
-const { toString } = Object.prototype
+const toString = Object.prototype.toString
 
 // 这个函数比较慢，所以下面都不用它，主要是给外部用
 export function is(value: any, type: string) {

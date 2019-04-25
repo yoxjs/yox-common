@@ -4,7 +4,7 @@
 export const TRUE = true
 export const FALSE = false
 export const NULL = null
-export const UNDEFINED = undefined
+export const UNDEFINED = void 0
 
 export const RAW_TRUE = 'true'
 export const RAW_FALSE = 'false'

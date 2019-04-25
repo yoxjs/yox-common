@@ -8,10 +8,10 @@ import * as array from '../util/array'
  *
  * @param fn 需要节制调用的函数
  * @param delay 调用的时间间隔，单位毫秒
- * @param sync 是否立即触发
+ * @param immediate 是否立即触发
  * @return 节流函数
  */
-export default function (fn: Function, delay: number, sync?: boolean) {
+export default function (fn: Function, delay: number, immediate?: boolean) {
 
   let timer: number
 
@@ -20,15 +20,15 @@ export default function (fn: Function, delay: number, sync?: boolean) {
     if (!timer) {
 
       const args = array.toArray(arguments)
-      if (sync) {
-        execute(fn, env.NULL, args)
+      if (immediate) {
+        execute(fn, env.UNDEFINED, args)
       }
 
       timer = setTimeout(
         function () {
           timer = 0
-          if (!sync) {
-            execute(fn, env.NULL, args)
+          if (!immediate) {
+            execute(fn, env.UNDEFINED, args)
           }
         },
         delay

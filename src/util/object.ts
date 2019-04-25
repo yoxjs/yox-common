@@ -71,7 +71,9 @@ export function each(object: Object, callback: (value: any, key: string) => bool
  */
 export function has(object: Object, key: string | number): boolean {
   // 优先不要用 hasOwnProperty，性能差
-  return isDef(object[key]) || object.hasOwnProperty(key)
+  return isDef(object[key])
+    // 没辙，那就用吧
+    || object.hasOwnProperty(key)
 }
 
 /**
