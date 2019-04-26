@@ -76,7 +76,7 @@ export const doc = typeof document !== RAW_UNDEFINED ? document : UNDEFINED
 /**
  * Single instance for noop function
  */
-export function EMPTY_FUNCTION() {
+export const EMPTY_FUNCTION = function () {
   /** yox */
 }
 
