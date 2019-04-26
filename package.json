@@ -1,6 +1,6 @@
 {
   "name": "yox-common",
-  "version": "0.18.23",
+  "version": "0.18.24",
   "description": "Common code for Yox.js",
   "directories": {
     "src": "src",
@@ -24,9 +24,9 @@
     "@babel/core": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
     "@babel/preset-typescript": "^7.3.3",
+    "@types/node": "^11.13.7",
     "babel-jest": "^24.6.0",
-    "jest": "^24.5.0",
-    "@types/node": "^11.13.7"
+    "jest": "^24.5.0"
   },
   "dependencies": {
     "yox-type": "^0.0.38"

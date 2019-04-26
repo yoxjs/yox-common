@@ -51,7 +51,7 @@ export function EMPTY_FUNCTION() {
 }
 
 /**
- * 空对象，很多地方会用到，比如 `a || plain` 确保是个对象
+ * 空对象，很多地方会用到，比如 `a || EMPTY_OBJECT` 确保是个对象
  */
 export const EMPTY_OBJECT = {}
 

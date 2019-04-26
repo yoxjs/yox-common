@@ -14,7 +14,7 @@ if (typeof setImmediate === env.RAW_FUNCTION && isNative(setImmediate)) {
 // 兼容性 IE10+ 和其他标准浏览器
 if (typeof MessageChannel === env.RAW_FUNCTION && isNative(MessageChannel)) {
   nextTick = function (fn: any) {
-    let channel = new MessageChannel()
+    const channel = new MessageChannel()
     channel.port1.onmessage = fn
     channel.port2.postMessage(1)
   }

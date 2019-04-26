@@ -1,7 +1,8 @@
 import * as is from '../util/is'
+import isDef from './isDef'
 
-export default function (target: any, defaultValue = 0): number {
+export default function (target: any, defaultValue?: number): number {
   return is.numeric(target)
     ? +target
-    : defaultValue
+    : isDef(defaultValue) ? defaultValue as number : 0
 }
