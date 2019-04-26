@@ -24,6 +24,9 @@ export const RAW_DIRECTIVE = 'directive'
 export const RAW_TRANSITION = 'transition'
 
 export const RAW_THIS = 'this'
+export const RAW_TYPE = 'type'
+export const RAW_VALUE = 'value'
+export const RAW_LENGTH = 'length'
 export const RAW_FUNCTION = 'function'
 export const RAW_TEMPLATE = 'template'
 
@@ -32,6 +35,33 @@ export const RAW_ABSOLUTE_KEYPATH = 'absoluteKeypath'
 
 export const KEYPATH_PARENT = '..'
 export const KEYPATH_CURRENT = RAW_THIS
+
+/**
+ * tap 事件
+ *
+ * 非常有用的抽象事件，比如 pc 端是 click 事件，移动端是 touchend 事件
+ *
+ * 这样只需 on-tap="handler" 就可以完美兼容各端
+ *
+ * 框架未实现此事件，通过 Yox.dom.specialEvents 提供给外部扩展
+ *
+ */
+export const EVENT_TAP = 'tap'
+
+/**
+ * 点击事件
+ */
+export const EVENT_CLICK = 'click'
+
+/**
+ * 输入事件
+ */
+export const EVENT_INPUT = 'input'
+
+/**
+ * 变化事件
+ */
+export const EVENT_CHANGE = 'change'
 
 /**
  * Single instance for window in browser
