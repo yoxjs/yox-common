@@ -13,7 +13,7 @@ import * as array from '../util/array'
  */
 export default function (fn: Function, delay: number, immediate?: boolean) {
 
-  let timer: number
+  let timer: any
 
   return function () {
 
@@ -26,7 +26,7 @@ export default function (fn: Function, delay: number, immediate?: boolean) {
 
       timer = setTimeout(
         function () {
-          timer = 0
+          timer = env.UNDEFINED
           if (!immediate) {
             execute(fn, env.UNDEFINED, args)
           }

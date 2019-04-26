@@ -143,7 +143,7 @@ test('get', () => {
   expect(object.get(test, 'user.extra.married').value).toBe(test.user.extra.married)
   expect(object.get(test, 'toString').value).toBe(Object.prototype.toString)
 
-  expect(object.get([1], 0).value).toBe(1)
+  expect(object.get([1], '0').value).toBe(1)
 
   expect(object.get('123', 'length').value).toBe(3)
   expect(object.get([1], 'length').value).toBe(1)

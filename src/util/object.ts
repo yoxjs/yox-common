@@ -159,7 +159,7 @@ const valueHolder: Record<string, any> = {}
  * @param keypath
  * @return
  */
-export function get(object: any, keypath: string | number): any {
+export function get(object: any, keypath: string): any {
 
   /**
    * 考虑以下情况:
@@ -230,7 +230,7 @@ export function get(object: any, keypath: string | number): any {
  * @param value
  * @param autofill 是否自动填充不存在的对象，默认自动填充
  */
-export function set(object: Object, keypath: string | number, value: any, autofill?: boolean) {
+export function set(object: Object, keypath: string, value: any, autofill?: boolean) {
   keypathUtil.each(
     keypath,
     function (key, isLast) {

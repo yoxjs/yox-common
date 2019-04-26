@@ -20,17 +20,17 @@ test('join', () => {
   .toBe('a.b.c')
 
   expect(
-    keypath.join('a.0.c', 1)
+    keypath.join('a.0.c', '1')
   )
   .toBe('a.0.c.1')
 
   expect(
-    keypath.join(0, 'a.b')
+    keypath.join('0', 'a.b')
   )
   .toBe('0.a.b')
 
   expect(
-    keypath.join(1, 2)
+    keypath.join('1', '2')
   )
   .toBe('1.2')
 

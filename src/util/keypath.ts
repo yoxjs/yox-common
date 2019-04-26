@@ -1,9 +1,8 @@
 import * as is from './is'
 import * as env from './env'
 import * as string from './string'
-import toString from '../function/toString'
 
-const SEPARATOR = '.', patternCache = {}
+const SEPARATOR = '.', splitCache = {}, patternCache = {}
 
 /**
  * 判断 keypath 是否以 prefix 开头，如果是，返回匹配上的前缀长度，否则返回 -1
@@ -28,46 +27,18 @@ export function match(keypath: string, prefix: string): number {
  * @param keypath
  * @param callback 返回 false 可中断遍历
  */
-export function each(keypath: any, callback: (key: string | number, isLast: boolean) => boolean | void) {
-  if (string.falsy(keypath)) {
-    callback(
-      keypath,
-      env.TRUE
-    )
-  }
-  else {
-    let startIndex = 0, endIndex = 0
-    while (env.TRUE) {
-      endIndex = string.indexOf(keypath, SEPARATOR, startIndex)
-      if (endIndex > 0) {
-        if (
-          callback(
-            string.slice(keypath, startIndex, endIndex),
-            env.FALSE
-          ) === env.FALSE
-        ) {
-          break
-        }
-        startIndex = endIndex + 1
-      }
-      else {
-        callback(
-          string.slice(keypath, startIndex),
-          env.TRUE
-        )
-        break
-      }
+export function each(keypath: string, callback: (key: string | number, isLast: boolean) => boolean | void) {
+  // 判断字符串是因为 keypath 有可能是 toString
+  // 而 splitCache.toString 是个函数
+  const list = is.string(splitCache[keypath])
+    ? splitCache[keypath]
+    : (splitCache[keypath] = keypath.split(SEPARATOR))
+
+  for (let i = 0, lastIndex = list.length - 1; i <= lastIndex; i++) {
+    if (callback(list[i], i === lastIndex) === env.FALSE) {
+      break
     }
   }
-}
-
-
-function formatKeypath(keypath: any): string {
-  return is.string(keypath)
-    ? keypath
-    : is.number(keypath)
-      ? toString(keypath)
-      : env.EMPTY_STRING
 }
 
 /**
@@ -76,17 +47,10 @@ function formatKeypath(keypath: any): string {
  * @param keypath1
  * @param keypath2
  */
-export function join(keypath1: any, keypath2: any): string {
-
-  keypath1 = formatKeypath(keypath1)
-  keypath2 = formatKeypath(keypath2)
-
-  return keypath1 === env.EMPTY_STRING
-    ? keypath2
-    : keypath2 !== env.EMPTY_STRING
-      ? keypath1 + SEPARATOR + keypath2
-      : keypath1
-
+export function join(keypath1: string, keypath2: string): string {
+  return keypath1 && keypath2
+    ? keypath1 + SEPARATOR + keypath2
+    : keypath1 || keypath2
 }
 
 /**
