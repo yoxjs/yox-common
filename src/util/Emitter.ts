@@ -276,7 +276,7 @@ export default class Emitter {
       // 但你不知道它是空值
       if (process.env.NODE_ENV === 'dev') {
         if (arguments.length > 0) {
-          logger.warn(`调用 emitter.off() 时，你传了事件名，但它是个空值`)
+          logger.warn(`调用 emitter.off(type) 时，type 为空`)
         }
       }
     }

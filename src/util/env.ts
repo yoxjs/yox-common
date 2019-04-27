@@ -30,9 +30,6 @@ export const RAW_LENGTH = 'length'
 export const RAW_FUNCTION = 'function'
 export const RAW_TEMPLATE = 'template'
 
-export const RAW_STATIC_KEYPATH = 'staticKeypath'
-export const RAW_ABSOLUTE_KEYPATH = 'absoluteKeypath'
-
 export const KEYPATH_PARENT = '..'
 export const KEYPATH_CURRENT = RAW_THIS
 
