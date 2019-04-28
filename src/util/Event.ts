@@ -7,7 +7,7 @@ export default class CustomEvent implements CustomEventInterface {
   // 事件名称
   type: string
 
-  // 谁发出的事件
+  // 哪个组件发出的事件
   target?: any
 
   // 原始事件，比如 DOM 事件

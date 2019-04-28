@@ -61,6 +61,11 @@ export const EVENT_INPUT = 'input'
 export const EVENT_CHANGE = 'change'
 
 /**
+ * 唯一内置的特殊事件：model
+ */
+export const EVENT_MODEL = 'model'
+
+/**
  * Single instance for window in browser
  */
 export const win = typeof window !== RAW_UNDEFINED ? window : UNDEFINED
