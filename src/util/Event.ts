@@ -16,7 +16,7 @@ export default class CustomEvent implements CustomEventInterface {
   // 是否已阻止事件的默认行为
   isPrevented?: boolean
 
-  // 事件是否已停止冒泡
+  // 是否已停止事件冒泡
   isStoped?: boolean
 
   // 处理当前事件的监听器，方便外部获取 listener 进行解绑
