@@ -1,4 +1,4 @@
-import CustomEventInterface from 'yox-type/src/Event'
+import CustomEventInterface from 'yox-type/src/CustomEvent'
 
 import * as env from './env'
 

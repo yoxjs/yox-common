@@ -9,7 +9,7 @@ import * as logger from './logger'
 
 import * as type from 'yox-type/index'
 import EmitterOptions from 'yox-type/src/options/Emitter'
-import CustomEvent from './Event'
+import CustomEvent from './CustomEvent'
 
 interface Namespace {
   name: string
@@ -47,7 +47,7 @@ export default class Emitter {
   /**
    * 原生事件监听，一个事件对应一个 listener
    */
-  nativeListeners?: Record<string, (event: Event) => void>
+  nativeListeners?: Record<string, type.nativeEventListener>
 
   constructor(ns?: boolean) {
     this.ns = ns || env.FALSE
