@@ -3,7 +3,7 @@ import * as env from './env'
 import * as array from './array'
 import * as keypathUtil from './keypath'
 
-import isDef from 'yox-common/src/function/isDef'
+import isDef from '../function/isDef'
 
 /**
  * 获取对象的 key 的数组

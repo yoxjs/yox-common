@@ -110,6 +110,10 @@ export default class Emitter {
 
           let result = execute(options.fn, options.ctx, args)
 
+          if (event) {
+            event.listener = env.UNDEFINED
+          }
+
           // 执行次数
           options.num = options.num ? (options.num + 1) : 1
 
