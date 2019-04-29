@@ -13,7 +13,6 @@ export const RAW_UNDEFINED = 'undefined'
 
 export const RAW_KEY = 'key'
 export const RAW_REF = 'ref'
-export const RAW_TAG = 'tag'
 export const RAW_SLOT = 'slot'
 export const RAW_NAME = 'name'
 
