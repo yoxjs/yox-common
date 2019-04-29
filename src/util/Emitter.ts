@@ -247,9 +247,9 @@ export default class Emitter {
       each = function (list: Object[], name: string) {
         array.each(
           list,
-          function (options: EmitterOptions, index: number, array: any[]) {
+          function (options: EmitterOptions, index: number, list: any[]) {
             if (matchListener(options) && matchNamespace(ns, options)) {
-              array.splice(index, 1)
+              list.splice(index, 1)
             }
           },
           env.TRUE
