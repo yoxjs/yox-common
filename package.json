@@ -1,6 +1,6 @@
 {
   "name": "yox-common",
-  "version": "0.18.34",
+  "version": "0.18.35",
   "description": "Common code for Yox.js",
   "directories": {
     "src": "src",
@@ -29,6 +29,6 @@
     "jest": "^24.5.0"
   },
   "dependencies": {
-    "yox-type": "^0.0.45"
+    "yox-type": "^0.0.46"
   }
 }
