@@ -5,6 +5,8 @@ import * as keypathUtil from './keypath'
 
 import isDef from '../function/isDef'
 
+import ValueHolder from 'yox-type/src/ValueHolder'
+
 /**
  * 获取对象的 key 的数组
  *
@@ -148,7 +150,9 @@ export function copy(object: any, deep?: boolean): any {
 /**
  * 辅助 get 函数，持有最后找到的值，避免频繁的创建临时对象
  */
-const valueHolder: Record<string, any> = {}
+const valueHolder: ValueHolder = {
+  value: env.UNDEFINED
+}
 
 /**
  * 从对象中查找一个 keypath
@@ -159,7 +163,7 @@ const valueHolder: Record<string, any> = {}
  * @param keypath
  * @return
  */
-export function get(object: any, keypath: string): any {
+export function get(object: any, keypath: string): ValueHolder | undefined {
 
   /**
    * 考虑以下情况:
