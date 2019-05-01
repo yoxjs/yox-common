@@ -42,7 +42,7 @@ export default class Emitter {
   /**
    * 已注册的事件监听
    */
-  listeners: Record<string, Record<string, any>[]>
+  listeners: Record<string, EmitterOptions[]>
 
   /**
    * 原生事件监听，一个事件对应一个 listener
