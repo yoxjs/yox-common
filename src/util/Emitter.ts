@@ -86,9 +86,12 @@ export default class Emitter {
 
     if (list) {
 
+      // 避免遍历过程中，数组发生变化，比如增删了
+      list = object.copy(list)
+
       array.each(
-        object.copy(list),
-        function (options: EmitterOptions, _: number, list: EmitterOptions[]) {
+        list,
+        function (options: EmitterOptions, _: number) {
 
           // 传了 filter，则用 filter 测试是否继续往下执行
           if ((filter ? !filter(options, data) : !matchNamespace(ns, options))
@@ -251,7 +254,7 @@ export default class Emitter {
       each = function (list: Object[], name: string) {
         array.each(
           list,
-          function (options: EmitterOptions, index: number, list: any[]) {
+          function (options: EmitterOptions, index: number) {
             if (matchListener(options) && matchNamespace(ns, options)) {
               list.splice(index, 1)
             }

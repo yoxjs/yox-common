@@ -7,8 +7,8 @@ it('each callback params', () => {
   let index = 0;
   let firstIsItem = false
   let secondIsIndex = false
-  let thirdIsArray = false
-  array.each(test, (item, i, list) => {
+  let thirdIsLength = false
+  array.each(test, (item, i, length) => {
     expect(i).toBe(index++)
     if (item === test[0]) {
       firstIsItem = true
@@ -16,13 +16,13 @@ it('each callback params', () => {
     if (i === 0) {
       secondIsIndex = true
     }
-    if (list === test) {
-      thirdIsArray = true
+    if (length === test.length) {
+      thirdIsLength = true
     }
   })
   expect(firstIsItem).toBe(true)
   expect(secondIsIndex).toBe(true)
-  expect(thirdIsArray).toBe(true)
+  expect(thirdIsLength).toBe(true)
 })
 
 it('each callback reversed', () => {

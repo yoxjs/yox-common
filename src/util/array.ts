@@ -9,19 +9,19 @@ import execute from '../function/execute'
  * @param callback 返回 false 可停止遍历
  * @param reversed 是否逆序遍历
  */
-export function each(array: any[], callback: (item: any, index: number, array: any[]) => boolean | void, reversed?: boolean) {
+export function each(array: any[], callback: (item: any, index: number, length: number) => boolean | void, reversed?: boolean) {
   const { length } = array
   if (length) {
     if (reversed) {
       for (let i = length - 1; i >= 0; i--) {
-        if (callback(array[i], i, array) === env.FALSE) {
+        if (callback(array[i], i, length) === env.FALSE) {
           break
         }
       }
     }
     else {
       for (let i = 0; i < length; i++) {
-        if (callback(array[i], i, array) === env.FALSE) {
+        if (callback(array[i], i, length) === env.FALSE) {
           break
         }
       }

@@ -72,10 +72,8 @@ export function each(object: Object, callback: (value: any, key: string) => bool
  * @return
  */
 export function has(object: Object, key: string | number): boolean {
-  // 优先不要用 hasOwnProperty，性能差
+  // 不用 hasOwnProperty，性能差
   return isDef(object[key])
-    // 没辙，那就用吧
-    || object.hasOwnProperty(key)
 }
 
 /**
@@ -186,15 +184,12 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
 
       if (object != env.NULL) {
 
-        // 这里主要目的是提升性能
-        // 因此不再调用 has 方法了
-
         // 先直接取值
         let value = object[key],
 
         // 紧接着判断值是否存在
         // 下面会处理计算属性的值，不能在它后面设置 hasValue
-        hasValue = isDef(value) || object.hasOwnProperty(key)
+        hasValue = isDef(value)
 
         // 如果是计算属性，取计算属性的值
         if (value && is.func(value.get)) {
