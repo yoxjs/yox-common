@@ -9,7 +9,7 @@ import execute from '../function/execute'
  * @param callback 返回 false 可停止遍历
  * @param reversed 是否逆序遍历
  */
-export function each(array: any[], callback: (item: any, index: number, length: number) => boolean | void, reversed?: boolean) {
+export function each<T>(array: T[], callback: (item: T, index: number, length: number) => boolean | void, reversed?: boolean) {
   const { length } = array
   if (length) {
     if (reversed) {
@@ -40,11 +40,11 @@ export function join(array: string[], separator: string): string {
   return array.join(separator)
 }
 
-function nativePush(array: any[], item: any) {
+function nativePush<T>(array: T[], item: T) {
   array[array.length] = item
 }
 
-function nativeUnshift(array: any[], item: any) {
+function nativeUnshift<T>(array: T[], item: T) {
   array.unshift(item)
 }
 
@@ -55,11 +55,11 @@ function nativeUnshift(array: any[], item: any) {
  * @param value
  * @param action
  */
-function addItem(array: any[], value: any, action: Function) {
+function addItem<T>(array: T[], value: T | T[], action: Function) {
   if (is.array(value)) {
     each(
-      value,
-      function (item: any) {
+      value as T[],
+      function (item: T) {
         action(array, item)
       }
     )
@@ -75,7 +75,7 @@ function addItem(array: any[], value: any, action: Function) {
  * @param array
  * @param target
  */
-export function push(array: any[], target: any) {
+export function push<T>(array: T[], target: T | T[]) {
   addItem(array, target, nativePush)
 }
 
@@ -85,7 +85,7 @@ export function push(array: any[], target: any) {
  * @param array
  * @param target
  */
-export function unshift(array: any[], target: any) {
+export function unshift<T>(array: T[], target: T | T[]) {
   addItem(array, target, nativeUnshift)
 }
 
@@ -95,10 +95,10 @@ export function unshift(array: any[], target: any) {
  * @param array 类数组
  * @return
  */
-export function toArray(array: Array<any> | ArrayLike<any>): Array<any> {
+export function toArray<T>(array: Array<T> | ArrayLike<T>): Array<T> {
   return is.array(array)
     ? array
-    : execute([].slice, array)
+    : execute(env.EMPTY_ARRAY.slice, array)
 }
 
 /**
@@ -128,7 +128,7 @@ export function toObject(array: any[], key?: string | null, value?: any) {
  * @param strict 是否全等判断，默认是全等
  * @return 如果未找到，返回 -1
  */
-export function indexOf(array: any[], target: any, strict?: boolean): number {
+export function indexOf<T>(array: T[], target: T, strict?: boolean): number {
   let result = -1
   each(
     array,
@@ -150,7 +150,7 @@ export function indexOf(array: any[], target: any, strict?: boolean): number {
  * @param strict 是否全等判断，默认是全等
  * @return
  */
-export function has(array: any[], target: any, strict?: boolean): boolean {
+export function has<T>(array: T[], target: T, strict?: boolean): boolean {
   return indexOf(array, target, strict) >= 0
 }
 
@@ -160,7 +160,7 @@ export function has(array: any[], target: any, strict?: boolean): boolean {
  * @param array 数组
  * @return
  */
-export function last(array: any[]): any {
+export function last<T>(array: T[]): T | void {
   const { length } = array
   if (length > 0) {
     return array[length - 1]
@@ -175,8 +175,11 @@ export function last(array: any[]): any {
  * @param array 数组
  * @return 弹出的数组项
  */
-export function pop(array: any[]): any {
-  return array.pop()
+export function pop<T>(array: T[]): T | void {
+  const { length } = array
+  if (length > 0) {
+    return array.pop()
+  }
 }
 
 /**
@@ -187,11 +190,11 @@ export function pop(array: any[]): any {
  * @param strict 是否全等判断，默认是全等
  * @return 删除的数量
  */
-export function remove(array: any[], target: any, strict?: boolean): number {
+export function remove<T>(array: T[], target: T, strict?: boolean): number {
   let result = 0
   each(
     array,
-    function (item: any, index: number) {
+    function (item: T, index: number) {
       if (strict === env.FALSE ? item == target : item === target) {
         array.splice(index, 1)
         result++

@@ -33,7 +33,7 @@ function isDebug() {
  *
  * @param msg
  */
-export function log(msg: string) {
+export function log(msg: string): void {
   if (nativeConsole && isDebug()) {
     nativeConsole.log(`[Yox log]: ${msg}`)
   }
@@ -44,7 +44,7 @@ export function log(msg: string) {
  *
  * @param msg
  */
-export function warn(msg: string) {
+export function warn(msg: string): void {
   if (nativeConsole && isDebug()) {
     nativeConsole.warn(`[Yox warn]: ${msg}`)
   }
@@ -55,7 +55,7 @@ export function warn(msg: string) {
  *
  * @param msg
  */
-export function error(msg: string) {
+export function error(msg: string): void {
   if (nativeConsole) {
     nativeConsole.error(`[Yox error]: ${msg}`)
   }
