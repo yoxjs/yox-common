@@ -9,6 +9,7 @@ import * as logger from './logger'
 
 import * as type from 'yox-type/index'
 import EmitterOptions from 'yox-type/src/options/Emitter'
+import EmitterInterface from 'yox-type/src/Emitter'
 import CustomEvent from './CustomEvent'
 
 interface Namespace {
@@ -16,7 +17,7 @@ interface Namespace {
   ns: string
 }
 
-export default class Emitter {
+export default class Emitter implements EmitterInterface {
 
   /**
    * 是否开启命名空间
