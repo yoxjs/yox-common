@@ -88,27 +88,35 @@ test('namespace', () => {
     cValue++
   }
 
+  let dValue = 0, dListener = function () {
+    dValue++
+  }
+
   emitter.on('a', aListener)
   emitter.on('a.b', bListener)
   emitter.on('a.b.c', cListener)
+  emitter.on('a.d', dListener)
 
   // 全局 a 事件
   emitter.fire(new CustomEvent('a'))
   expect(aValue).toBe(1)
   expect(bValue).toBe(1)
   expect(cValue).toBe(1)
+  expect(dValue).toBe(1)
 
   // b 命名空间下的 a 事件
   emitter.fire('a.b')
   expect(aValue).toBe(1)
   expect(bValue).toBe(2)
   expect(cValue).toBe(1)
+  expect(dValue).toBe(1)
 
   // b.c 命名空间下的 a 事件
   emitter.fire('a.b.c')
   expect(aValue).toBe(1)
   expect(bValue).toBe(2)
   expect(cValue).toBe(2)
+  expect(dValue).toBe(1)
 
   expect(emitter.has('a.b')).toBe(true)
   expect(emitter.has('a.b', cListener)).toBe(false)
@@ -123,6 +131,10 @@ test('namespace', () => {
   expect(emitter.has('a.b')).toBe(false)
   expect(emitter.has('a.b', cListener)).toBe(false)
   expect(emitter.has('a.b', bListener)).toBe(false)
+
+  expect(emitter.has('a.d')).toBe(true)
+  emitter.off('.d')
+  expect(emitter.has('a.d')).toBe(false)
 
   emitter.off()
   expect(emitter.has('a')).toBe(false)

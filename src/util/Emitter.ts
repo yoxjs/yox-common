@@ -165,7 +165,7 @@ export default class Emitter {
 
     matchListener = createMatchListener(listener),
 
-    each = function (list: Object[]) {
+    each = function (list: EmitterOptions[]) {
       array.each(
         list,
         function (options: EmitterOptions) {
@@ -251,7 +251,7 @@ export default class Emitter {
 
       matchListener = createMatchListener(listener),
 
-      each = function (list: Object[], name: string) {
+      each = function (list: EmitterOptions[], name: string) {
         array.each(
           list,
           function (options: EmitterOptions, index: number) {
