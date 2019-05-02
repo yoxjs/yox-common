@@ -9,7 +9,11 @@ import execute from '../function/execute'
  * @param callback 返回 false 可停止遍历
  * @param reversed 是否逆序遍历
  */
-export function each<T>(array: T[], callback: (item: T, index: number, length: number) => boolean | void, reversed?: boolean) {
+export function each<T>(
+  array: T[],
+  callback: (item: T, index: number, length: number) => boolean | void,
+  reversed?: boolean
+): void {
   const { length } = array
   if (length) {
     if (reversed) {
@@ -36,7 +40,10 @@ export function each<T>(array: T[], callback: (item: T, index: number, length: n
  * @param separator
  * @return
  */
-export function join(array: string[], separator: string): string {
+export function join(
+  array: string[],
+  separator: string
+): string {
   return array.join(separator)
 }
 
@@ -75,7 +82,7 @@ function addItem<T>(array: T[], value: T | T[], action: Function) {
  * @param array
  * @param target
  */
-export function push<T>(array: T[], target: T | T[]) {
+export function push<T>(array: T[], target: T | T[]): void {
   addItem(array, target, nativePush)
 }
 
@@ -85,7 +92,7 @@ export function push<T>(array: T[], target: T | T[]) {
  * @param array
  * @param target
  */
-export function unshift<T>(array: T[], target: T | T[]) {
+export function unshift<T>(array: T[], target: T | T[]): void {
   addItem(array, target, nativeUnshift)
 }
 
@@ -95,7 +102,7 @@ export function unshift<T>(array: T[], target: T | T[]) {
  * @param array 类数组
  * @return
  */
-export function toArray<T>(array: Array<T> | ArrayLike<T>): Array<T> {
+export function toArray<T>(array: T[] | ArrayLike<T>): T[] {
   return is.array(array)
     ? array
     : execute(env.EMPTY_ARRAY.slice, array)
@@ -109,7 +116,7 @@ export function toArray<T>(array: Array<T> | ArrayLike<T>): Array<T> {
  * @param value
  * @return
  */
-export function toObject(array: any[], key?: string | null, value?: any) {
+export function toObject(array: any[], key?: string | null, value?: any): Object {
   let result = {}
   each(
     array,

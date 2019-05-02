@@ -16,6 +16,15 @@ it('hyphenate', () => {
   expect(string.hyphenate('1A')).toBe('1-a')
 })
 
+it('capitalize', () => {
+  expect(string.capitalize('aB')).toBe('AB')
+  expect(string.capitalize('a_b')).toBe('A_b')
+  expect(string.capitalize('ab')).toBe('Ab')
+  expect(string.capitalize('1A')).toBe('1A')
+  expect(string.capitalize('a')).toBe('A')
+  expect(string.capitalize('')).toBe('')
+})
+
 it('falsy', () => {
   expect(string.falsy('ab')).toBe(false)
   expect(string.falsy('')).toBe(true)

@@ -60,7 +60,11 @@ export default class Emitter {
    * @param bullet 事件或事件名称
    * @param data 事件数据
    */
-  fire(bullet: string | CustomEvent, data: type.eventData | any[] | void, filter?: (options: EmitterOptions, data: type.eventData | any[] | void) => boolean | void) {
+  fire(
+    bullet: string | CustomEvent,
+    data: type.eventData | any[] | void,
+    filter?: (options: EmitterOptions, data: type.eventData | any[] | void) => boolean | void
+  ): boolean {
 
     let event: CustomEvent | void, type: string, args: any
 
@@ -153,7 +157,10 @@ export default class Emitter {
    * @param type
    * @param listener
    */
-  has(type: string, listener?: Function | EmitterOptions): boolean {
+  has(
+    type: string,
+    listener?: type.eventListener | EmitterOptions
+  ): boolean {
 
     let instance = this,
 
@@ -195,20 +202,24 @@ export default class Emitter {
    *
    * @param type
    * @param listener
-   * @param data
+   * @param extra
    */
-  on(type: string | Record<string, Function | EmitterOptions>, listener?: Function | EmitterOptions, data?: EmitterOptions) {
+  on(
+    type: string | Record<string, type.eventListener | EmitterOptions>,
+    listener?: type.eventListener | EmitterOptions,
+    extra?: EmitterOptions
+  ): void {
 
     const instance = this,
 
     listeners = instance.listeners,
 
-    addListener = function (item: Function | EmitterOptions | void, type: string) {
+    addListener = function (item: type.eventListener | EmitterOptions | void, type: string) {
       if (item) {
-        const options: EmitterOptions = is.func(item) ? { fn: item as Function } : item as EmitterOptions
+        const options: EmitterOptions = is.func(item) ? { fn: item as type.eventListener } : item as EmitterOptions
         if (is.object(options) && is.func(options.fn)) {
-          if (data) {
-            object.extend(options, data)
+          if (extra) {
+            object.extend(options, extra)
           }
           const { name, ns } = parseNamespace(instance.ns, type)
           options.ns = ns
@@ -239,7 +250,10 @@ export default class Emitter {
    * @param type
    * @param listener
    */
-  off(type?: string, listener?: Function | EmitterOptions) {
+  off(
+    type?: string,
+    listener?: type.eventListener | EmitterOptions
+  ): void {
 
     const instance = this,
 
@@ -318,19 +332,19 @@ function parseNamespace(ns: boolean, type: string): Namespace {
 }
 
 /**
- * 外部会传入 Function 或 EmitterOptions 或 空
+ * 外部会传入 type.eventListener 或 EmitterOptions 或 空
  *
  * 这里根据传入值的不同类型，创建不同的判断函数
  *
  * 如果传入的是 EmitterOptions，则全等判断
  *
- * 如果传入的是 Function，则判断函数是否全等
+ * 如果传入的是 type.eventListener，则判断函数是否全等
  *
  * 如果传入的是空，则直接返回 true
  *
  * @param listener
  */
-function createMatchListener(listener: Function | EmitterOptions | void): (options: EmitterOptions) => boolean {
+function createMatchListener(listener: type.eventListener | EmitterOptions | void): (options: EmitterOptions) => boolean {
   return is.object(listener)
     ? function (options: EmitterOptions) {
         return listener === options

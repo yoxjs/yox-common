@@ -7,9 +7,13 @@ const camelizePattern = /-([a-z])/gi,
 
 hyphenatePattern = /\B([A-Z])/g,
 
+capitalizePattern = /^[a-z]/,
+
 camelizeCache: Record<string, string> = {},
 
-hyphenateCache: Record<string, string> = {}
+hyphenateCache: Record<string, string> = {},
+
+capitalizeCache: Record<string, string> = {}
 
 /**
  * 连字符转成驼峰
@@ -48,6 +52,24 @@ export function hyphenate(str: string): string {
 }
 
 /**
+ * 首字母大写
+ *
+ * @param str
+ * @return
+ */
+export function capitalize(str: string): string {
+  if (!capitalizeCache[str]) {
+    capitalizeCache[str] = str.replace(
+      capitalizePattern,
+      function ($0) {
+        return $0.toUpperCase()
+      }
+    )
+  }
+  return capitalizeCache[str]
+}
+
+/**
  * 清除两侧空白符
  *
  * @param str
@@ -67,7 +89,7 @@ export function trim(str: any): string {
  * @param end
  * @return
  */
-export function slice(str: string, start: number, end?: number) {
+export function slice(str: string, start: number, end?: number): string {
   return is.number(end)
     ? start === end
       ? env.EMPTY_STRING

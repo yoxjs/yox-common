@@ -17,18 +17,6 @@ export function keys(object: Object): string[] {
   return Object.keys(object)
 }
 
-/**
- * 是否是空对象
- *
- * @param object
- * @return
- */
-export function falsy(object: any): boolean {
-  return !is.object(object)
-    || is.array(object)
-    || !keys(object).length
-}
-
 function sortKeyByAsc(a: string, b: string): number {
   return a.length - b.length
 }
@@ -56,7 +44,7 @@ export function sort(object: Object, desc?: boolean): string[] {
  * @param object
  * @param callback 返回 false 可停止遍历
  */
-export function each(object: Object, callback: (value: any, key: string) => boolean | void) {
+export function each(object: Object, callback: (value: any, key: string) => boolean | void): void {
   for (let key in object) {
     if (callback(object[key], key) === env.FALSE) {
       break
@@ -229,7 +217,7 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
  * @param value
  * @param autofill 是否自动填充不存在的对象，默认自动填充
  */
-export function set(object: Object, keypath: string, value: any, autofill?: boolean) {
+export function set(object: Object, keypath: string, value: any, autofill?: boolean): void {
   keypathUtil.each(
     keypath,
     function (key, isLast) {
@@ -247,4 +235,16 @@ export function set(object: Object, keypath: string, value: any, autofill?: bool
       }
     }
   )
+}
+
+/**
+ * 是否是空对象
+ *
+ * @param object
+ * @return
+ */
+export function falsy(object: any): boolean {
+  return !is.object(object)
+    || is.array(object)
+    || !keys(object).length
 }
