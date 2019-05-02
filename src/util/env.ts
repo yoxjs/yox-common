@@ -84,12 +84,12 @@ export const EMPTY_FUNCTION = function () {
 /**
  * 空对象，很多地方会用到，比如 `a || EMPTY_OBJECT` 确保是个对象
  */
-export const EMPTY_OBJECT = {}
+export const EMPTY_OBJECT = Object.freeze({})
 
 /**
  * 空数组
  */
-export const EMPTY_ARRAY = []
+export const EMPTY_ARRAY = Object.freeze([])
 
 /**
  * 空字符串

@@ -2,6 +2,11 @@ import * as array from './array'
 import execute from '../function/execute'
 import nextTick from '../function/nextTick'
 
+interface Task {
+  fn: Function,
+  ctx?: any
+}
+
 let shared: NextTask | void
 
 export default class NextTask {
@@ -10,16 +15,13 @@ export default class NextTask {
    * 全局单例
    */
   public static shared(): NextTask {
-    if (!shared) {
-      shared = new NextTask()
-    }
-    return shared
+    return shared || (shared = new NextTask())
   }
 
   /**
    * 异步队列
    */
-  nextTasks: Function[]
+  nextTasks: Task[]
 
   constructor() {
     this.nextTasks = []
@@ -28,16 +30,28 @@ export default class NextTask {
   /**
    * 在队尾添加异步任务
    */
-  append(task: Function) {
-    array.push(this.nextTasks, task)
+  append(task: Function, context?: any) {
+    array.push(
+      this.nextTasks,
+      {
+        fn: task,
+        ctx: context
+      }
+    )
     this.start()
   }
 
   /**
    * 在队首添加异步任务
    */
-  prepend(task: Function) {
-    array.unshift(this.nextTasks, task)
+  prepend(task: Function, context?: any) {
+    array.unshift(
+      this.nextTasks,
+      {
+        fn: task,
+        ctx: context
+      }
+    )
     this.start()
   }
 
@@ -71,7 +85,9 @@ export default class NextTask {
       this.nextTasks = []
       array.each(
         nextTasks,
-        execute
+        function (task: Task) {
+          execute(task.fn, task.ctx)
+        }
       )
     }
   }
