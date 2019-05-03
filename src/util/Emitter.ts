@@ -21,22 +21,6 @@ export default class Emitter implements EmitterInterface {
 
   /**
    * 是否开启命名空间
-   *
-   * 命名空间格式为  name.namespace
-   *
-   * 典型的场景是在一个组件创建时绑定全局事件，销毁时解绑事件，如下
-   *
-   * create:
-   *
-   *    component.on('a.namespace', listener)
-   *    component.on('b.namespace', listener)
-   *
-   * destroy:
-   *
-   *    component.off('.namespace') // 无需依次解绑，费时费力
-   *
-   * a.namespace 会响应全局 a 事件，原因正如上面这个例子，否则无法实现快捷解绑
-   * a 不会响应 a.namespace 事件，因为命名空间不匹配
    */
   ns: boolean
 
@@ -91,10 +75,12 @@ export default class Emitter implements EmitterInterface {
         list,
         function (options: EmitterOptions, _: number) {
 
-          // 传了 filter，则用 filter 测试是否继续往下执行
-          if ((filter ? !filter(type, args, options) : !matchNamespace(ns, options))
+          // 命名空间不匹配
+          if (!matchNamespace(ns, options)
             // 在 fire 过程中被移除了
             || !array.has(list, options)
+            // 传了 filter，则用 filter 判断是否过滤此 options
+            || (filter && !filter(type, args, options))
           ) {
             return
           }
@@ -358,11 +344,17 @@ function createMatchListener(listener: Function | EmitterOptions | void): (optio
 /**
  * 判断 options 是否能匹配命名空间
  *
- * 如果 options 未指定命名空间，或 options.ns 和 namespace 一致，返回 true
+ * 如果 namespace 和 options.ns 都不为空，则需完全匹配
+ *
+ * 如果他们两个其中任何一个为空，则不判断命名空间
  *
  * @param namespace
  * @param options
  */
 function matchNamespace(namespace: string, options: EmitterOptions): boolean {
-  return !namespace.length || namespace === options.ns
+  const { ns } = options
+  if (ns && namespace) {
+    return ns === namespace
+  }
+  return env.TRUE
 }

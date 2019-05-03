@@ -105,30 +105,27 @@ test('namespace', () => {
 
   // b 命名空间下的 a 事件
   emitter.fire('a.b')
-  expect(aValue).toBe(1)
+  expect(aValue).toBe(2)
   expect(bValue).toBe(2)
   expect(cValue).toBe(1)
   expect(dValue).toBe(1)
 
   // b.c 命名空间下的 a 事件
   emitter.fire('a.b.c')
-  expect(aValue).toBe(1)
+  expect(aValue).toBe(3)
   expect(bValue).toBe(2)
   expect(cValue).toBe(2)
   expect(dValue).toBe(1)
 
   expect(emitter.has('a.b')).toBe(true)
-  expect(emitter.has('a.b', cListener)).toBe(false)
+  expect(emitter.has('a.b', aListener)).toBe(true)
   expect(emitter.has('a.b', bListener)).toBe(true)
-
-  emitter.off('a.b', cListener)
-  expect(emitter.has('a.b')).toBe(true)
   expect(emitter.has('a.b', cListener)).toBe(false)
-  expect(emitter.has('a.b', bListener)).toBe(true)
 
   emitter.off('a.b', bListener)
-  expect(emitter.has('a.b')).toBe(false)
-  expect(emitter.has('a.b', cListener)).toBe(false)
+  // 还有 aListener 在监听
+  expect(emitter.has('a.b')).toBe(true)
+  expect(emitter.has('a.b', aListener)).toBe(true)
   expect(emitter.has('a.b', bListener)).toBe(false)
 
   expect(emitter.has('a.d')).toBe(true)

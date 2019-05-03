@@ -29,6 +29,6 @@
     "jest": "^24.5.0"
   },
   "dependencies": {
-    "yox-type": "^0.0.51"
+    "yox-type": "^0.0.54"
   }
 }
