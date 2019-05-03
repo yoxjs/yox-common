@@ -1,4 +1,5 @@
 import CustomEventInterface from 'yox-type/src/CustomEvent'
+import Yox from 'yox-type/src/Yox'
 
 import * as env from './env'
 
@@ -8,10 +9,10 @@ export default class CustomEvent implements CustomEventInterface {
   type: string
 
   // 哪个组件发出的事件
-  target?: any
+  target?: Yox
 
   // 原始事件，比如 DOM 事件
-  originalEvent?: CustomEventInterface | Event
+  originalEvent?: CustomEvent | Event
 
   // 是否已阻止事件的默认行为
   isPrevented?: boolean
@@ -27,7 +28,7 @@ export default class CustomEvent implements CustomEventInterface {
    *
    * 可以传事件名称，也可以传原生事件对象
    */
-  constructor(type: string, originalEvent?: CustomEventInterface | Event) {
+  constructor(type: string, originalEvent?: CustomEvent | Event) {
     this.type = type
     this.originalEvent = originalEvent
   }

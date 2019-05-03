@@ -48,7 +48,7 @@ export default class Emitter implements EmitterInterface {
   /**
    * 原生事件监听，一个事件对应一个 listener
    */
-  nativeListeners?: Record<string, type.nativeEventListener>
+  nativeListeners?: Record<string, type.nativeListener>
 
   constructor(ns?: boolean) {
     this.ns = ns || env.FALSE
@@ -62,24 +62,10 @@ export default class Emitter implements EmitterInterface {
    * @param data 事件数据
    */
   fire(
-    bullet: string | CustomEvent,
-    data: type.eventData | any[] | void,
-    filter?: (options: EmitterOptions, data: type.eventData | any[] | void) => boolean | void
+    type: string,
+    args: any[] | void,
+    filter?: (type: string, args: any[] | void, options: EmitterOptions) => boolean | void
   ): boolean {
-
-    let event: CustomEvent | void, type: string, args: any
-
-    if (bullet instanceof CustomEvent) {
-      event = bullet
-      type = bullet.type
-      args = is.object(data) ? [event, data] : event
-    }
-    else {
-      type = bullet
-      if (data) {
-        args = data
-      }
-    }
 
     let instance = this,
 
@@ -94,12 +80,19 @@ export default class Emitter implements EmitterInterface {
       // 避免遍历过程中，数组发生变化，比如增删了
       list = object.copy(list)
 
+      // 判断是否是发射事件
+      // 如果 args 的第一个参数是 CustomEvent 类型，表示发射事件
+      // 因为事件处理函数的参数列表是 (event, data)
+      const event = args && args[0] instanceof CustomEvent
+        ? args[0] as CustomEvent
+        : env.UNDEFINED
+
       array.each(
         list,
         function (options: EmitterOptions, _: number) {
 
           // 传了 filter，则用 filter 测试是否继续往下执行
-          if ((filter ? !filter(options, data) : !matchNamespace(ns, options))
+          if ((filter ? !filter(type, args, options) : !matchNamespace(ns, options))
             // 在 fire 过程中被移除了
             || !array.has(list, options)
           ) {
@@ -160,7 +153,7 @@ export default class Emitter implements EmitterInterface {
    */
   has(
     type: string,
-    listener?: type.eventListener | EmitterOptions
+    listener?: Function | EmitterOptions
   ): boolean {
 
     let instance = this,
@@ -206,8 +199,8 @@ export default class Emitter implements EmitterInterface {
    * @param extra
    */
   on(
-    type: string | Record<string, type.eventListener | EmitterOptions>,
-    listener?: type.eventListener | EmitterOptions,
+    type: string | Record<string, Function | EmitterOptions>,
+    listener?: Function | EmitterOptions,
     extra?: EmitterOptions
   ): void {
 
@@ -215,9 +208,9 @@ export default class Emitter implements EmitterInterface {
 
     listeners = instance.listeners,
 
-    addListener = function (item: type.eventListener | EmitterOptions | void, type: string) {
+    addListener = function (item: Function | EmitterOptions | void, type: string) {
       if (item) {
-        const options: EmitterOptions = is.func(item) ? { fn: item as type.eventListener } : item as EmitterOptions
+        const options: EmitterOptions = is.func(item) ? { fn: item as Function } : item as EmitterOptions
         if (is.object(options) && is.func(options.fn)) {
           if (extra) {
             object.extend(options, extra)
@@ -253,7 +246,7 @@ export default class Emitter implements EmitterInterface {
    */
   off(
     type?: string,
-    listener?: type.eventListener | EmitterOptions
+    listener?: Function | EmitterOptions
   ): void {
 
     const instance = this,
@@ -332,20 +325,25 @@ function parseNamespace(ns: boolean, type: string): Namespace {
 
 }
 
+
+function matchTrue(options: EmitterOptions) {
+  return env.TRUE
+}
+
 /**
- * 外部会传入 type.eventListener 或 EmitterOptions 或 空
+ * 外部会传入 Function 或 EmitterOptions 或 空
  *
  * 这里根据传入值的不同类型，创建不同的判断函数
  *
  * 如果传入的是 EmitterOptions，则全等判断
  *
- * 如果传入的是 type.eventListener，则判断函数是否全等
+ * 如果传入的是 Function，则判断函数是否全等
  *
  * 如果传入的是空，则直接返回 true
  *
  * @param listener
  */
-function createMatchListener(listener: type.eventListener | EmitterOptions | void): (options: EmitterOptions) => boolean {
+function createMatchListener(listener: Function | EmitterOptions | void): (options: EmitterOptions) => boolean {
   return is.object(listener)
     ? function (options: EmitterOptions) {
         return listener === options
@@ -354,9 +352,7 @@ function createMatchListener(listener: type.eventListener | EmitterOptions | voi
       ? function (options: EmitterOptions) {
           return listener === options.fn
         }
-      : function (options: EmitterOptions) {
-          return env.TRUE
-        }
+      : matchTrue
 }
 
 /**

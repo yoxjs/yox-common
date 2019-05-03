@@ -33,6 +33,16 @@ export const KEYPATH_PARENT = '..'
 export const KEYPATH_CURRENT = RAW_THIS
 
 /**
+ * Single instance for window in browser
+ */
+export const WINDOW = typeof window !== RAW_UNDEFINED ? window : UNDEFINED
+
+/**
+ * Single instance for document in browser
+ */
+export const DOCUMENT = typeof document !== RAW_UNDEFINED ? document : UNDEFINED
+
+/**
  * tap 事件
  *
  * 非常有用的抽象事件，比如 pc 端是 click 事件，移动端是 touchend 事件
@@ -63,16 +73,6 @@ export const EVENT_CHANGE = 'change'
  * 唯一内置的特殊事件：model
  */
 export const EVENT_MODEL = 'model'
-
-/**
- * Single instance for window in browser
- */
-export const win = typeof window !== RAW_UNDEFINED ? window : UNDEFINED
-
-/**
- * Single instance for document in browser
- */
-export const doc = typeof document !== RAW_UNDEFINED ? document : UNDEFINED
 
 /**
  * Single instance for noop function

@@ -19,8 +19,8 @@ useSource = /yox/.test(toString(env.EMPTY_FUNCTION))
  * 比如线上环境，关了 debug 模式，为了调试，想强制打开
  */
 function isDebug() {
-  if (env.win) {
-    let debug = env.win['DEBUG']
+  if (env.WINDOW) {
+    let debug = env.WINDOW['DEBUG']
     if (is.boolean(debug)) {
       return debug
     }

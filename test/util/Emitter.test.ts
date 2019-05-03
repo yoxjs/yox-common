@@ -1,6 +1,5 @@
 
 import Emitter from '../../src/util/Emitter'
-import CustomEvent from '../../src/util/CustomEvent';
 
 test('on', () => {
 
@@ -98,7 +97,7 @@ test('namespace', () => {
   emitter.on('a.d', dListener)
 
   // 全局 a 事件
-  emitter.fire(new CustomEvent('a'))
+  emitter.fire('a')
   expect(aValue).toBe(1)
   expect(bValue).toBe(1)
   expect(cValue).toBe(1)

@@ -30,11 +30,11 @@ export default class NextTask {
   /**
    * 在队尾添加异步任务
    */
-  append(task: Function, context?: any) {
+  append(func: Function, context?: any) {
     array.push(
       this.nextTasks,
       {
-        fn: task,
+        fn: func,
         ctx: context
       }
     )
@@ -44,11 +44,11 @@ export default class NextTask {
   /**
    * 在队首添加异步任务
    */
-  prepend(task: Function, context?: any) {
+  prepend(func: Function, context?: any) {
     array.unshift(
       this.nextTasks,
       {
-        fn: task,
+        fn: func,
         ctx: context
       }
     )
