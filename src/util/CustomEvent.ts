@@ -5,14 +5,23 @@ import * as env from './env'
 
 export default class CustomEvent implements CustomEventInterface {
 
+  public static PHASE_CURRENT = 0
+
+  public static PHASE_UPWARD = 1
+
+  public static PHASE_DOWNWARD = -1
+
   // 事件名称
   type: string
+
+  // 事件当前阶段
+  phase: number
 
   // 哪个组件发出的事件
   target?: Yox
 
   // 原始事件，比如 DOM 事件
-  originalEvent?: CustomEvent | Event
+  originalEvent?: CustomEventInterface | Event
 
   // 是否已阻止事件的默认行为
   isPrevented?: boolean
@@ -28,8 +37,9 @@ export default class CustomEvent implements CustomEventInterface {
    *
    * 可以传事件名称，也可以传原生事件对象
    */
-  constructor(type: string, originalEvent?: CustomEvent | Event) {
+  constructor(type: string, originalEvent?: CustomEventInterface | Event) {
     this.type = type
+    this.phase = CustomEvent.PHASE_CURRENT
     this.originalEvent = originalEvent
   }
 
