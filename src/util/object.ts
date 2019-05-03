@@ -53,18 +53,6 @@ export function each(object: Object, callback: (value: any, key: string) => bool
 }
 
 /**
- * 对象是否包含某个 key
- *
- * @param object
- * @param key
- * @return
- */
-export function has(object: Object, key: string | number): boolean {
-  // 不用 hasOwnProperty，性能差
-  return isDef(object[key])
-}
-
-/**
  * 清空对象所有的键值对
  *
  * @param object
@@ -235,6 +223,18 @@ export function set(object: Object, keypath: string, value: any, autofill?: bool
       }
     }
   )
+}
+
+/**
+ * 对象是否包含某个 key
+ *
+ * @param object
+ * @param key
+ * @return
+ */
+export function has(object: Object, key: string | number): boolean {
+  // 不用 hasOwnProperty，性能差
+  return isDef(object[key])
 }
 
 /**

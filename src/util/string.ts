@@ -122,17 +122,6 @@ export function lastIndexOf(str: string, part: string, end?: number): number {
 }
 
 /**
- * str 是否包含 part
- *
- * @param str
- * @param part
- * @return 是否包含
- */
-export function has(str: string, part: string): boolean {
-  return indexOf(str, part) >= 0
-}
-
-/**
  * str 是否以 part 开头
  *
  * @param str
@@ -167,6 +156,17 @@ export function charAt(str: string, index?: number): string {
  */
 export function codeAt(str: string, index?: number): number {
   return str.charCodeAt(index || 0)
+}
+
+/**
+ * str 是否包含 part
+ *
+ * @param str
+ * @param part
+ * @return 是否包含
+ */
+export function has(str: string, part: string): boolean {
+  return indexOf(str, part) >= 0
 }
 
 /**

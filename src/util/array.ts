@@ -33,20 +33,6 @@ export function each<T>(
   }
 }
 
-/**
- * 把数组合并成字符串
- *
- * @param array
- * @param separator
- * @return
- */
-export function join(
-  array: string[],
-  separator: string
-): string {
-  return array.join(separator)
-}
-
 function nativePush<T>(array: T[], item: T) {
   array[array.length] = item
 }
@@ -97,37 +83,6 @@ export function unshift<T>(array: T[], target: T | T[]): void {
 }
 
 /**
- * 把类数组转成数组
- *
- * @param array 类数组
- * @return
- */
-export function toArray<T>(array: T[] | ArrayLike<T>): T[] {
-  return is.array(array)
-    ? array
-    : execute(env.EMPTY_ARRAY.slice, array)
-}
-
-/**
- * 把数组转成对象
- *
- * @param array 数组
- * @param key 数组项包含的字段名称，如果数组项是基本类型，可不传
- * @param value
- * @return
- */
-export function toObject(array: any[], key?: string | null, value?: any): Object {
-  let result = {}
-  each(
-    array,
-    function (item: any) {
-      result[key ? item[key] : item] = value || item
-    }
-  )
-  return result
-}
-
-/**
  * 数组项在数组中的位置
  *
  * @param array 数组
@@ -147,18 +102,6 @@ export function indexOf<T>(array: T[], target: T, strict?: boolean): number {
     }
   )
   return result
-}
-
-/**
- * 数组是否包含 item
- *
- * @param array 数组
- * @param target 可能包含的数组项
- * @param strict 是否全等判断，默认是全等
- * @return
- */
-export function has<T>(array: T[], target: T, strict?: boolean): boolean {
-  return indexOf(array, target, strict) >= 0
 }
 
 /**
@@ -210,6 +153,60 @@ export function remove<T>(array: T[], target: T, strict?: boolean): number {
     env.TRUE
   )
   return result
+}
+
+/**
+ * 数组是否包含 item
+ *
+ * @param array 数组
+ * @param target 可能包含的数组项
+ * @param strict 是否全等判断，默认是全等
+ * @return
+ */
+export function has<T>(array: T[], target: T, strict?: boolean): boolean {
+  return indexOf(array, target, strict) >= 0
+}
+
+/**
+ * 把类数组转成数组
+ *
+ * @param array 类数组
+ * @return
+ */
+export function toArray<T>(array: T[] | ArrayLike<T>): T[] {
+  return is.array(array)
+    ? array
+    : execute(env.EMPTY_ARRAY.slice, array)
+}
+
+/**
+ * 把数组转成对象
+ *
+ * @param array 数组
+ * @param key 数组项包含的字段名称，如果数组项是基本类型，可不传
+ * @param value
+ * @return
+ */
+export function toObject(array: any[], key?: string | null, value?: any): Object {
+  let result = {}
+  each(
+    array,
+    function (item: any) {
+      result[key ? item[key] : item] = value || item
+    }
+  )
+  return result
+}
+
+/**
+ * 把数组合并成字符串
+ *
+ * @param array
+ * @param separator
+ * @return
+ */
+export function join(array: string[], separator: string): string {
+  return array.join(separator)
 }
 
 /**
