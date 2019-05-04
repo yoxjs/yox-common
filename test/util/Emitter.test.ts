@@ -11,7 +11,7 @@ test('on', () => {
     expect(this).toBe(listener)
   }
 
-  emitter.on('click', listener, { ctx: listener })
+  emitter.on('click', { fn: listener, ctx: listener })
   expect(i).toBe(0)
 
   expect(emitter.has('click')).toBe(true)
@@ -32,11 +32,11 @@ test('once', () => {
 
   emitter.on(
     'click',
-    function () {
-      i++
-    },
     {
-      max: 1
+      max: 1,
+      fn: function () {
+        i++
+      },
     }
   )
   expect(i).toBe(0)
