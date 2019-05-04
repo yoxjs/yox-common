@@ -11,7 +11,7 @@
     "url": "git+https://github.com/yoxjs/yox-common.git"
   },
   "scripts": {
-    "test": "export NODE_ENV=dev && jest"
+    "test": "export NODE_ENV=dev && tsc && jest"
   },
   "keywords": [],
   "author": "musicode",
@@ -21,12 +21,8 @@
   },
   "homepage": "https://github.com/yoxjs/yox-common#readme",
   "devDependencies": {
-    "@babel/core": "^7.4.0",
-    "@babel/preset-env": "^7.4.2",
-    "@babel/preset-typescript": "^7.3.3",
     "@types/node": "^11.13.7",
-    "babel-jest": "^24.6.0",
-    "jest": "^24.5.0"
+    "jest": "^24.7.1"
   },
   "dependencies": {
     "yox-type": "^0.0.59"

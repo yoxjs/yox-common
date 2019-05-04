@@ -1,5 +1,5 @@
 
-import isDef from '../../src/function/isDef'
+let isDef = require('../../dist/function/isDef').default
 
 test('test all types', () => {
 

@@ -1,5 +1,5 @@
 
-import * as is from '../../src/util/is'
+let is = require('../../dist/util/is')
 
 it('function', () => {
 

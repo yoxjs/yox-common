@@ -1,6 +1,6 @@
 
-import * as is from '../../src/util/is'
-import * as array from '../../src/util/array'
+let is = require('../../dist/util/is')
+let array = require('../../dist/util/array')
 
 it('each callback params', () => {
   let test = [1, 2, 3]

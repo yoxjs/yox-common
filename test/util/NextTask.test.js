@@ -1,5 +1,5 @@
 
-import NextTask from '../../src/util/NextTask'
+let NextTask = require('../../dist/util/NextTask').default
 
 test('add', done => {
 

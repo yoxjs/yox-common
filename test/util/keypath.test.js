@@ -1,6 +1,6 @@
 
-import * as is from '../../src/util/is'
-import * as keypath from '../../src/util/keypath'
+let is = require('../../dist/util/is')
+let keypath = require('../../dist/util/keypath')
 
 test('join', () => {
 

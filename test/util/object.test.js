@@ -1,5 +1,5 @@
 
-import * as object from '../../src/util/object'
+let object = require('../../dist/util/object')
 
 test('sort', () => {
   let target = {

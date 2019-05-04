@@ -1,5 +1,5 @@
 
-import toJSON from '../../src/function/toJSON'
+let toJSON = require('../../dist/function/toJSON').default
 
 it('toJSON', () => {
   let obj = { a: 1 }

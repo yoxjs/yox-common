@@ -1,5 +1,5 @@
 
-import Emitter from '../../src/util/Emitter'
+let Emitter = require('../../dist/util/Emitter').default
 
 test('on', () => {
 

@@ -1,5 +1,5 @@
 
-import nextTick from '../../src/function/nextTick'
+let nextTick = require('../../dist/function/nextTick').default
 
 it('nextTick', done => {
   let i = 0

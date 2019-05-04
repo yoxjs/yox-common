@@ -1,5 +1,5 @@
 
-import toNumber from '../../src/function/toNumber'
+let toNumber = require('../../dist/function/toNumber').default
 
 it('defaultValue is 0', () => {
   expect(
