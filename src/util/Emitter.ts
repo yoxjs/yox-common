@@ -182,12 +182,10 @@ export default class Emitter implements EmitterInterface {
    *
    * @param type
    * @param listener
-   * @param extra
    */
   on(
     type: string | Record<string, Function | EmitterOptions>,
-    listener?: Function | EmitterOptions,
-    extra?: EmitterOptions
+    listener?: Function | EmitterOptions
   ): void {
 
     const instance = this,
@@ -198,9 +196,6 @@ export default class Emitter implements EmitterInterface {
       if (item) {
         const options: EmitterOptions = is.func(item) ? { fn: item as Function } : item as EmitterOptions
         if (is.object(options) && is.func(options.fn)) {
-          if (extra) {
-            object.extend(options, extra)
-          }
           const { name, ns } = parseNamespace(instance.ns, type)
           options.ns = ns
           array.push(
@@ -211,7 +206,7 @@ export default class Emitter implements EmitterInterface {
         }
       }
       if (process.env.NODE_ENV === 'dev') {
-        logger.fatal(`注册 ${type} 事件失败`)
+        logger.fatal(`invoke emitter.on(type, listener) failed.`)
       }
     }
 
@@ -277,7 +272,7 @@ export default class Emitter implements EmitterInterface {
       // 但你不知道它是空值
       if (process.env.NODE_ENV === 'dev') {
         if (arguments.length > 0) {
-          logger.warn(`调用 emitter.off(type) 时，type 为空`)
+          logger.warn(`invoke emitter.off(type), but [type] is undefined or null.`)
         }
       }
     }
@@ -353,8 +348,7 @@ function createMatchListener(listener: Function | EmitterOptions | void): (optio
  */
 function matchNamespace(namespace: string, options: EmitterOptions): boolean {
   const { ns } = options
-  if (ns && namespace) {
-    return ns === namespace
-  }
-  return env.TRUE
+  return ns && namespace
+    ? ns === namespace
+    : env.TRUE
 }
