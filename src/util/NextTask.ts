@@ -1,3 +1,5 @@
+import NextTaskInterface from 'yox-type/src/interface/NextTask'
+
 import * as array from './array'
 import execute from '../function/execute'
 import nextTick from '../function/nextTick'
@@ -9,7 +11,7 @@ interface Task {
 
 let shared: NextTask | void
 
-export default class NextTask {
+export default class NextTask implements NextTaskInterface {
 
   /**
    * 全局单例
@@ -21,46 +23,46 @@ export default class NextTask {
   /**
    * 异步队列
    */
-  nextTasks: Task[]
+  tasks: Task[]
 
   constructor() {
-    this.nextTasks = []
+    this.tasks = []
   }
 
   /**
    * 在队尾添加异步任务
    */
-  append(func: Function, context?: any) {
+  append(func: Function, context?: any): void {
+    const instance = this, { tasks } = instance
     array.push(
-      this.nextTasks,
+      tasks,
       {
         fn: func,
         ctx: context
       }
     )
-    this.start()
+    if (tasks.length === 1) {
+      nextTick(
+        function () {
+          instance.run()
+        }
+      )
+    }
   }
 
   /**
    * 在队首添加异步任务
    */
-  prepend(func: Function, context?: any) {
+  prepend(func: Function, context?: any): void {
+    const instance = this, { tasks } = instance
     array.unshift(
-      this.nextTasks,
+      tasks,
       {
         fn: func,
         ctx: context
       }
     )
-    this.start()
-  }
-
-  /**
-   * 启动下一轮任务
-   */
-  start() {
-    const instance = this
-    if (instance.nextTasks.length === 1) {
+    if (tasks.length === 1) {
       nextTick(
         function () {
           instance.run()
@@ -72,20 +74,20 @@ export default class NextTask {
   /**
    * 清空异步队列
    */
-  clear() {
-    this.nextTasks.length = 0
+  clear(): void {
+    this.tasks.length = 0
   }
 
   /**
    * 立即执行异步任务，并清空队列
    */
-  run() {
-    const { nextTasks } = this
-    if (nextTasks.length) {
-      this.nextTasks = []
+  run(): void {
+    const { tasks } = this
+    if (tasks.length) {
+      this.tasks = []
       array.each(
-        nextTasks,
-        function (task: Task) {
+        tasks,
+        function (task) {
           execute(task.fn, task.ctx)
         }
       )
