@@ -7,9 +7,9 @@ import * as object from './object'
 import * as string from './string'
 import * as logger from './logger'
 
-import * as type from 'yox-type/index'
+import * as type from 'yox-type/src/type'
 import EmitterOptions from 'yox-type/src/options/Emitter'
-import EmitterInterface from 'yox-type/src/Emitter'
+import EmitterInterface from 'yox-type/src/event/Emitter'
 import CustomEvent from './CustomEvent'
 
 interface Namespace {

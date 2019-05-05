@@ -5,7 +5,7 @@ import * as keypathUtil from './keypath'
 
 import isDef from '../function/isDef'
 
-import ValueHolder from 'yox-type/src/ValueHolder'
+import ValueHolder from 'yox-type/src/interface/ValueHolder'
 
 /**
  * 获取对象的 key 的数组
