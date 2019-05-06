@@ -24,10 +24,10 @@ export default class CustomEvent implements CustomEventInterface {
   originalEvent?: CustomEventInterface | Event
 
   // 是否已阻止事件的默认行为
-  isPrevented?: boolean
+  isPrevented?: true
 
   // 是否已停止事件冒泡
-  isStoped?: boolean
+  isStoped?: true
 
   // 处理当前事件的监听器，方便外部获取 listener 进行解绑
   listener?: Function
@@ -40,7 +40,9 @@ export default class CustomEvent implements CustomEventInterface {
   constructor(type: string, originalEvent?: CustomEventInterface | Event) {
     this.type = type
     this.phase = CustomEvent.PHASE_CURRENT
-    this.originalEvent = originalEvent
+    if (originalEvent) {
+      this.originalEvent = originalEvent
+    }
   }
 
   /**

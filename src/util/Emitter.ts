@@ -106,7 +106,7 @@ export default class Emitter implements EmitterInterface {
 
           // 注册的 listener 可以指定最大执行次数
           if (options.num === options.max) {
-            instance.off(type, options)
+            instance.off(type, options.fn)
           }
 
           // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
@@ -139,7 +139,7 @@ export default class Emitter implements EmitterInterface {
    */
   has(
     type: string,
-    listener?: Function | EmitterOptions
+    listener?: Function
   ): boolean {
 
     let instance = this,
@@ -184,7 +184,7 @@ export default class Emitter implements EmitterInterface {
    * @param listener
    */
   on(
-    type: string | Record<string, Function | EmitterOptions>,
+    type: string,
     listener?: Function | EmitterOptions
   ): void {
 
@@ -192,29 +192,20 @@ export default class Emitter implements EmitterInterface {
 
     listeners = instance.listeners,
 
-    addListener = function (item: Function | EmitterOptions | void, type: string) {
-      if (item) {
-        const options: EmitterOptions = is.func(item) ? { fn: item as Function } : item as EmitterOptions
-        if (is.object(options) && is.func(options.fn)) {
-          const { name, ns } = parseNamespace(instance.ns, type)
-          options.ns = ns
-          array.push(
-            listeners[name] || (listeners[name] = []),
-            options
-          )
-          return
-        }
-      }
-      if (process.env.NODE_ENV === 'dev') {
-        logger.fatal(`invoke emitter.on(type, listener) failed.`)
-      }
-    }
+    options: EmitterOptions = is.func(listener)
+      ? { fn: listener as Function }
+      : listener as EmitterOptions
 
-    if (is.string(type)) {
-      addListener(listener, type as string)
+    if (is.object(options) && is.func(options.fn)) {
+      const { name, ns } = parseNamespace(instance.ns, type)
+      options.ns = ns
+      array.push(
+        listeners[name] || (listeners[name] = []),
+        options
+      )
     }
-    else {
-      object.each(type, addListener)
+    else if (process.env.NODE_ENV === 'dev') {
+      logger.fatal(`invoke emitter.on(type, listener) failed.`)
     }
 
   }
@@ -227,7 +218,7 @@ export default class Emitter implements EmitterInterface {
    */
   off(
     type?: string,
-    listener?: Function | EmitterOptions
+    listener?: Function
   ): void {
 
     const instance = this,
@@ -324,12 +315,8 @@ function matchTrue(options: EmitterOptions) {
  *
  * @param listener
  */
-function createMatchListener(listener: Function | EmitterOptions | void): (options: EmitterOptions) => boolean {
-  return is.object(listener)
-    ? function (options: EmitterOptions) {
-        return listener === options
-      }
-    : is.func(listener)
+function createMatchListener(listener: Function | void): (options: EmitterOptions) => boolean {
+  return is.func(listener)
       ? function (options: EmitterOptions) {
           return listener === options.fn
         }
