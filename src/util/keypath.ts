@@ -11,9 +11,9 @@ asteriskPattern = /\*/g,
 
 doubleAsteriskPattern = /\*\*/g,
 
-splitCache = {},
+splitCache: Record<string, string[]> = {},
 
-patternCache = {}
+patternCache: Record<string, RegExp> = {}
 
 /**
  * 判断 keypath 是否以 prefix 开头，如果是，返回匹配上的前缀长度，否则返回 -1
@@ -38,7 +38,7 @@ export function match(keypath: string, prefix: string): number {
  * @param keypath
  * @param callback 返回 false 可中断遍历
  */
-export function each(keypath: string, callback: (key: string | number, isLast: boolean) => boolean | void) {
+export function each(keypath: string, callback: (key: string, isLast: boolean) => boolean | void) {
   // 判断字符串是因为 keypath 有可能是 toString
   // 而 splitCache.toString 是个函数
   const list = isDef(splitCache[keypath])
@@ -82,11 +82,11 @@ export function isFuzzy(keypath: string): boolean {
 export function matchFuzzy(keypath: string, pattern: string): string | void {
   let cache = patternCache[pattern]
   if (!cache) {
-    cache = pattern
+    const str = pattern
       .replace(dotPattern, '\\.')
       .replace(asteriskPattern, '(\\w+)')
       .replace(doubleAsteriskPattern, '([\.\\w]+?)')
-    cache = patternCache[pattern] = new RegExp(`^${cache}$`)
+    cache = patternCache[pattern] = new RegExp(`^${str}$`)
   }
   const result = keypath.match(cache)
   if (result) {
