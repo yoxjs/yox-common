@@ -132,52 +132,6 @@ export default class Emitter implements EmitterInterface {
   }
 
   /**
-   * 是否已监听某个事件
-   *
-   * @param type
-   * @param listener
-   */
-  has(
-    type: string,
-    listener?: Function
-  ): boolean {
-
-    let instance = this,
-
-    listeners = instance.listeners,
-
-    { name, ns } = parseNamespace(instance.ns, type),
-
-    result = env.TRUE,
-
-    matchListener = createMatchListener(listener),
-
-    each = function (list: EmitterOptions[]) {
-      array.each(
-        list,
-        function (options: EmitterOptions) {
-          if (matchListener(options) && matchNamespace(ns, options)) {
-            return result = env.FALSE
-          }
-        }
-      )
-      return result
-    }
-
-    if (name) {
-      if (listeners[name]) {
-        each(listeners[name])
-      }
-    }
-    else if (ns) {
-      object.each(listeners, each)
-    }
-
-    return !result
-
-  }
-
-  /**
    * 注册监听
    *
    * @param type
@@ -190,7 +144,7 @@ export default class Emitter implements EmitterInterface {
 
     const instance = this,
 
-    listeners = instance.listeners,
+    { listeners } = instance,
 
     options: EmitterOptions = is.func(listener)
       ? { fn: listener as Function }
@@ -223,7 +177,7 @@ export default class Emitter implements EmitterInterface {
 
     const instance = this,
 
-    listeners = instance.listeners
+    { listeners } = instance
 
     if (type) {
 
@@ -267,6 +221,52 @@ export default class Emitter implements EmitterInterface {
         }
       }
     }
+
+  }
+
+  /**
+   * 是否已监听某个事件
+   *
+   * @param type
+   * @param listener
+   */
+  has(
+    type: string,
+    listener?: Function
+  ): boolean {
+
+    let instance = this,
+
+    { listeners } = instance,
+
+    { name, ns } = parseNamespace(instance.ns, type),
+
+    result = env.TRUE,
+
+    matchListener = createMatchListener(listener),
+
+    each = function (list: EmitterOptions[]) {
+      array.each(
+        list,
+        function (options: EmitterOptions) {
+          if (matchListener(options) && matchNamespace(ns, options)) {
+            return result = env.FALSE
+          }
+        }
+      )
+      return result
+    }
+
+    if (name) {
+      if (listeners[name]) {
+        each(listeners[name])
+      }
+    }
+    else if (ns) {
+      object.each(listeners, each)
+    }
+
+    return !result
 
   }
 
