@@ -7,10 +7,11 @@ import * as object from './object'
 import * as string from './string'
 import * as logger from './logger'
 
-import * as type from '../../../yox-type/src/type'
-import EmitterOptions from '../../../yox-type/src/options/Emitter'
-import EmitterInterface from '../../../yox-type/src/event/Emitter'
 import CustomEvent from './CustomEvent'
+
+import * as type from 'yox-type/src/type'
+import EmitterOptions from 'yox-type/src/options/Emitter'
+import EmitterInterface from 'yox-type/src/event/Emitter'
 
 interface Namespace {
   name: string
@@ -159,7 +160,7 @@ export default class Emitter implements EmitterInterface {
       )
     }
     else if (process.env.NODE_ENV === 'dev') {
-      logger.fatal(`invoke emitter.on(type, listener) failed.`)
+      logger.fatal(`Invoke emitter.on(type, listener) failed.`)
     }
 
   }
@@ -217,7 +218,7 @@ export default class Emitter implements EmitterInterface {
       // 但你不知道它是空值
       if (process.env.NODE_ENV === 'dev') {
         if (arguments.length > 0) {
-          logger.warn(`invoke emitter.off(type), but [type] is undefined or null.`)
+          logger.warn(`emitter.off(type) is invoked, but the "type" argument is undefined or null.`)
         }
       }
     }
