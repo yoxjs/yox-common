@@ -1,8 +1,19 @@
-import * as is from './is'
 import * as env from './env'
 import * as string from './string'
 
-const SEPARATOR = '.', splitCache = {}, patternCache = {}
+import isDef from '../function/isDef'
+
+const SEP_DOT = '.',
+
+dotPattern = /\./g,
+
+asteriskPattern = /\*/g,
+
+doubleAsteriskPattern = /\*\*/g,
+
+splitCache = {},
+
+patternCache = {}
 
 /**
  * 判断 keypath 是否以 prefix 开头，如果是，返回匹配上的前缀长度，否则返回 -1
@@ -15,7 +26,7 @@ export function match(keypath: string, prefix: string): number {
   if (keypath === prefix) {
     return prefix.length
   }
-  prefix += SEPARATOR
+  prefix += SEP_DOT
   return string.startsWith(keypath, prefix)
     ? prefix.length
     : -1
@@ -30,9 +41,9 @@ export function match(keypath: string, prefix: string): number {
 export function each(keypath: string, callback: (key: string | number, isLast: boolean) => boolean | void) {
   // 判断字符串是因为 keypath 有可能是 toString
   // 而 splitCache.toString 是个函数
-  const list = is.string(splitCache[keypath])
+  const list = isDef(splitCache[keypath])
     ? splitCache[keypath]
-    : (splitCache[keypath] = keypath.split(SEPARATOR))
+    : (splitCache[keypath] = keypath.split(SEP_DOT))
 
   for (let i = 0, lastIndex = list.length - 1; i <= lastIndex; i++) {
     if (callback(list[i], i === lastIndex) === env.FALSE) {
@@ -49,7 +60,7 @@ export function each(keypath: string, callback: (key: string | number, isLast: b
  */
 export function join(keypath1: string, keypath2: string): string {
   return keypath1 && keypath2
-    ? keypath1 + SEPARATOR + keypath2
+    ? keypath1 + SEP_DOT + keypath2
     : keypath1 || keypath2
 }
 
@@ -59,7 +70,7 @@ export function join(keypath1: string, keypath2: string): string {
  * @param keypath
  */
 export function isFuzzy(keypath: string): boolean {
-  return string.has(keypath, '*')
+  return string.has(keypath, env.RAW_WILDCARD)
 }
 
 /**
@@ -72,9 +83,9 @@ export function matchFuzzy(keypath: string, pattern: string): string | void {
   let cache = patternCache[pattern]
   if (!cache) {
     cache = pattern
-      .replace(/\./g, '\\.')
-      .replace(/\*\*/g, '([\.\\w]+?)')
-      .replace(/\*/g, '(\\w+)')
+      .replace(dotPattern, '\\.')
+      .replace(asteriskPattern, '(\\w+)')
+      .replace(doubleAsteriskPattern, '([\.\\w]+?)')
     cache = patternCache[pattern] = new RegExp(`^${cache}$`)
   }
   const result = keypath.match(cache)
