@@ -26,7 +26,7 @@ export function camelize(str: string): string {
     camelizeCache[str] = str.replace(
       camelizePattern,
       function ($0, $1) {
-        return $1.toUpperCase()
+        return upper($1)
       }
     )
   }
@@ -44,7 +44,7 @@ export function hyphenate(str: string): string {
     hyphenateCache[str] = str.replace(
       hyphenatePattern,
       function ($0, $1) {
-        return '-' + $1.toLowerCase()
+        return '-' + lower($1)
       }
     )
   }
@@ -61,9 +61,7 @@ export function capitalize(str: string): string {
   if (!capitalizeCache[str]) {
     capitalizeCache[str] = str.replace(
       capitalizePattern,
-      function ($0) {
-        return $0.toUpperCase()
-      }
+      upper
     )
   }
   return capitalizeCache[str]
@@ -156,6 +154,20 @@ export function charAt(str: string, index?: number): string {
  */
 export function codeAt(str: string, index?: number): number {
   return str.charCodeAt(index || 0)
+}
+
+/**
+ * 大写格式
+ */
+export function upper(str: string): string {
+  return str.toUpperCase()
+}
+
+/**
+ * 小写格式
+ */
+export function lower(str: string): string {
+  return str.toLowerCase()
 }
 
 /**
