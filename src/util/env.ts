@@ -23,7 +23,6 @@ export const RAW_DIRECTIVE = 'directive'
 export const RAW_TRANSITION = 'transition'
 
 export const RAW_THIS = 'this'
-export const RAW_TYPE = 'type'
 export const RAW_VALUE = 'value'
 export const RAW_LENGTH = 'length'
 export const RAW_FUNCTION = 'function'
