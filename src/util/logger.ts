@@ -28,14 +28,40 @@ function isDebug() {
   return useSource
 }
 
+function getStyle(backgroundColor: string) {
+  return `background-color:${backgroundColor};color:#fff;padding:4px 8px;border-radius:20px;`
+}
+
 /**
- * 打印普通日志
+ * 打印 debug 日志
  *
  * @param msg
  */
-export function log(msg: string): void {
+export function debug(msg: string): void {
   if (nativeConsole && isDebug()) {
-    nativeConsole.log(`[Yox log]: ${msg}`)
+    nativeConsole.log('%cYox debug', getStyle('#888'), msg)
+  }
+}
+
+/**
+ * 打印 info 日志
+ *
+ * @param msg
+ */
+export function info(msg: string): void {
+  if (nativeConsole && isDebug()) {
+    nativeConsole.log('%cYox info', getStyle('#2db7f5'), msg)
+  }
+}
+
+/**
+ * 打印 success 日志
+ *
+ * @param msg
+ */
+export function success(msg: string): void {
+  if (nativeConsole && isDebug()) {
+    nativeConsole.log('%cYox success', getStyle('#19be6b'), msg)
   }
 }
 
@@ -46,7 +72,7 @@ export function log(msg: string): void {
  */
 export function warn(msg: string): void {
   if (nativeConsole && isDebug()) {
-    nativeConsole.warn(`[Yox warn]: ${msg}`)
+    nativeConsole.warn('%cYox warn', getStyle('#f90'), msg)
   }
 }
 
@@ -57,7 +83,7 @@ export function warn(msg: string): void {
  */
 export function error(msg: string): void {
   if (nativeConsole) {
-    nativeConsole.error(`[Yox error]: ${msg}`)
+    nativeConsole.error('%cYox error', getStyle('#ed4014'), msg)
   }
 }
 
