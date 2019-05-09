@@ -10,7 +10,12 @@ const nativeConsole: Console | null = typeof console !== env.RAW_UNDEFINED ? con
 /**
  * 当前是否是源码调试，如果开启了代码压缩，empty function 里的注释会被干掉
  */
-useSource = /yox/.test(toString(env.EMPTY_FUNCTION))
+useSource = /yox/.test(toString(env.EMPTY_FUNCTION)),
+
+/**
+ * console 样式前缀
+ */
+stylePrefix = '%c'
 
 /**
  * 全局调试开关
@@ -37,9 +42,9 @@ function getStyle(backgroundColor: string) {
  *
  * @param msg
  */
-export function debug(msg: string): void {
+export function debug(msg: string, tag?: string): void {
   if (nativeConsole && isDebug()) {
-    nativeConsole.log('%cYox debug', getStyle('#888'), msg)
+    nativeConsole.log(stylePrefix + (tag || 'Yox debug'), getStyle('#888'), msg)
   }
 }
 
@@ -48,9 +53,9 @@ export function debug(msg: string): void {
  *
  * @param msg
  */
-export function info(msg: string): void {
+export function info(msg: string, tag?: string): void {
   if (nativeConsole && isDebug()) {
-    nativeConsole.log('%cYox info', getStyle('#2db7f5'), msg)
+    nativeConsole.log(stylePrefix + (tag || 'Yox info'), getStyle('#2db7f5'), msg)
   }
 }
 
@@ -59,31 +64,31 @@ export function info(msg: string): void {
  *
  * @param msg
  */
-export function success(msg: string): void {
+export function success(msg: string, tag?: string): void {
   if (nativeConsole && isDebug()) {
-    nativeConsole.log('%cYox success', getStyle('#19be6b'), msg)
+    nativeConsole.log(stylePrefix + (tag || 'Yox success'), getStyle('#19be6b'), msg)
   }
 }
 
 /**
- * 打印警告日志
+ * 打印 warn 日志
  *
  * @param msg
  */
-export function warn(msg: string): void {
+export function warn(msg: string, tag?: string): void {
   if (nativeConsole && isDebug()) {
-    nativeConsole.warn('%cYox warn', getStyle('#f90'), msg)
+    nativeConsole.warn(stylePrefix + (tag || 'Yox warn'), getStyle('#f90'), msg)
   }
 }
 
 /**
- * 打印错误日志
+ * 打印 error 日志
  *
  * @param msg
  */
-export function error(msg: string): void {
+export function error(msg: string, tag?: string): void {
   if (nativeConsole) {
-    nativeConsole.error('%cYox error', getStyle('#ed4014'), msg)
+    nativeConsole.error(stylePrefix + (tag || 'Yox error'), getStyle('#ed4014'), msg)
   }
 }
 
