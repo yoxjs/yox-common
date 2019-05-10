@@ -1,13 +1,9 @@
 import NextTaskInterface from '../../../yox-type/src/interface/NextTask'
+import TaskInterface from '../../../yox-type/src/interface/Task'
 
 import * as array from './array'
 import execute from '../function/execute'
 import nextTick from '../function/nextTick'
-
-interface Task {
-  fn: Function,
-  ctx?: any
-}
 
 let shared: NextTask | void
 
@@ -23,7 +19,7 @@ export default class NextTask implements NextTaskInterface {
   /**
    * 异步队列
    */
-  tasks: Task[]
+  tasks: TaskInterface[]
 
   constructor() {
     this.tasks = []

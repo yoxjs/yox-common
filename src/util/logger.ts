@@ -97,6 +97,6 @@ export function error(msg: string, tag?: string): void {
  *
  * @param msg
  */
-export function fatal(msg: string): never {
-  throw new Error(`[Yox fatal]: ${msg}`)
+export function fatal(msg: string, tag?: string): never {
+  throw new Error(`[${tag || 'Yox fatal'}]: ${msg}`)
 }
