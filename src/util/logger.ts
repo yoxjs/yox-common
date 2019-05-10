@@ -34,7 +34,7 @@ function isDebug() {
 }
 
 function getStyle(backgroundColor: string) {
-  return `background-color:${backgroundColor};color:#fff;padding:4px 8px;border-radius:20px;`
+  return `background-color:${backgroundColor};border-radius:20px;color:#fff;font-size:10px;padding:3px 6px;`
 }
 
 /**
