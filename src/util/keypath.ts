@@ -29,7 +29,7 @@ export function match(keypath: string, prefix: string): number {
   prefix += SEP_DOT
   return string.startsWith(keypath, prefix)
     ? prefix.length
-    : -1
+    : env.RAW_MINUS_ONE
 }
 
 /**

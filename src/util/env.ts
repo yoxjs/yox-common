@@ -32,6 +32,8 @@ export const RAW_WILDCARD = '*'
 export const KEYPATH_PARENT = '..'
 export const KEYPATH_CURRENT = RAW_THIS
 
+export const RAW_MINUS_ONE = -1
+
 /**
  * Single instance for window in browser
  */

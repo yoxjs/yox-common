@@ -91,7 +91,7 @@ export function unshift<T>(array: T[], target: T | T[]): void {
  * @return 如果未找到，返回 -1
  */
 export function indexOf<T>(array: T[], target: T, strict?: boolean): number {
-  let result = -1
+  let result = env.RAW_MINUS_ONE
   each(
     array,
     function (item: any, index: number) {
