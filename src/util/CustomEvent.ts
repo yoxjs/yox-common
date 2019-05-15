@@ -9,7 +9,7 @@ export default class CustomEvent implements CustomEventInterface {
 
   public static PHASE_UPWARD = 1
 
-  public static PHASE_DOWNWARD = -1
+  public static PHASE_DOWNWARD = env.RAW_MINUS_ONE
 
   // 事件名称
   type: string
