@@ -71,16 +71,11 @@ export function clear(object: Object): void {
  *
  * @return
  */
-export function extend(original: Object, ...objects: Object[]): Object {
-  array.each(
-    objects,
-    function (object) {
-      each(
-        object,
-        function (value, key) {
-          original[key] = value
-        }
-      )
+export function extend(original: Object, object: Object): Object {
+  each(
+    object,
+    function (value, key) {
+      original[key] = value
     }
   )
   return original
@@ -93,7 +88,7 @@ export function extend(original: Object, ...objects: Object[]): Object {
  */
 export function merge(object1: Object | void, object2: Object | void): Object | void {
   return object1 && object2
-    ? extend({}, object2, object1)
+    ? extend(extend({}, object1), object2)
     : object1 || object2
 }
 
