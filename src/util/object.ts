@@ -87,6 +87,17 @@ export function extend(original: Object, ...objects: Object[]): Object {
 }
 
 /**
+ * 合并对象
+ *
+ * @return
+ */
+export function merge(object1: Object | void, object2: Object | void): Object | void {
+  return object1 && object2
+    ? extend({}, object2, object1)
+    : object1 || object2
+}
+
+/**
  * 拷贝对象
  *
  * @param object
