@@ -36,7 +36,7 @@ function getLevel() {
 }
 
 function getStyle(backgroundColor: string) {
-  return `background-color:${backgroundColor};border-radius:20px;color:#fff;font-size:10px;padding:3px 6px;`
+  return `background-color:${backgroundColor};border-radius:12px;color:#fff;font-size:10px;padding:3px 6px;`
 }
 
 /**
@@ -46,7 +46,7 @@ function getStyle(backgroundColor: string) {
  */
 export function debug(msg: string, tag?: string): void {
   if (nativeConsole && getLevel() <= DEBUG) {
-    nativeConsole.log(stylePrefix + (tag || 'Yox debug'), getStyle('#888'), msg)
+    nativeConsole.log(stylePrefix + (tag || 'Yox debug'), getStyle('#999'), msg)
   }
 }
 
