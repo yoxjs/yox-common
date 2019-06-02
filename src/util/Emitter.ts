@@ -159,7 +159,7 @@ export default class Emitter implements EmitterInterface {
         options
       )
     }
-    else if (process.env.NODE_ENV === 'dev') {
+    else if (process.env.NODE_ENV === 'development') {
       logger.fatal(`Invoke emitter.on(type, listener) failed.`)
     }
 
@@ -216,7 +216,7 @@ export default class Emitter implements EmitterInterface {
       instance.listeners = {}
       // 在开发阶段进行警告，比如传了 type 进来，type 是个空值
       // 但你不知道它是空值
-      if (process.env.NODE_ENV === 'dev') {
+      if (process.env.NODE_ENV === 'development') {
         if (arguments.length > 0) {
           logger.warn(`emitter.off(type) is invoked, but the "type" argument is undefined or null.`)
         }
