@@ -129,13 +129,6 @@ export function copy(object: any, deep?: boolean): any {
 }
 
 /**
- * 辅助 get 函数，持有最后找到的值，避免频繁的创建临时对象
- */
-const valueHolder: ValueHolder = {
-  value: env.UNDEFINED
-}
-
-/**
  * 从对象中查找一个 keypath
  *
  * 返回值是空时，表示没找到值
@@ -181,8 +174,8 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
 
         if (isLast) {
           if (hasValue) {
-            valueHolder.value = value
-            object = valueHolder
+            env.VALUE_HOLDER.value = value
+            object = env.VALUE_HOLDER
           }
           else {
             object = env.UNDEFINED
