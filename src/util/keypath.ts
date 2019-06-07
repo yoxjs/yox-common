@@ -3,9 +3,7 @@ import * as string from './string'
 
 import isDef from '../function/isDef'
 
-const SEP_DOT = '.',
-
-dotPattern = /\./g,
+const dotPattern = /\./g,
 
 asteriskPattern = /\*/g,
 
@@ -14,6 +12,8 @@ doubleAsteriskPattern = /\*\*/g,
 splitCache: Record<string, string[]> = {},
 
 patternCache: Record<string, RegExp> = {}
+
+export const separator = '.'
 
 /**
  * 判断 keypath 是否以 prefix 开头，如果是，返回匹配上的前缀长度，否则返回 -1
@@ -26,7 +26,7 @@ export function match(keypath: string, prefix: string): number {
   if (keypath === prefix) {
     return prefix.length
   }
-  prefix += SEP_DOT
+  prefix += separator
   return string.startsWith(keypath, prefix)
     ? prefix.length
     : env.RAW_MINUS_ONE
@@ -43,7 +43,7 @@ export function each(keypath: string, callback: (key: string, isLast: boolean) =
   // 而 splitCache.toString 是个函数
   const list = isDef(splitCache[keypath])
     ? splitCache[keypath]
-    : (splitCache[keypath] = keypath.split(SEP_DOT))
+    : (splitCache[keypath] = keypath.split(separator))
 
   for (let i = 0, lastIndex = list.length - 1; i <= lastIndex; i++) {
     if (callback(list[i], i === lastIndex) === env.FALSE) {
@@ -60,7 +60,7 @@ export function each(keypath: string, callback: (key: string, isLast: boolean) =
  */
 export function join(keypath1: string, keypath2: string): string {
   return keypath1 && keypath2
-    ? keypath1 + SEP_DOT + keypath2
+    ? keypath1 + separator + keypath2
     : keypath1 || keypath2
 }
 
