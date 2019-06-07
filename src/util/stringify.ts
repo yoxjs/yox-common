@@ -15,7 +15,7 @@ export const EMPTY = toJSON(env.EMPTY_STRING)
 /**
  * 目的是 保证调用参数顺序稳定，减少运行时判断
  */
-export function trimArgs(list: (string | void)[]) {
+function trimArgs(list: (string | void)[]) {
 
   let args: string[] = [], removable = env.TRUE
 
