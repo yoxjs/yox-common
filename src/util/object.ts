@@ -3,6 +3,8 @@ import * as env from './env'
 import * as array from './array'
 import * as keypathUtil from './keypath'
 
+import valueHolder from './valueHolder'
+
 import isDef from '../function/isDef'
 
 import * as type from '../../../yox-type/src/type'
@@ -174,8 +176,8 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
 
         if (isLast) {
           if (hasValue) {
-            env.VALUE_HOLDER.value = value
-            object = env.VALUE_HOLDER
+            valueHolder.value = value
+            object = valueHolder
           }
           else {
             object = env.UNDEFINED

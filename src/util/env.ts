@@ -1,5 +1,3 @@
-import ValueHolder from '../../../yox-type/src/interface/ValueHolder'
-
 /**
  * 为了压缩，定义的常量
  */
@@ -99,10 +97,3 @@ export const EMPTY_ARRAY = Object.freeze([])
  * 空字符串
  */
 export const EMPTY_STRING = ''
-
-/**
- * 全局 value holder，避免频繁的创建临时对象
- */
-export const VALUE_HOLDER: ValueHolder = {
-  value: UNDEFINED
-}
