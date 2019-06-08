@@ -4,11 +4,21 @@ import toJSON from '../function/toJSON'
 import * as env from './env'
 import * as array from './array'
 
-const SEP_COMMA = ','
-
 export const TRUE = '!0'
 
 export const FALSE = '!1'
+
+export const COMMA = ','
+
+export const COLON = ':'
+
+export const PLUS = '+'
+
+export const AND = '&&'
+
+export const QUESTION = '?'
+
+export const NOT = '!'
 
 export const EMPTY = toJSON(env.EMPTY_STRING)
 
@@ -38,14 +48,17 @@ function trimArgs(list: (string | void)[]) {
 }
 
 export function toObject(fields: string[]): string {
-  return `{${array.join(fields, SEP_COMMA)}}`
+  return `{${array.join(fields, COMMA)}}`
 }
 
 export function toArray(items: string[]): string {
-  return `[${array.join(items, SEP_COMMA)}]`
+  return `[${array.join(items, COMMA)}]`
 }
 
 export function toCall(name: string, args: (string | void)[]): string {
-  return `${name}(${array.join(trimArgs(args), SEP_COMMA)})`
+  return `${name}(${array.join(trimArgs(args), COMMA)})`
 }
 
+export function toString(value: any): string {
+  return toJSON(value)
+}
