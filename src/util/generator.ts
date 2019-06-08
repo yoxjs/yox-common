@@ -1,5 +1,4 @@
 import isDef from '../function/isDef'
-import toJSON from '../function/toJSON'
 
 import * as env from './env'
 import * as array from './array'
@@ -20,7 +19,7 @@ export const QUESTION = '?'
 
 export const NOT = '!'
 
-export const EMPTY = toJSON(env.EMPTY_STRING)
+export const EMPTY = '""'
 
 /**
  * 目的是 保证调用参数顺序稳定，减少运行时判断
@@ -60,5 +59,5 @@ export function toCall(name: string, args: (string | void)[]): string {
 }
 
 export function toString(value: any): string {
-  return toJSON(value)
+  return JSON.stringify(value)
 }
