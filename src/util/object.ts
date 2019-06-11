@@ -141,21 +141,6 @@ export function copy(object: any, deep?: boolean): any {
  */
 export function get(object: any, keypath: string): ValueHolder | undefined {
 
-  /**
-   * 考虑以下情况:
-   *
-   * {
-   *   'a.b.c.d': 1,
-   *   'a.b.c': {
-   *      d: 2
-   *   }
-   * }
-   *
-   * 此时 keypath 是 `a.b.c.d`，可以获取到 1
-   * 如果没有这个 key，按 keypath 推进是取不到值的，因为没有 a.b.c 对象
-   * 个人觉得没有必要支持字面量，情况实在太多，会把这个函数搞的性能很差
-   */
-
   keypathUtil.each(
     keypath,
     function (key, isLast) {
