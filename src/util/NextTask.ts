@@ -1,5 +1,5 @@
-import NextTaskInterface from '../../../yox-type/src/interface/NextTask'
-import TaskInterface from '../../../yox-type/src/interface/Task'
+import NextTaskInterface from 'yox-type/src/interface/NextTask'
+import TaskInterface from 'yox-type/src/interface/Task'
 
 import * as array from './array'
 import execute from '../function/execute'
