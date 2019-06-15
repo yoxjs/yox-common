@@ -7,8 +7,8 @@ import valueHolder from './valueHolder'
 
 import isDef from '../function/isDef'
 
-import * as type from 'yox-type/src/type'
-import ValueHolder from 'yox-type/src/interface/ValueHolder'
+import * as type from '../../../yox-type/src/type'
+import ValueHolder from '../../../yox-type/src/interface/ValueHolder'
 
 /**
  * 获取对象的 key 的数组
