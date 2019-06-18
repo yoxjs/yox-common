@@ -1,4 +1,4 @@
-import ValueHolder from '../../../yox-type/src/interface/ValueHolder'
+import { ValueHolder } from '../../../yox-type/src/class'
 import * as env from './env'
 
 /**

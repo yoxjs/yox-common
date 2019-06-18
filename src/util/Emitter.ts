@@ -10,8 +10,10 @@ import * as logger from './logger'
 import CustomEvent from './CustomEvent'
 
 import * as type from '../../../yox-type/src/type'
-import EmitterOptions from '../../../yox-type/src/options/Emitter'
-import EmitterInterface from '../../../yox-type/src/event/Emitter'
+import {
+  EmitterOptions,
+  Emitter as EmitterInterface
+} from '../../../yox-type/src/class'
 
 interface Namespace {
   name: string
