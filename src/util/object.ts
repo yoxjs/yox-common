@@ -1,6 +1,6 @@
 import {
   data,
-  valueHolder
+  ValueHolder
 } from '../../../yox-type/src/type'
 
 import * as is from './is'
@@ -141,7 +141,7 @@ export function copy(object: any, deep?: boolean): any {
  * @param keypath
  * @return
  */
-export function get(object: any, keypath: string): valueHolder | undefined {
+export function get(object: any, keypath: string): ValueHolder | undefined {
 
   keypathUtil.each(
     keypath,
