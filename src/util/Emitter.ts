@@ -1,3 +1,9 @@
+import {
+  nativeListener,
+  EmitterOptions,
+  Emitter as EmitterInterface
+} from '../../../yox-type/src/type'
+
 import execute from '../function/execute'
 
 import * as is from './is'
@@ -8,12 +14,6 @@ import * as string from './string'
 import * as logger from './logger'
 
 import CustomEvent from './CustomEvent'
-
-import * as type from '../../../yox-type/src/type'
-import {
-  EmitterOptions,
-  Emitter as EmitterInterface
-} from '../../../yox-type/src/class'
 
 interface Namespace {
   name: string
@@ -35,7 +35,7 @@ export default class Emitter implements EmitterInterface {
   /**
    * 原生事件监听，一个事件对应一个 listener
    */
-  nativeListeners?: Record<string, type.nativeListener>
+  nativeListeners?: Record<string, nativeListener>
 
   constructor(ns?: boolean) {
     this.ns = ns || env.FALSE

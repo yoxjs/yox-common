@@ -1,7 +1,7 @@
 import {
   Task as TaskInterface,
   NextTask as NextTaskInterface,
-} from '../../../yox-type/src/class'
+} from '../../../yox-type/src/type'
 
 import * as array from './array'
 import execute from '../function/execute'

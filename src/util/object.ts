@@ -1,14 +1,16 @@
+import {
+  data,
+  valueHolder
+} from '../../../yox-type/src/type'
+
 import * as is from './is'
 import * as env from './env'
 import * as array from './array'
 import * as keypathUtil from './keypath'
 
-import valueHolder from './valueHolder'
+import holder from './holder'
 
 import isDef from '../function/isDef'
-
-import * as type from '../../../yox-type/src/type'
-import { ValueHolder } from '../../../yox-type/src/class'
 
 /**
  * 获取对象的 key 的数组
@@ -16,7 +18,7 @@ import { ValueHolder } from '../../../yox-type/src/class'
  * @param object
  * @return
  */
-export function keys(object: type.data): string[] {
+export function keys(object: data): string[] {
   return Object.keys(object)
 }
 
@@ -35,7 +37,7 @@ function sortKeyByDesc(a: string, b: string): number {
  * @param desc 是否逆序，默认从小到大排序
  * @return
  */
-export function sort(object: type.data, desc?: boolean): string[] {
+export function sort(object: data, desc?: boolean): string[] {
   return keys(object).sort(
     desc ? sortKeyByDesc : sortKeyByAsc
   )
@@ -47,7 +49,7 @@ export function sort(object: type.data, desc?: boolean): string[] {
  * @param object
  * @param callback 返回 false 可停止遍历
  */
-export function each(object: type.data, callback: (value: any, key: string) => boolean | void): void {
+export function each(object: data, callback: (value: any, key: string) => boolean | void): void {
   for (let key in object) {
     if (callback(object[key], key) === env.FALSE) {
       break
@@ -60,7 +62,7 @@ export function each(object: type.data, callback: (value: any, key: string) => b
  *
  * @param object
  */
-export function clear(object: type.data): void {
+export function clear(object: data): void {
   each(
     object,
     function (_, key) {
@@ -74,7 +76,7 @@ export function clear(object: type.data): void {
  *
  * @return
  */
-export function extend(original: type.data, object: type.data): type.data {
+export function extend(original: data, object: data): data {
   each(
     object,
     function (value, key) {
@@ -89,7 +91,7 @@ export function extend(original: type.data, object: type.data): type.data {
  *
  * @return
  */
-export function merge(object1: type.data | void, object2: type.data | void): type.data | void {
+export function merge(object1: data | void, object2: data | void): data | void {
   return object1 && object2
     ? extend(extend({}, object1), object2)
     : object1 || object2
@@ -139,7 +141,7 @@ export function copy(object: any, deep?: boolean): any {
  * @param keypath
  * @return
  */
-export function get(object: any, keypath: string): ValueHolder | undefined {
+export function get(object: any, keypath: string): valueHolder | undefined {
 
   keypathUtil.each(
     keypath,
@@ -161,8 +163,8 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
 
         if (isLast) {
           if (hasValue) {
-            valueHolder.value = value
-            object = valueHolder
+            holder.value = value
+            object = holder
           }
           else {
             object = env.UNDEFINED
@@ -192,7 +194,7 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
  * @param value
  * @param autofill 是否自动填充不存在的对象，默认自动填充
  */
-export function set(object: type.data, keypath: string, value: any, autofill?: boolean): void {
+export function set(object: data, keypath: string, value: any, autofill?: boolean): void {
   keypathUtil.each(
     keypath,
     function (key, isLast) {
@@ -219,7 +221,7 @@ export function set(object: type.data, keypath: string, value: any, autofill?: b
  * @param key
  * @return
  */
-export function has(object: type.data, key: string | number): boolean {
+export function has(object: data, key: string | number): boolean {
   // 不用 hasOwnProperty，性能差
   return isDef(object[key])
 }

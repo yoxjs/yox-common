@@ -1,7 +1,7 @@
 import {
   Yox,
   CustomEvent as CustomEventInterface
-} from '../../../yox-type/src/class'
+} from '../../../yox-type/src/type'
 
 import * as env from './env'
 
