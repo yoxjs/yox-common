@@ -1,10 +1,6 @@
 import {
-  CustomEvent as CustomEventInterface
+  CustomEventInterface
 } from '../../../yox-type/src/type'
-
-import {
-  Yox,
-} from '../../../yox-type/src/global'
 
 import * as env from './env'
 
@@ -23,7 +19,7 @@ export default class CustomEvent implements CustomEventInterface {
   phase: number
 
   // 哪个组件发出的事件
-  target?: Yox
+  target?: YoxInterface
 
   // 原始事件，比如 DOM 事件
   originalEvent?: CustomEventInterface | Event

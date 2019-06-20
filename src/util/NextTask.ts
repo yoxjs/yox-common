@@ -1,6 +1,6 @@
 import {
-  Task as TaskInterface,
-  NextTask as NextTaskInterface,
+  Task,
+  NextTaskInterface,
 } from '../../../yox-type/src/type'
 
 import * as array from './array'
@@ -21,7 +21,7 @@ export default class NextTask implements NextTaskInterface {
   /**
    * 异步队列
    */
-  tasks: TaskInterface[]
+  tasks: Task[]
 
   constructor() {
     this.tasks = []
