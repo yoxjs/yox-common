@@ -2,6 +2,10 @@ import {
   CustomEventInterface
 } from '../../../yox-type/src/type'
 
+import {
+  YoxInterface,
+} from '../../../yox-type/src/global'
+
 import * as env from './env'
 
 export default class CustomEvent implements CustomEventInterface {
