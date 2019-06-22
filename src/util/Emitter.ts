@@ -2,7 +2,7 @@ import {
   nativeListener,
   EmitterOptions,
   EmitterInterface,
-} from '../../../yox-type/src/type'
+} from '../../../yox-type/src/global'
 
 import execute from '../function/execute'
 
