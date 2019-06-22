@@ -9,7 +9,6 @@
     }
   ],
   "include": [
-    "src/**/*.ts",
-    "../yox-type/src/*.ts"
+    "src/**/*.ts"
   ]
 }
