@@ -21,7 +21,7 @@ defaultLogLevel = /yox/.test(toString(env.EMPTY_FUNCTION)) ? DEBUG : WARN,
  * console 样式前缀
  * ie 和 edge 不支持 console.log 样式
  */
-stylePrefix = env.WINDOW && /edge|msie|trident/.test(env.WINDOW.navigator.userAgent)
+stylePrefix = env.WINDOW && /edge|msie|trident/i.test(env.WINDOW.navigator.userAgent)
   ? env.EMPTY_STRING
   : '%c',
 
