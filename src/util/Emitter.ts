@@ -20,7 +20,7 @@ interface Namespace {
   ns: string
 }
 
-export default class Emitter implements EmitterInterface {
+export default class Emitter<T> implements EmitterInterface<T> {
 
   /**
    * 是否开启命名空间
