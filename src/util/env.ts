@@ -45,6 +45,11 @@ export const WINDOW = typeof window !== RAW_UNDEFINED ? window : UNDEFINED
 export const DOCUMENT = typeof document !== RAW_UNDEFINED ? document : UNDEFINED
 
 /**
+ * Single instance for global in nodejs or browser
+ */
+export const GLOBAL = typeof global !== RAW_UNDEFINED ? global : WINDOW
+
+/**
  * tap 事件
  *
  * 非常有用的抽象事件，比如 pc 端是 click 事件，移动端是 touchend 事件
