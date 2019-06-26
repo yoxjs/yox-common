@@ -1,5 +1,5 @@
 import {
-  nativeListener,
+  NativeListener,
   EmitterOptions,
   EmitterInterface,
 } from '../../../yox-type/src/global'
@@ -35,7 +35,7 @@ export default class Emitter implements EmitterInterface {
   /**
    * 原生事件监听，一个事件对应一个 listener
    */
-  nativeListeners?: Record<string, nativeListener>
+  nativeListeners?: Record<string, NativeListener>
 
   constructor(ns?: boolean) {
     this.ns = ns || env.FALSE
