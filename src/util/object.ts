@@ -1,5 +1,5 @@
 import {
-  data,
+  Data,
   ValueHolder
 } from '../../../yox-type/src/type'
 
@@ -18,7 +18,7 @@ import isDef from '../function/isDef'
  * @param object
  * @return
  */
-export function keys(object: data): string[] {
+export function keys(object: Data): string[] {
   return Object.keys(object)
 }
 
@@ -37,7 +37,7 @@ function sortKeyByDesc(a: string, b: string): number {
  * @param desc 是否逆序，默认从小到大排序
  * @return
  */
-export function sort(object: data, desc?: boolean): string[] {
+export function sort(object: Data, desc?: boolean): string[] {
   return keys(object).sort(
     desc ? sortKeyByDesc : sortKeyByAsc
   )
@@ -49,7 +49,7 @@ export function sort(object: data, desc?: boolean): string[] {
  * @param object
  * @param callback 返回 false 可停止遍历
  */
-export function each(object: data, callback: (value: any, key: string) => boolean | void): void {
+export function each(object: Data, callback: (value: any, key: string) => boolean | void): void {
   for (let key in object) {
     if (callback(object[key], key) === env.FALSE) {
       break
@@ -62,7 +62,7 @@ export function each(object: data, callback: (value: any, key: string) => boolea
  *
  * @param object
  */
-export function clear(object: data): void {
+export function clear(object: Data): void {
   each(
     object,
     function (_, key) {
@@ -76,7 +76,7 @@ export function clear(object: data): void {
  *
  * @return
  */
-export function extend(original: data, object: data): data {
+export function extend(original: Data, object: Data): Data {
   each(
     object,
     function (value, key) {
@@ -91,7 +91,7 @@ export function extend(original: data, object: data): data {
  *
  * @return
  */
-export function merge(object1: data | void, object2: data | void): data | void {
+export function merge(object1: Data | void, object2: Data | void): Data | void {
   return object1 && object2
     ? extend(extend({}, object1), object2)
     : object1 || object2
@@ -194,7 +194,7 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
  * @param value
  * @param autofill 是否自动填充不存在的对象，默认自动填充
  */
-export function set(object: data, keypath: string, value: any, autofill?: boolean): void {
+export function set(object: Data, keypath: string, value: any, autofill?: boolean): void {
   keypathUtil.each(
     keypath,
     function (key, isLast) {
@@ -221,7 +221,7 @@ export function set(object: data, keypath: string, value: any, autofill?: boolea
  * @param key
  * @return
  */
-export function has(object: data, key: string | number): boolean {
+export function has(object: Data, key: string | number): boolean {
   // 不用 hasOwnProperty，性能差
   return isDef(object[key])
 }
