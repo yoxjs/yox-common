@@ -1,8 +1,14 @@
 import {
   NativeListener,
+} from '../../../yox-type/src/type'
+
+import {
   EmitterOptions,
+} from '../../../yox-type/src/options'
+
+import {
   EmitterInterface,
-} from '../../../yox-type/src/global'
+} from '../../../yox-type/src/emitter'
 
 import execute from '../function/execute'
 
