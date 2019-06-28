@@ -187,7 +187,7 @@ export function toArray<T>(array: T[] | ArrayLike<T>): T[] {
  * @param value
  * @return
  */
-export function toObject(array: any[], key?: string | null, value?: any): Object {
+export function toObject(array: any[], key?: string | null, value?: any): object {
   let result = {}
   each(
     array,
