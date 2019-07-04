@@ -295,7 +295,7 @@ function parseNamespace(ns: boolean, type: string): Namespace {
   }
 
   if (ns) {
-    const index = string.indexOf(type, '.')
+    const index = string.indexOf(type, env.RAW_DOT)
     if (index >= 0) {
       result.name = string.slice(type, 0, index)
       result.ns = string.slice(type, index + 1)
