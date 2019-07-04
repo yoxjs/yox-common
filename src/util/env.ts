@@ -56,7 +56,7 @@ export const GLOBAL = typeof global !== RAW_UNDEFINED ? global : WINDOW
  *
  * 这样只需 on-tap="handler" 就可以完美兼容各端
  *
- * 框架未实现此事件，通过 Yox.dom.specialEvents 提供给外部扩展
+ * 框架未实现此事件，通过 Yox.dom.addSpecialEvent 提供给外部扩展
  *
  */
 export const EVENT_TAP = 'tap'

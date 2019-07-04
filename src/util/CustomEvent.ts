@@ -53,7 +53,7 @@ export default class CustomEvent implements CustomEventInterface {
   /**
    * 阻止事件的默认行为
    */
-  preventDefault(): CustomEventInterface {
+  preventDefault(): this {
     const instance = this
     if (!instance.isPrevented) {
       const { originalEvent } = instance
@@ -68,7 +68,7 @@ export default class CustomEvent implements CustomEventInterface {
   /**
    * 停止事件广播
    */
-  stopPropagation(): CustomEventInterface {
+  stopPropagation(): this {
     const instance = this
     if (!instance.isStoped) {
       const { originalEvent } = instance
@@ -80,11 +80,11 @@ export default class CustomEvent implements CustomEventInterface {
     return instance
   }
 
-  prevent(): CustomEventInterface {
+  prevent(): this {
     return this.preventDefault()
   }
 
-  stop(): CustomEventInterface {
+  stop(): this {
     return this.stopPropagation()
   }
 
