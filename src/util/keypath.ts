@@ -27,7 +27,7 @@ export function match(keypath: string, prefix: string): number {
   prefix += env.RAW_DOT
   return string.startsWith(keypath, prefix)
     ? prefix.length
-    : env.RAW_MINUS_ONE
+    : env.MINUS_ONE
 }
 
 /**

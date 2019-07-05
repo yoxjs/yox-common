@@ -5,6 +5,7 @@ export const TRUE = true
 export const FALSE = false
 export const NULL = null
 export const UNDEFINED = void 0
+export const MINUS_ONE = -1
 
 export const RAW_TRUE = 'true'
 export const RAW_FALSE = 'false'
@@ -32,8 +33,6 @@ export const RAW_DOT = '.'
 
 export const KEYPATH_PARENT = '..'
 export const KEYPATH_CURRENT = RAW_THIS
-
-export const RAW_MINUS_ONE = -1
 
 /**
  * Single instance for window in browser
