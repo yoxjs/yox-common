@@ -11,21 +11,21 @@ import execute from '../function/execute'
  */
 export function each<T>(
   array: T[],
-  callback: (item: T, index: number, length: number) => boolean | void,
+  callback: (item: T, index: number) => boolean | void,
   reversed?: boolean
 ): void {
   const { length } = array
   if (length) {
     if (reversed) {
       for (let i = length - 1; i >= 0; i--) {
-        if (callback(array[i], i, length) === env.FALSE) {
+        if (callback(array[i], i) === env.FALSE) {
           break
         }
       }
     }
     else {
       for (let i = 0; i < length; i++) {
-        if (callback(array[i], i, length) === env.FALSE) {
+        if (callback(array[i], i) === env.FALSE) {
           break
         }
       }

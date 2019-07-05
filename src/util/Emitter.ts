@@ -53,7 +53,11 @@ export default class Emitter implements EmitterInterface {
   fire(
     type: string | Namespace,
     args: any[] | void,
-    filter?: (namespace: Namespace, args: any[] | void, options: EmitterOptions) => boolean | void
+    filter?: (
+      namespace: Namespace,
+      args: any[] | void,
+      options: EmitterOptions
+    ) => boolean | void
   ): boolean {
 
     let instance = this,
@@ -78,7 +82,7 @@ export default class Emitter implements EmitterInterface {
 
       array.each(
         list,
-        function (options: EmitterOptions, _: number) {
+        function (options) {
 
           // 命名空间不匹配
           if (!matchNamespace(namespace.ns, options)
@@ -193,7 +197,7 @@ export default class Emitter implements EmitterInterface {
       each = function (list: EmitterOptions[], name: string) {
         array.each(
           list,
-          function (options: EmitterOptions, index: number) {
+          function (options, index) {
             if (matchListener(options) && matchNamespace(ns, options)) {
               list.splice(index, 1)
             }
@@ -253,7 +257,7 @@ export default class Emitter implements EmitterInterface {
     each = function (list: EmitterOptions[]) {
       array.each(
         list,
-        function (options: EmitterOptions) {
+        function (options) {
           if (matchListener(options) && matchNamespace(ns, options)) {
             return result = env.FALSE
           }

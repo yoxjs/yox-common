@@ -30,7 +30,7 @@ function trimArgs(list: (string | void)[]) {
 
   array.each(
     list,
-    function (arg: string | void) {
+    function (arg) {
       if (isDef(arg)) {
         removable = env.FALSE
         array.unshift(args, arg as string)
