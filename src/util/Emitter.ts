@@ -1,4 +1,5 @@
 import {
+  Namespace,
   NativeListener,
 } from '../../../yox-type/src/type'
 
@@ -20,11 +21,6 @@ import * as string from './string'
 import * as logger from './logger'
 
 import CustomEvent from './CustomEvent'
-
-interface Namespace {
-  name: string
-  ns: string
-}
 
 export default class Emitter implements EmitterInterface {
 
@@ -55,16 +51,16 @@ export default class Emitter implements EmitterInterface {
    * @param data 事件数据
    */
   fire(
-    type: string,
+    type: string | Namespace,
     args: any[] | void,
-    filter?: (type: string, args: any[] | void, options: EmitterOptions) => boolean | void
+    filter?: (namespace: Namespace, args: any[] | void, options: EmitterOptions) => boolean | void
   ): boolean {
 
     let instance = this,
 
-    { name, ns } = parseNamespace(instance.ns, type),
+    namespace = is.string(type) ? instance.parse(type as string) : type as Namespace,
 
-    list = instance.listeners[name],
+    list = instance.listeners[namespace.name],
 
     isComplete = env.TRUE
 
@@ -85,11 +81,11 @@ export default class Emitter implements EmitterInterface {
         function (options: EmitterOptions, _: number) {
 
           // 命名空间不匹配
-          if (!matchNamespace(ns, options)
+          if (!matchNamespace(namespace.ns, options)
             // 在 fire 过程中被移除了
             || !array.has(list, options)
             // 传了 filter，则用 filter 判断是否过滤此 options
-            || (filter && !filter(type, args, options))
+            || (filter && !filter(namespace, args, options))
           ) {
             return
           }
@@ -115,7 +111,7 @@ export default class Emitter implements EmitterInterface {
 
           // 注册的 listener 可以指定最大执行次数
           if (options.num === options.max) {
-            instance.off(type, options.fn)
+            instance.off(namespace.key, options.fn)
           }
 
           // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
@@ -160,7 +156,7 @@ export default class Emitter implements EmitterInterface {
       : listener as EmitterOptions
 
     if (is.object(options) && is.func(options.fn)) {
-      const { name, ns } = parseNamespace(instance.ns, type)
+      const { name, ns } = instance.parse(type)
       options.ns = ns
       array.push(
         listeners[name] || (listeners[name] = []),
@@ -190,7 +186,7 @@ export default class Emitter implements EmitterInterface {
 
     if (type) {
 
-      const { name, ns } = parseNamespace(instance.ns, type),
+      const { name, ns } = instance.parse(type),
 
       matchListener = createMatchListener(listener),
 
@@ -248,7 +244,7 @@ export default class Emitter implements EmitterInterface {
 
     { listeners } = instance,
 
-    { name, ns } = parseNamespace(instance.ns, type),
+    { name, ns } = instance.parse(type),
 
     result = env.TRUE,
 
@@ -279,35 +275,34 @@ export default class Emitter implements EmitterInterface {
 
   }
 
-}
+  /**
+   * 把事件类型解析成命名空间格式
+   *
+   * @param type
+   */
+  parse(type: string): Namespace {
 
-/**
- * 把事件类型解析成命名空间格式
- *
- * @param ns
- * @param type
- */
-function parseNamespace(ns: boolean, type: string): Namespace {
-
-  const result = {
-    name: type,
-    ns: env.EMPTY_STRING,
-  }
-
-  if (ns) {
-    const index = string.indexOf(type, env.RAW_DOT)
-    if (index >= 0) {
-      result.name = string.slice(type, 0, index)
-      result.ns = string.slice(type, index + 1)
+    const result = {
+      key: type,
+      name: type,
+      ns: env.EMPTY_STRING,
     }
-  }
 
-  return result
+    if (this.ns) {
+      const index = string.indexOf(type, env.RAW_DOT)
+      if (index >= 0) {
+        result.name = string.slice(type, 0, index)
+        result.ns = string.slice(type, index + 1)
+      }
+    }
+
+    return result
+
+  }
 
 }
 
-
-function matchTrue(options: EmitterOptions) {
+function matchTrue() {
   return env.TRUE
 }
 
