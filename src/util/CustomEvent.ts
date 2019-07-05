@@ -1,4 +1,8 @@
 import {
+  Namespace,
+} from '../../../yox-type/src/type'
+
+import {
   YoxInterface,
 } from '../../../yox-type/src/yox'
 
@@ -21,6 +25,9 @@ export default class CustomEvent implements CustomEventInterface {
 
   // 事件当前阶段
   phase: number
+
+  // 事件命名空间信息
+  ns?: Namespace
 
   // 哪个组件发出的事件
   target?: YoxInterface
