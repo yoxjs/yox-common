@@ -3,6 +3,8 @@ import isDef from '../function/isDef'
 import * as env from './env'
 import * as array from './array'
 
+export const UNDEFINED = 'z'
+
 export const TRUE = '!0'
 
 export const FALSE = '!1'
@@ -21,6 +23,8 @@ export const NOT = '!'
 
 export const EMPTY = '""'
 
+export const RETURN = 'return '
+
 /**
  * 目的是 保证调用参数顺序稳定，减少运行时判断
  */
@@ -36,7 +40,7 @@ function trimArgs(list: (string | void)[]) {
         array.unshift(args, arg as string)
       }
       else if (!removable) {
-        array.unshift(args, FALSE)
+        array.unshift(args, UNDEFINED)
       }
     },
     env.TRUE
@@ -60,4 +64,8 @@ export function toCall(name: string, args: (string | void)[]): string {
 
 export function toString(value: any): string {
   return JSON.stringify(value)
+}
+
+export function toFunction(args: string, code: string) {
+  return `${env.RAW_FUNCTION}(${args}){var ${UNDEFINED}=void 0;${RETURN}${code}}`
 }
