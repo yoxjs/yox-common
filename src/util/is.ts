@@ -27,7 +27,7 @@ export function array(value: any): boolean {
  * @return
  */
 export function object(value: any): boolean {
-  // 低版本 IE 会把 null 和 undefined 当作 object
+  // 低版本 IE 会把 null 当作 object
   return value !== env.NULL && typeof value === 'object'
 }
 
