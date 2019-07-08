@@ -47,8 +47,9 @@ export default class Emitter implements EmitterInterface {
   /**
    * 发射事件
    *
-   * @param bullet 事件或事件名称
-   * @param data 事件数据
+   * @param type 事件名称或命名空间
+   * @param args 事件处理函数的参数列表
+   * @param filter 自定义过滤器
    */
   fire(
     type: string | Namespace,
@@ -148,7 +149,7 @@ export default class Emitter implements EmitterInterface {
    */
   on(
     type: string,
-    listener?: Function | EmitterOptions
+    listener: Function | EmitterOptions
   ): void {
 
     const instance = this,
