@@ -99,7 +99,7 @@ export default class Emitter implements EmitterInterface {
           // 这样方便业务层移除事件绑定
           // 比如 on('xx', function) 这样定义了匿名 listener
           // 在这个 listener 里面获取不到当前 listener 的引用
-          // 为了能引用到，有时候会先定义 var listener = function,
+          // 为了能引用到，有时候会先定义 var listener = function
           // 然后再 on('xx', listener) 这样其实是没有必要的
           if (event) {
             event.listener = options.fn
@@ -169,7 +169,7 @@ export default class Emitter implements EmitterInterface {
       )
     }
     else if (process.env.NODE_ENV === 'development') {
-      logger.fatal(`Invoke emitter.on(type, listener) failed.`)
+      logger.fatal(`emitter.on(type, listener) invoke failed：\n\n"listener" is expected to be a Function or an EmitterOptions.\n`)
     }
 
   }
@@ -227,7 +227,7 @@ export default class Emitter implements EmitterInterface {
       // 但你不知道它是空值
       if (process.env.NODE_ENV === 'development') {
         if (arguments.length > 0) {
-          logger.warn(`emitter.off(type) is invoked, but the "type" argument is undefined or null.`)
+          logger.warn(`emitter.off(type) is invoked, but "type" is ${type}.`)
         }
       }
     }
