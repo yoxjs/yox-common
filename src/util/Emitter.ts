@@ -219,6 +219,14 @@ export default class Emitter implements EmitterInterface {
         object.each(listeners, each)
       }
 
+      // 在开发阶段进行警告，比如传了 listener 进来，listener 是个空值
+      // 但你不知道它是空值
+      if (process.env.NODE_ENV === 'development') {
+        if (arguments.length > 1) {
+          logger.warn(`emitter.off(type, listener) is invoked, but "listener" is ${listener}.`)
+        }
+      }
+
     }
     else {
       // 清空
