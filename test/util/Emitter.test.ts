@@ -8,10 +8,11 @@ test('on', () => {
 
   let listener = function () {
     i++
-    expect(this).toBe(listener)
   }
 
-  emitter.on('click', { fn: listener, ctx: listener })
+  expect(emitter.has('click')).toBe(false)
+
+  emitter.on('click', { fn: listener })
   expect(i).toBe(0)
 
   expect(emitter.has('click')).toBe(true)
@@ -22,6 +23,95 @@ test('on', () => {
 
   emitter.fire('click')
   expect(i).toBe(2)
+
+})
+
+test('on context', () => {
+
+  let emitter = new Emitter()
+
+  let $this: any
+
+  let listener = function () {
+    $this = this
+  }
+
+  emitter.on('click', { fn: listener, ctx: listener })
+
+  emitter.fire('click')
+  expect($this).toBe(listener)
+
+})
+
+test('on namespace', () => {
+
+  let emitter = new Emitter(true)
+
+  let a = 0, b = 0, c = 0
+
+  let listenerA = function () {
+    a++
+  }
+
+  let listenerB = function () {
+    b++
+  }
+
+  let listener = function () {
+    c++
+  }
+
+  expect(emitter.has('click.a')).toBe(false)
+  expect(emitter.has('click.b')).toBe(false)
+  expect(emitter.has('click')).toBe(false)
+  expect(emitter.has('click.c')).toBe(false)
+
+  emitter.on('click.a', { fn: listenerA })
+  emitter.on('click.b', { fn: listenerB })
+  emitter.on('click', { fn: listener })
+
+  expect(emitter.has('click.a')).toBe(true)
+  expect(emitter.has('click.b')).toBe(true)
+  expect(emitter.has('click')).toBe(true)
+  // 因为 click 可以监听到 click.c，因此为 true
+  expect(emitter.has('click.c')).toBe(true)
+
+  expect(a).toBe(0)
+  expect(b).toBe(0)
+  expect(c).toBe(0)
+
+  emitter.fire('click')
+
+  expect(a).toBe(1)
+  expect(b).toBe(1)
+  expect(c).toBe(1)
+
+  emitter.fire('click.a')
+
+  expect(a).toBe(2)
+  expect(b).toBe(1)
+  expect(c).toBe(2)
+
+  emitter.fire('click.b')
+
+  expect(a).toBe(2)
+  expect(b).toBe(2)
+  expect(c).toBe(3)
+
+  emitter.fire('click.c')
+
+  expect(a).toBe(2)
+  expect(b).toBe(2)
+  expect(c).toBe(4)
+
+  emitter.fire({
+    type: 'click',
+    ns: 'a'
+  })
+
+  expect(a).toBe(3)
+  expect(b).toBe(2)
+  expect(c).toBe(5)
 
 })
 
@@ -39,6 +129,8 @@ test('once', () => {
       },
     }
   )
+
+  expect(emitter.has('click')).toBe(true)
   expect(i).toBe(0)
 
   emitter.fire('click')

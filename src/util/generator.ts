@@ -3,7 +3,7 @@ import isDef from '../function/isDef'
 import * as env from './env'
 import * as array from './array'
 
-export const UNDEFINED = 'z'
+export const UNDEFINED = '$'
 
 export const TRUE = '!0'
 
@@ -27,6 +27,9 @@ export const RETURN = 'return '
 
 /**
  * 目的是 保证调用参数顺序稳定，减少运行时判断
+ *
+ * [a, undefined, undefined] => [a]
+ * [a, undefined, b, undefined] => [a, undefined, b]
  */
 function trimArgs(list: (string | void)[]) {
 
