@@ -33,6 +33,11 @@ test('join', () => {
   )
   .toBe('1.2')
 
+  expect(
+    keypath.join('1', '')
+  )
+  .toBe('1')
+
 })
 
 test('match', () => {
@@ -56,6 +61,24 @@ test('match', () => {
     keypath.match('a.b', 'b')
   )
   .toBe(-1)
+
+})
+
+test('each', () => {
+
+  let keys = ['a', 'b', 'c']
+  let index = -1
+
+  keypath.each(
+    keys.join('.'),
+    function (key, isLast) {
+      index++
+      expect(key).toBe(keys[index])
+      if (key === keys[keys.length - 1]) {
+        expect(isLast).toBe(true)
+      }
+    }
+  )
 
 })
 

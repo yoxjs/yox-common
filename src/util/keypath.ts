@@ -1,8 +1,6 @@
 import * as env from './env'
 import * as string from './string'
 
-import isDef from '../function/isDef'
-
 const dotPattern = /\./g,
 
 asteriskPattern = /\*/g,
@@ -37,9 +35,9 @@ export function match(keypath: string, prefix: string): number {
  * @param callback 返回 false 可中断遍历
  */
 export function each(keypath: string, callback: (key: string, isLast: boolean) => boolean | void) {
-  // 判断字符串是因为 keypath 有可能是 toString
-  // 而 splitCache.toString 是个函数
-  const list = isDef(splitCache[keypath])
+  // 如果 keypath 是 toString 之类的原型字段
+  // splitCache[keypath] 会取到原型链上的对象
+  const list = splitCache.hasOwnProperty(keypath)
     ? splitCache[keypath]
     : (splitCache[keypath] = keypath.split(env.RAW_DOT))
 

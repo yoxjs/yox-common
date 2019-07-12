@@ -2,12 +2,14 @@
 import * as object from '../../src/util/object'
 
 test('sort', () => {
+
   let target = {
     a: 1,
     aaa: 3,
     aa: 2,
     aaaa: 4,
   }
+
   let result1 = object.sort(target)
   expect(result1.length).toBe(4)
   expect(result1[0]).toBe('a')
@@ -30,6 +32,7 @@ test('falsy', () => {
   expect(object.falsy(new Date())).toBe(true)
   expect(object.falsy(undefined)).toBe(true)
   expect(object.falsy(null)).toBe(true)
+  expect(object.falsy(NaN)).toBe(true)
   expect(object.falsy(1)).toBe(true)
   expect(object.falsy(0)).toBe(true)
   expect(object.falsy(true)).toBe(true)
@@ -73,16 +76,17 @@ test('each interrupt', () => {
       return false
     }
   })
-  expect(index).not.toBe(3)
+  expect(index).not.toBe(Object.keys(test).length)
 })
 
-test('has', () => {
-  let test1 = {}
-  let test2 = { a: 1 }
-  expect(object.has(test1, 'a')).toBe(false)
-  expect(object.has(test1, 'toString')).toBe(true)
-  expect(object.has(test2, 'a')).toBe(true)
-  expect(object.has(test2, 'toString')).toBe(true)
+test('clear', () => {
+  let test = {
+    a: 'a',
+    b: 'b',
+    c: 'c',
+  }
+  object.clear(test)
+  expect(Object.keys(test).length).toBe(0)
 })
 
 test('extend', () => {
@@ -95,15 +99,45 @@ test('extend', () => {
   expect(object.keys(test2).length).toBe(1)
 })
 
+test('merge', () => {
+
+  let test1 = { a: 1 }
+  let test2 = { b: 2 }
+  let result = object.merge(test1, test2)
+
+  expect(typeof result).toBe('object')
+  if (result) {
+    // 新对象
+    expect(result).not.toBe(test1)
+    expect(result).not.toBe(test2)
+    expect(object.keys(result).length).toBe(2)
+    expect(object.keys(test1).length).toBe(1)
+    expect(object.keys(test2).length).toBe(1)
+  }
+
+  result = object.merge(test1)
+  expect(result).toBe(test1)
+
+  result = object.merge(undefined, test2)
+  expect(result).toBe(test2)
+
+  result = object.merge()
+  expect(result).toBe(undefined)
+
+})
+
 test('copy', () => {
+
   let obj = { a: 1 }
   let objCopy = object.copy(obj)
   let arr = [ 'a' ]
   let arrCopy = object.copy(arr)
+
   expect(obj).not.toBe(objCopy)
   expect(arr).not.toBe(arrCopy)
   expect(obj.a).toBe(objCopy.a)
   expect(arr[0]).toBe(arrCopy[0])
+
   expect(object.copy(null)).toBe(null)
   expect(object.copy(1)).toBe(1)
   expect(object.copy('1')).toBe('1')
@@ -135,18 +169,56 @@ test('get', () => {
     }
   }
 
+  let result = object.get(test, 'user')
+  expect(result != null).toBe(true)
+  if (result) {
+    expect(result.value).toBe(test.user)
+  }
 
-  expect(object.get(test, 'user').value).toBe(test.user)
-  expect(object.get(test, 'user.name').value).toBe(test.user.name)
-  expect(object.get(test, 'user.haha')).toBe(undefined)
-  expect(object.get(test, 'other.name')).toBe(undefined)
-  expect(object.get(test, 'user.extra.married').value).toBe(test.user.extra.married)
-  expect(object.get(test, 'toString').value).toBe(Object.prototype.toString)
+  result = object.get(test, 'user.name')
+  expect(result != null).toBe(true)
+  if (result) {
+    expect(result.value).toBe(test.user.name)
+  }
 
-  expect(object.get([1], '0').value).toBe(1)
+  result = object.get(test, 'user.haha')
+  expect(result == null).toBe(true)
 
-  expect(object.get('123', 'length').value).toBe(3)
-  expect(object.get([1], 'length').value).toBe(1)
+  result = object.get(test, 'other.haha')
+  expect(result == null).toBe(true)
+
+
+  result = object.get(test, 'user.extra.married')
+  expect(result != null).toBe(true)
+  if (result) {
+    expect(result.value).toBe(test.user.extra.married)
+  }
+
+  result = object.get(test, 'toString')
+  expect(result != null).toBe(true)
+  if (result) {
+    expect(result.value).toBe(Object.prototype.toString)
+  }
+
+
+  result = object.get([1], '0')
+  expect(result != null).toBe(true)
+  if (result) {
+    expect(result.value).toBe(1)
+  }
+
+  result = object.get('123', 'length')
+  expect(result != null).toBe(true)
+  if (result) {
+    expect(result.value).toBe(3)
+  }
+
+  result = object.get([1], 'length')
+  expect(result != null).toBe(true)
+  if (result) {
+    expect(result.value).toBe(1)
+  }
+
 })
 
 test('set', () => {
@@ -160,19 +232,74 @@ test('set', () => {
       }
     }
   }
+
   object.set(test, 'user.name', 'haha')
-  expect(object.get(test, 'user.name').value).toBe('haha')
 
+  let result = object.get(test, 'user.name')
+  expect(result != null).toBe(true)
+  if (result) {
+    expect(result.value).toBe('haha')
+  }
+
+
+  // 没有自动填充
   object.set(test, 'a.b', 'haha', false)
-  expect(object.get(test, 'a.b')).toBe(undefined)
 
+  result = object.get(test, 'a.b')
+  expect(result == null).toBe(true)
+
+
+
+  // 自动填充
   object.set(test, 'a.b', 'haha', true)
-  expect(object.get(test, 'a.b').value).toBe('haha')
+
+  result = object.get(test, 'a.b')
+  expect(result != null).toBe(true)
+  if (result) {
+    expect(result.value).toBe('haha')
+  }
+
+
 
   let test1 = [ { age: 1 } ]
 
-  expect(object.get(test1, '0.age').value).toBe(1)
-  object.set(test1, '0.age', 2)
-  expect(object.get(test1, '0.age').value).toBe(2)
+  result = object.get(test1, '0.age')
+  expect(result != null).toBe(true)
+  if (result) {
+    expect(result.value).toBe(1)
+  }
 
+
+  object.set(test1, '0.age', 2)
+
+  result = object.get(test1, '0.age')
+  expect(result != null).toBe(true)
+  if (result) {
+    expect(result.value).toBe(2)
+  }
+
+
+})
+
+test('has', () => {
+  let test1 = {}
+  let test2 = { a: 1 }
+  expect(object.has(test1, 'a')).toBe(false)
+  expect(object.has(test1, 'toString')).toBe(true)
+  expect(object.has(test2, 'a')).toBe(true)
+  expect(object.has(test2, 'toString')).toBe(true)
+})
+
+test('falsy', () => {
+  expect(object.falsy({})).toBe(true)
+  expect(object.falsy(null)).toBe(true)
+  expect(object.falsy(undefined)).toBe(true)
+  expect(object.falsy(NaN)).toBe(true)
+  expect(object.falsy(1)).toBe(true)
+  expect(object.falsy(0)).toBe(true)
+  expect(object.falsy('')).toBe(true)
+  expect(object.falsy(true)).toBe(true)
+  expect(object.falsy(false)).toBe(true)
+
+  expect(object.falsy({name: 'xx'})).toBe(false)
 })
