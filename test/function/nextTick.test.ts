@@ -1,7 +1,7 @@
 
 import nextTick from '../../src/function/nextTick'
 
-it('nextTick', done => {
+test('nextTick', done => {
   let i = 0
   nextTick(() => {
     expect(i).toBe(1)

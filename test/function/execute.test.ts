@@ -1,40 +1,60 @@
 
 import execute from '../../src/function/execute'
 
-test('execute not a function', () => {
+test('not a function', () => {
 
-  execute(null)
-  execute(undefined)
-  execute(0)
-  execute('')
-  execute(true)
-  execute(false)
-  execute({})
-  execute([ ])
+  let error: any
+
+  try {
+    execute(null)
+    execute(undefined)
+    execute(0)
+    execute('')
+    execute(true)
+    execute(false)
+    execute({})
+    execute([])
+  }
+  catch (e) {
+    error = e
+  }
+
+  expect(error).toBe(undefined)
 
 })
 
-test('execute context', () => {
+test('context', () => {
 
   let context = { }
 
+  let executed = false
+
   execute(
     function () {
+      executed = true
       expect(this).toBe(context)
     },
     context
   )
 
+  execute(
+    function () {
+      expect(this).toBe(undefined)
+    }
+  )
+
+  expect(executed).toBe(true)
+
 })
-test('execute arguments', () => {
+
+test('arguments', () => {
 
   let context = { }
 
   let args = [ 1, 2, 3 ]
 
   execute(
-    function (a, b, c) {
-      expect(this).toBe(context)
+    function (a: any, b: any, c: any) {
       expect(arguments.length).toBe(args.length)
       expect(a).toBe(args[0])
       expect(b).toBe(args[1])
@@ -46,8 +66,7 @@ test('execute arguments', () => {
 
   let arg = 1
   execute(
-    function (a) {
-      expect(this).toBe(context)
+    function (a: any) {
       expect(arguments.length).toBe(1)
       expect(a).toBe(arg)
     },
@@ -63,7 +82,7 @@ test('execute arguments', () => {
 
 })
 
-test('execute return value', () => {
+test('return value', () => {
 
   let value = 1
 
@@ -75,5 +94,14 @@ test('execute return value', () => {
     )
   )
   .toBe(value)
+
+  expect(
+    execute(
+      function () {
+
+      }
+    )
+  )
+  .toBe(undefined)
 
 })

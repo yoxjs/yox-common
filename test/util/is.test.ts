@@ -1,7 +1,7 @@
 
 import * as is from '../../src/util/is'
 
-it('function', () => {
+test('function', () => {
 
   expect(
     is.func(
@@ -41,7 +41,7 @@ it('function', () => {
 
 })
 
-it('array', () => {
+test('array', () => {
 
   expect(
     is.array([])
@@ -75,7 +75,7 @@ it('array', () => {
 
 })
 
-it('object', () => {
+test('object', () => {
 
   expect(
     is.object({})
@@ -144,7 +144,7 @@ it('object', () => {
 
 })
 
-it('string', () => {
+test('string', () => {
 
   expect(
     is.string(null)
@@ -166,6 +166,7 @@ it('string', () => {
   )
   .toBe(false)
 
+  // 不支持封装类型
   expect(
     is.string(new String(''))
   )
@@ -178,7 +179,7 @@ it('string', () => {
 
 })
 
-it('number', () => {
+test('number', () => {
 
   expect(
     is.number(null)
@@ -200,6 +201,7 @@ it('number', () => {
   )
   .toBe(false)
 
+  // 不支持封装类型
   expect(
     is.number(new Number(1))
   )
@@ -212,7 +214,7 @@ it('number', () => {
 
 })
 
-it('boolean', () => {
+test('boolean', () => {
 
   expect(
     is.boolean(true)
@@ -224,11 +226,13 @@ it('boolean', () => {
   )
   .toBe(true)
 
+  // 不支持封装类型
   expect(
     is.boolean(new Boolean(true))
   )
   .toBe(false)
 
+  // 不支持封装类型
   expect(
     is.boolean(new Boolean(false))
   )
@@ -261,7 +265,7 @@ it('boolean', () => {
 
 })
 
-it('numeric', () => {
+test('numeric', () => {
 
   expect(
     is.numeric(null)

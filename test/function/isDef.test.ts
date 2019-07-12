@@ -1,9 +1,8 @@
 
 import isDef from '../../src/function/isDef'
 
-test('test all types', () => {
+test('all types', () => {
 
-  expect(isDef(undefined)).toBe(false)
   expect(isDef(null)).toBe(true)
   expect(isDef(false)).toBe(true)
   expect(isDef('')).toBe(true)
@@ -11,5 +10,7 @@ test('test all types', () => {
   expect(isDef(NaN)).toBe(true)
   expect(isDef({})).toBe(true)
   expect(isDef([])).toBe(true)
+
+  expect(isDef(undefined)).toBe(false)
 
 })

@@ -1,7 +1,7 @@
 
 import toNumber from '../../src/function/toNumber'
 
-it('defaultValue is 0', () => {
+test('defaultValue', () => {
   expect(
     toNumber(null)
   )
@@ -11,61 +11,74 @@ it('defaultValue is 0', () => {
   )
   .toBe(0)
 })
-it('custom defaultValue', () => {
+
+test('custom defaultValue', () => {
   expect(
     toNumber(null, 1)
   )
   .toBe(1)
+  expect(
+    toNumber(undefined, 2)
+  )
+  .toBe(2)
 })
-it('string int to number', () => {
+
+test('string int', () => {
   expect(
     toNumber('1')
   )
   .toBe(1)
 })
-it('string float to number', () => {
+
+test('string float', () => {
   expect(
     toNumber('1.1')
   )
   .toBe(1.1)
 })
-it('int to number', () => {
+
+test('int', () => {
   expect(
     toNumber(1)
   )
   .toBe(1)
 })
-it('float to number', () => {
+
+test('float', () => {
   expect(
     toNumber(1.1)
   )
   .toBe(1.1)
 })
-it('number + string', () => {
+
+test('number + string to defaultValue', () => {
   expect(
-    toNumber('1str')
+    toNumber('1str', 10)
   )
-  .toBe(0)
+  .toBe(10)
 })
-it('boolean to defaultValue', () => {
+
+test('boolean to defaultValue', () => {
   expect(
-    toNumber(true)
+    toNumber(true, 10)
   )
-  .toBe(0)
+  .toBe(10)
   expect(
-    toNumber(false)
+    toNumber(false, 10)
   )
-  .toBe(0)
+  .toBe(10)
 })
-it('object to defaultValue', () => {
+
+test('object to defaultValue', () => {
   expect(
-    toNumber({})
+    toNumber({}, 10)
   )
-  .toBe(0)
+  .toBe(10)
 })
-it('array to defaultValue', () => {
+
+test('array to defaultValue', () => {
   expect(
-    toNumber([])
+    toNumber([], 10)
   )
-  .toBe(0)
+  .toBe(10)
 })

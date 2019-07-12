@@ -11,7 +11,7 @@
     "url": "git+https://github.com/yoxjs/yox-common.git"
   },
   "scripts": {
-    "test": "export NODE_ENV=development && jest"
+    "test": "jest"
   },
   "keywords": [],
   "author": "musicode",
@@ -21,7 +21,11 @@
   },
   "homepage": "https://github.com/yoxjs/yox-common#readme",
   "devDependencies": {
-    "@types/node": "^11.13.7"
+    "@types/jest": "^24.0.15",
+    "@types/node": "^12.6.2",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.5.3"
   },
   "peerDependencies": {
     "yox-config": "^0.2.1",
