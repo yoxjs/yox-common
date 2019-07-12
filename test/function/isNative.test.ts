@@ -1,5 +1,5 @@
 
-let isNative = require('../../dist/function/isNative').default
+import isNative from '../../src/function/isNative'
 
 test('test all types', () => {
 

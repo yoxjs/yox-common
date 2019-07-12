@@ -1,6 +1,6 @@
 
-let is = require('../../dist/util/is')
-let array = require('../../dist/util/array')
+import * as is from '../../src/util/is'
+import * as array from '../../src/util/array'
 
 it('each callback params', () => {
   let test = [1, 2, 3]
@@ -8,16 +8,13 @@ it('each callback params', () => {
   let firstIsItem = false
   let secondIsIndex = false
   let thirdIsLength = false
-  array.each(test, (item, i, length) => {
+  array.each(test, (item, i) => {
     expect(i).toBe(index++)
     if (item === test[0]) {
       firstIsItem = true
     }
     if (i === 0) {
       secondIsIndex = true
-    }
-    if (length === test.length) {
-      thirdIsLength = true
     }
   })
   expect(firstIsItem).toBe(true)

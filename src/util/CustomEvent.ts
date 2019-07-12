@@ -1,8 +1,4 @@
 import {
-  Namespace,
-} from '../../../yox-type/src/type'
-
-import {
   YoxInterface,
 } from '../../../yox-type/src/yox'
 
@@ -26,8 +22,8 @@ export default class CustomEvent implements CustomEventInterface {
   // 事件当前阶段
   phase: number
 
-  // 事件命名空间信息
-  ns?: Namespace
+  // 事件命名空间
+  ns?: string
 
   // 哪个组件发出的事件
   target?: YoxInterface
@@ -50,6 +46,9 @@ export default class CustomEvent implements CustomEventInterface {
    * 可以传事件名称，也可以传原生事件对象
    */
   constructor(type: string, originalEvent?: CustomEventInterface | Event) {
+    // 这里不设置命名空间
+    // 因为有没有命名空间取决于 Emitter 的构造函数有没有传 true
+    // CustomEvent 自己无法决定
     this.type = type
     this.phase = CustomEvent.PHASE_CURRENT
     if (originalEvent) {

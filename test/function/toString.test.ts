@@ -1,5 +1,5 @@
 
-let toString = require('../../dist/function/toString').default
+import toString from '../../src/function/toString'
 
 describe('function/toString', () => {
   it('defaultValue is empty string', () => {

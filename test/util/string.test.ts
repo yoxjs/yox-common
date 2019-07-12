@@ -1,5 +1,5 @@
 
-let string = require('../../dist/util/string')
+import * as string from '../../src/util/string'
 
 it('camelize', () => {
   expect(string.camelize('a-b')).toBe('aB')

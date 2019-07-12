@@ -1,5 +1,5 @@
 
-let execute = require('../../dist/function/execute').default
+import execute from '../../src/function/execute'
 
 test('execute not a function', () => {
 

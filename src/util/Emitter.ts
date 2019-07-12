@@ -1,5 +1,4 @@
 import {
-  Namespace,
   NativeListener,
 } from '../../../yox-type/src/type'
 
@@ -8,6 +7,7 @@ import {
 } from '../../../yox-type/src/options'
 
 import {
+  Namespace,
   EmitterInterface,
 } from '../../../yox-type/src/emitter'
 
@@ -65,7 +65,7 @@ export default class Emitter implements EmitterInterface {
 
     namespace = is.string(type) ? instance.parse(type as string) : type as Namespace,
 
-    list = instance.listeners[namespace.name],
+    list = instance.listeners[namespace.type],
 
     isComplete = env.TRUE
 
@@ -116,7 +116,7 @@ export default class Emitter implements EmitterInterface {
 
           // 注册的 listener 可以指定最大执行次数
           if (options.num === options.max) {
-            instance.off(namespace.key, options.fn)
+            instance.off(namespace, options.fn)
           }
 
           // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
@@ -148,23 +148,23 @@ export default class Emitter implements EmitterInterface {
    * @param listener
    */
   on(
-    type: string,
+    type: string | Namespace,
     listener: Function | EmitterOptions
   ): void {
 
     const instance = this,
 
-    { listeners } = instance,
+    listeners = instance.listeners,
 
     options: EmitterOptions = is.func(listener)
       ? { fn: listener as Function }
       : listener as EmitterOptions
 
     if (is.object(options) && is.func(options.fn)) {
-      const { name, ns } = instance.parse(type)
-      options.ns = ns
+      const namespace = is.string(type) ? instance.parse(type as string) : type as Namespace
+      options.ns = namespace.ns
       array.push(
-        listeners[name] || (listeners[name] = []),
+        listeners[namespace.type] || (listeners[namespace.type] = []),
         options
       )
     }
@@ -181,17 +181,21 @@ export default class Emitter implements EmitterInterface {
    * @param listener
    */
   off(
-    type?: string,
+    type?: string | Namespace,
     listener?: Function
   ): void {
 
     const instance = this,
 
-    { listeners } = instance
+    listeners = instance.listeners
 
     if (type) {
 
-      const { name, ns } = instance.parse(type),
+      const namespace = is.string(type) ? instance.parse(type as string) : type as Namespace,
+
+      name = namespace.type,
+
+      ns = namespace.ns,
 
       matchListener = createMatchListener(listener),
 
@@ -249,15 +253,19 @@ export default class Emitter implements EmitterInterface {
    * @param listener
    */
   has(
-    type: string,
+    type: string | Namespace,
     listener?: Function
   ): boolean {
 
     let instance = this,
 
-    { listeners } = instance,
+    listeners = instance.listeners,
 
-    { name, ns } = instance.parse(type),
+    namespace = is.string(type) ? instance.parse(type as string) : type as Namespace,
+
+    name = namespace.type,
+
+    ns = namespace.ns,
 
     result = env.TRUE,
 
@@ -295,16 +303,18 @@ export default class Emitter implements EmitterInterface {
    */
   parse(type: string): Namespace {
 
+    // 这里 ns 必须为字符串
+    // 用于区分 event 对象是否已完成命名空间的解析
     const result = {
-      key: type,
-      name: type,
+      type,
       ns: env.EMPTY_STRING,
     }
 
+    // 是否开启命名空间
     if (this.ns) {
       const index = string.indexOf(type, env.RAW_DOT)
       if (index >= 0) {
-        result.name = string.slice(type, 0, index)
+        result.type = string.slice(type, 0, index)
         result.ns = string.slice(type, index + 1)
       }
     }
@@ -350,7 +360,7 @@ function createMatchListener(listener: Function | void): (options: EmitterOption
  * @param namespace
  * @param options
  */
-function matchNamespace(namespace: string, options: EmitterOptions): boolean {
+function matchNamespace(namespace: string | void, options: EmitterOptions): boolean {
   const { ns } = options
   return ns && namespace
     ? ns === namespace

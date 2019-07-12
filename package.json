@@ -11,7 +11,7 @@
     "url": "git+https://github.com/yoxjs/yox-common.git"
   },
   "scripts": {
-    "test": "export NODE_ENV=dev && jest"
+    "test": "export NODE_ENV=development && jest"
   },
   "keywords": [],
   "author": "musicode",

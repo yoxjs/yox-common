@@ -1,5 +1,5 @@
 
-let isDef = require('../../dist/function/isDef').default
+import isDef from '../../src/function/isDef'
 
 test('test all types', () => {
 
@@ -8,6 +8,7 @@ test('test all types', () => {
   expect(isDef(false)).toBe(true)
   expect(isDef('')).toBe(true)
   expect(isDef(0)).toBe(true)
+  expect(isDef(NaN)).toBe(true)
   expect(isDef({})).toBe(true)
   expect(isDef([])).toBe(true)
 

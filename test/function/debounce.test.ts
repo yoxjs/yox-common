@@ -1,5 +1,5 @@
 
-let debounce = require('../../dist/function/debounce').default
+import debounce from '../../src/function/debounce'
 
 test('set sync to true', done => {
   let i = 0

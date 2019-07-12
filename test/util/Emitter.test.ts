@@ -1,5 +1,5 @@
 
-let Emitter = require('../../dist/util/Emitter').default
+import Emitter from '../../src/util/Emitter'
 
 test('on', () => {
 
@@ -17,10 +17,10 @@ test('on', () => {
   expect(emitter.has('click')).toBe(true)
   expect(emitter.has('click', listener)).toBe(true)
 
-  emitter.fire('click', null)
+  emitter.fire('click')
   expect(i).toBe(1)
 
-  emitter.fire('click', null)
+  emitter.fire('click')
   expect(i).toBe(2)
 
 })
