@@ -30,6 +30,7 @@ export const RAW_FUNCTION = 'function'
 export const RAW_TEMPLATE = 'template'
 export const RAW_WILDCARD = '*'
 export const RAW_DOT = '.'
+export const RAW_SLASH = '/'
 
 export const KEYPATH_PARENT = '..'
 export const KEYPATH_CURRENT = RAW_THIS
