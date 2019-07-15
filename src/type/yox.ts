@@ -69,7 +69,7 @@ export interface YoxInterface {
   ): this
 
   fire(
-    type: string | CustomEvent,
+    type: string | CustomEvent<YoxInterface>,
     data?: Data | boolean,
     downward?: boolean
   ): boolean
