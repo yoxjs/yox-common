@@ -39,10 +39,6 @@ import {
   DirectiveHooks,
 } from './hooks'
 
-import {
-  YoxInterface,
-} from './yox'
-
 
 export interface ComputedOptions {
 
@@ -95,14 +91,14 @@ export interface EmitterOptions extends Task {
 
 }
 
-type DataGenerator = (
-  this: YoxInterface,
-  options: ComponentOptions
+type DataGenerator<T> = (
+  this: T,
+  options: ComponentOptions<T>
 ) => Data
 
 type Accessors<T, V> = { [K in keyof T]: V }
 
-export interface ComponentOptions<Computed = any, Watchers = any, Events = any, Methods = any> {
+export interface ComponentOptions<Yox = any, Computed = any, Watchers = any, Events = any, Methods = any> {
 
   // 给外部命名组件的机会
   name?: string
@@ -111,7 +107,7 @@ export interface ComponentOptions<Computed = any, Watchers = any, Events = any, 
 
   el?: string | Node
 
-  data?: Data | DataGenerator
+  data?: Data | DataGenerator<Yox>
 
   template?: string | Function
 
@@ -119,11 +115,11 @@ export interface ComponentOptions<Computed = any, Watchers = any, Events = any, 
 
   props?: Data
 
-  root?: YoxInterface
+  root?: Yox
 
-  parent?: YoxInterface
+  parent?: Yox
 
-  context?: YoxInterface
+  context?: Yox
 
   replace?: true
 
@@ -143,7 +139,7 @@ export interface ComponentOptions<Computed = any, Watchers = any, Events = any, 
 
   components?: Record<string, ComponentOptions>
 
-  directives?: Record<string, DirectiveHooks<YoxInterface>>
+  directives?: Record<string, DirectiveHooks<Yox>>
 
   partials?: Record<string, string>
 
