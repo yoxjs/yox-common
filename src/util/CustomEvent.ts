@@ -1,10 +1,6 @@
-import {
-  YoxInterface,
-} from 'yox-type/src/yox'
-
 import * as env from './env'
 
-export default class CustomEvent {
+export default class CustomEvent<T = any> {
 
   public static PHASE_CURRENT = 0
 
@@ -22,7 +18,7 @@ export default class CustomEvent {
   ns?: string
 
   // 哪个组件发出的事件
-  target?: YoxInterface
+  target?: T
 
   // 原始事件，比如 DOM 事件
   originalEvent?: CustomEvent | Event

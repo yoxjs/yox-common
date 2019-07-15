@@ -1,14 +1,14 @@
 import {
   NativeListener,
-} from 'yox-type/src/type'
+} from '../type/type'
 
 import {
   EmitterOptions,
-} from 'yox-type/src/options'
+} from '../type/options'
 
 import {
   Namespace,
-} from 'yox-type/src/event'
+} from '../type/event'
 
 import execute from '../function/execute'
 

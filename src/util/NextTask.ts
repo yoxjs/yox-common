@@ -1,6 +1,6 @@
 import {
   Task,
-} from 'yox-type/src/type'
+} from '../type/type'
 
 import * as array from './array'
 import execute from '../function/execute'
