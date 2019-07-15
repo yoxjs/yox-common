@@ -1,4 +1,4 @@
-import { ValueHolder } from '../../../yox-type/src/type'
+import { ValueHolder } from 'yox-type/src/type'
 import * as env from './env'
 
 /**

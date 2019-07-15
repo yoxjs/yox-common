@@ -1,15 +1,14 @@
 import {
   NativeListener,
-} from '../../../yox-type/src/type'
+} from 'yox-type/src/type'
 
 import {
   EmitterOptions,
-} from '../../../yox-type/src/options'
+} from 'yox-type/src/options'
 
 import {
   Namespace,
-  EmitterInterface,
-} from '../../../yox-type/src/emitter'
+} from 'yox-type/src/emitter'
 
 import execute from '../function/execute'
 
@@ -22,7 +21,7 @@ import * as logger from './logger'
 
 import CustomEvent from './CustomEvent'
 
-export default class Emitter implements EmitterInterface {
+export default class Emitter {
 
   /**
    * 是否开启命名空间
