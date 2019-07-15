@@ -28,10 +28,6 @@ import {
   Watcher,
   ComputedGetter,
   ComputedSetter,
-  OptionsBeforeCreateHook,
-  OptionsOtherHook,
-  RouterBeforeHook,
-  RouterAfterHook,
 } from './type'
 
 import {
@@ -39,6 +35,10 @@ import {
   DirectiveHooks,
 } from './hooks'
 
+import {
+  Location,
+  RouteTarget,
+} from './router'
 
 export interface ComputedOptions {
 
@@ -59,10 +59,10 @@ export interface ComputedOptions {
 
 }
 
-export interface WatcherOptions<T = any> {
+export interface WatcherOptions<This = any> {
 
   // 数据变化处理器，必填
-  watcher: Watcher<T>
+  watcher: Watcher<This>
 
   // 是否立即执行一次 watcher，默认为 false
   immediate?: boolean
@@ -91,12 +91,17 @@ export interface EmitterOptions extends Task {
 
 }
 
-type DataGenerator<T> = (
-  this: T,
-  options: ComponentOptions<T>
-) => Data
+type DataGenerator<T> = (options: ComponentOptions<T>) => Data
 
 type Accessors<T, V> = { [K in keyof T]: V }
+
+type OptionsBeforeCreateHook = (options: ComponentOptions) => void
+
+type OptionsOtherHook = () => void
+
+type RouterBeforeHook = (to: Location, from: Location | void, next: (value?: false | string | RouteTarget) => void) => void
+
+type RouterAfterHook = (to: Location, from: Location | void) => void
 
 export interface ComponentOptions<Yox = any, Computed = any, Watchers = any, Events = any, Methods = any> {
 

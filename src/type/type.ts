@@ -2,11 +2,6 @@ import {
   ComponentOptions,
 } from './options'
 
-import {
-  Location,
-  RouteTarget,
-} from './router'
-
 import CustomEvent from '../util/CustomEvent'
 
 export type Data = Record<string, any>
@@ -25,27 +20,19 @@ export type ComponentLoader = (callback: ComponentCallback) => Promise<Component
 
 export type Component = ComponentOptions | ComponentLoader
 
-export type FilterFunction = (this: any, ...args: any) => string | number | boolean
+export type FilterFunction<This = any> = (this: This, ...args: any) => string | number | boolean
 
-export type Filter = FilterFunction | Record<string, FilterFunction>
+export type Filter<This = any> = FilterFunction<This> | Record<string, FilterFunction<This>>
 
-export type Watcher<T = any> = (this: T, newValue: any, oldValue: any, keypath: string) => void
+export type Watcher<This = any> = (this: This, newValue: any, oldValue: any, keypath: string) => void
 
-export type Listener<T = any> = (this: T, event: CustomEvent, data?: Data) => false | void
+export type Listener<This = any> = (this: This, event: CustomEvent, data?: Data) => false | void
 
 export type NativeListener = (event: CustomEvent | Event) => false | void
 
 export type ComputedGetter = () => any
 
 export type ComputedSetter = (value: any) => void
-
-export type OptionsBeforeCreateHook = (options: ComponentOptions) => void
-
-export type OptionsOtherHook = () => void
-
-export type RouterBeforeHook = (to: Location, from: Location | void, next: (value?: false | string | RouteTarget) => void) => void
-
-export type RouterAfterHook = (to: Location, from: Location | void) => void
 
 export type ValueHolder = {
 
