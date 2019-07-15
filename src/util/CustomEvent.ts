@@ -2,13 +2,9 @@ import {
   YoxInterface,
 } from 'yox-type/src/yox'
 
-import {
-  CustomEventInterface,
-} from 'yox-type/src/event'
-
 import * as env from './env'
 
-export default class CustomEvent implements CustomEventInterface {
+export default class CustomEvent {
 
   public static PHASE_CURRENT = 0
 
@@ -29,7 +25,7 @@ export default class CustomEvent implements CustomEventInterface {
   target?: YoxInterface
 
   // 原始事件，比如 DOM 事件
-  originalEvent?: CustomEventInterface | Event
+  originalEvent?: CustomEvent | Event
 
   // 是否已阻止事件的默认行为
   isPrevented?: true
@@ -45,7 +41,7 @@ export default class CustomEvent implements CustomEventInterface {
    *
    * 可以传事件名称，也可以传原生事件对象
    */
-  constructor(type: string, originalEvent?: CustomEventInterface | Event) {
+  constructor(type: string, originalEvent?: CustomEvent | Event) {
     // 这里不设置命名空间
     // 因为有没有命名空间取决于 Emitter 的构造函数有没有传 true
     // CustomEvent 自己无法决定
