@@ -1,4 +1,4 @@
-import * as env from './env'
+import * as constant from 'yox-type/src/constant'
 import * as string from './string'
 
 const dotPattern = /\./g,
@@ -22,10 +22,10 @@ export function match(keypath: string, prefix: string): number {
   if (keypath === prefix) {
     return prefix.length
   }
-  prefix += env.RAW_DOT
+  prefix += constant.RAW_DOT
   return string.startsWith(keypath, prefix)
     ? prefix.length
-    : env.MINUS_ONE
+    : constant.MINUS_ONE
 }
 
 /**
@@ -39,10 +39,10 @@ export function each(keypath: string, callback: (key: string, isLast: boolean) =
   // splitCache[keypath] 会取到原型链上的对象
   const list = splitCache.hasOwnProperty(keypath)
     ? splitCache[keypath]
-    : (splitCache[keypath] = keypath.split(env.RAW_DOT))
+    : (splitCache[keypath] = keypath.split(constant.RAW_DOT))
 
   for (let i = 0, lastIndex = list.length - 1; i <= lastIndex; i++) {
-    if (callback(list[i], i === lastIndex) === env.FALSE) {
+    if (callback(list[i], i === lastIndex) === constant.FALSE) {
       break
     }
   }
@@ -56,7 +56,7 @@ export function each(keypath: string, callback: (key: string, isLast: boolean) =
  */
 export function join(keypath1: string, keypath2: string): string {
   return keypath1 && keypath2
-    ? keypath1 + env.RAW_DOT + keypath2
+    ? keypath1 + constant.RAW_DOT + keypath2
     : keypath1 || keypath2
 }
 
@@ -66,7 +66,7 @@ export function join(keypath1: string, keypath2: string): string {
  * @param keypath
  */
 export function isFuzzy(keypath: string): boolean {
-  return string.has(keypath, env.RAW_WILDCARD)
+  return string.has(keypath, constant.RAW_WILDCARD)
 }
 
 /**

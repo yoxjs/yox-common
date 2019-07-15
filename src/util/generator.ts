@@ -1,6 +1,7 @@
+import * as constant from 'yox-type/src/constant'
+
 import isDef from '../function/isDef'
 
-import * as env from './env'
 import * as array from './array'
 
 export const UNDEFINED = '$'
@@ -33,20 +34,20 @@ export const RETURN = 'return '
  */
 function trimArgs(list: (string | void)[]) {
 
-  let args: string[] = [], removable = env.TRUE
+  let args: string[] = [], removable = constant.TRUE
 
   array.each(
     list,
     function (arg) {
       if (isDef(arg)) {
-        removable = env.FALSE
+        removable = constant.FALSE
         array.unshift(args, arg as string)
       }
       else if (!removable) {
         array.unshift(args, UNDEFINED)
       }
     },
-    env.TRUE
+    constant.TRUE
   )
 
   return args
@@ -70,5 +71,5 @@ export function toString(value: any): string {
 }
 
 export function toFunction(args: string, code: string) {
-  return `${env.RAW_FUNCTION}(${args}){var ${UNDEFINED}=void 0;${RETURN}${code}}`
+  return `${constant.RAW_FUNCTION}(${args}){var ${UNDEFINED}=void 0;${RETURN}${code}}`
 }

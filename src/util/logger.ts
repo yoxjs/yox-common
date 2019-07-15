@@ -1,4 +1,4 @@
-import * as env from './env'
+import * as constant from 'yox-type/src/constant'
 import toString from '../function/toString'
 
 export const DEBUG = 1
@@ -10,20 +10,20 @@ export const FATAL = 5
 /**
  * 是否有原生的日志特性，没有必要单独实现
  */
-const nativeConsole: Console | null = typeof console !== env.RAW_UNDEFINED ? console : env.NULL,
+const nativeConsole: Console | null = typeof console !== constant.RAW_UNDEFINED ? console : constant.NULL,
 
 /**
  * 当前是否是源码调试，如果开启了代码压缩，empty function 里的注释会被干掉
  * 源码模式默认选 INFO，因为 DEBUG 输出的日志太多，会导致性能急剧下降
  */
-defaultLogLevel = /yox/.test(toString(env.EMPTY_FUNCTION)) ? INFO : WARN,
+defaultLogLevel = /yox/.test(toString(constant.EMPTY_FUNCTION)) ? INFO : WARN,
 
 /**
  * console 样式前缀
  * ie 和 edge 不支持 console.log 样式
  */
-stylePrefix = env.WINDOW && /edge|msie|trident/i.test(env.WINDOW.navigator.userAgent)
-  ? env.EMPTY_STRING
+stylePrefix = constant.WINDOW && /edge|msie|trident/i.test(constant.WINDOW.navigator.userAgent)
+  ? constant.EMPTY_STRING
   : '%c',
 
 /**
@@ -37,14 +37,14 @@ printLog = nativeConsole
     : function (tag: string, msg: string) {
       nativeConsole.log(tag, msg)
     }
-  : env.EMPTY_FUNCTION
+  : constant.EMPTY_FUNCTION
 
 /**
  * 全局调试开关
  */
 function getLogLevel() {
-  if (env.GLOBAL) {
-    const logLevel = env.GLOBAL['YOX_LOG_LEVEL']
+  if (constant.GLOBAL) {
+    const logLevel = constant.GLOBAL['YOX_LOG_LEVEL']
     if (logLevel >= DEBUG && logLevel <= FATAL) {
       return logLevel as number
     }

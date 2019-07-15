@@ -1,4 +1,4 @@
-import * as env from './env'
+import * as constant from 'yox-type/src/constant'
 
 /**
  * Check if value is a function.
@@ -7,7 +7,7 @@ import * as env from './env'
  * @return
  */
 export function func(value: any): boolean {
-  return typeof value === env.RAW_FUNCTION
+  return typeof value === constant.RAW_FUNCTION
 }
 
 /**
@@ -28,7 +28,7 @@ export function array(value: any): boolean {
  */
 export function object(value: any): boolean {
   // 低版本 IE 会把 null 当作 object
-  return value !== env.NULL && typeof value === 'object'
+  return value !== constant.NULL && typeof value === 'object'
 }
 
 /**

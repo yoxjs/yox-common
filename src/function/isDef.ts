@@ -1,5 +1,5 @@
-import * as env from '../util/env'
+import * as constant from 'yox-type/src/constant'
 
 export default function (target: any): boolean {
-  return target !== env.UNDEFINED
+  return target !== constant.UNDEFINED
 }

@@ -1,6 +1,7 @@
+import * as constant from 'yox-type/src/constant'
+
 import execute from './execute'
 
-import * as env from '../util/env'
 import * as array from '../util/array'
 
 /**
@@ -21,14 +22,14 @@ export default function (fn: Function, delay: number, immediate?: boolean) {
 
       const args = array.toArray(arguments)
       if (immediate) {
-        execute(fn, env.UNDEFINED, args)
+        execute(fn, constant.UNDEFINED, args)
       }
 
       timer = setTimeout(
         function () {
-          timer = env.UNDEFINED
+          timer = constant.UNDEFINED
           if (!immediate) {
-            execute(fn, env.UNDEFINED, args)
+            execute(fn, constant.UNDEFINED, args)
           }
         },
         delay

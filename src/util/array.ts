@@ -1,5 +1,6 @@
+import * as constant from 'yox-type/src/constant'
+
 import * as is from './is'
-import * as env from './env'
 import execute from '../function/execute'
 
 /**
@@ -18,14 +19,14 @@ export function each<T>(
   if (length) {
     if (reversed) {
       for (let i = length - 1; i >= 0; i--) {
-        if (callback(array[i], i) === env.FALSE) {
+        if (callback(array[i], i) === constant.FALSE) {
           break
         }
       }
     }
     else {
       for (let i = 0; i < length; i++) {
-        if (callback(array[i], i) === env.FALSE) {
+        if (callback(array[i], i) === constant.FALSE) {
           break
         }
       }
@@ -91,13 +92,13 @@ export function unshift<T>(array: T[], target: T | T[]): void {
  * @return 如果未找到，返回 -1
  */
 export function indexOf<T>(array: T[], target: T, strict?: boolean): number {
-  let result = env.MINUS_ONE
+  let result = constant.MINUS_ONE
   each(
     array,
     function (item: any, index: number) {
-      if (strict === env.FALSE ? item == target : item === target) {
+      if (strict === constant.FALSE ? item == target : item === target) {
         result = index
-        return env.FALSE
+        return constant.FALSE
       }
     }
   )
@@ -145,12 +146,12 @@ export function remove<T>(array: T[], target: T, strict?: boolean): number {
   each(
     array,
     function (item: T, index: number) {
-      if (strict === env.FALSE ? item == target : item === target) {
+      if (strict === constant.FALSE ? item == target : item === target) {
         array.splice(index, 1)
         result++
       }
     },
-    env.TRUE
+    constant.TRUE
   )
   return result
 }
@@ -176,7 +177,7 @@ export function has<T>(array: T[], target: T, strict?: boolean): boolean {
 export function toArray<T>(array: T[] | ArrayLike<T>): T[] {
   return is.array(array)
     ? array
-    : execute(env.EMPTY_ARRAY.slice, array)
+    : execute(constant.EMPTY_ARRAY.slice, array)
 }
 
 /**

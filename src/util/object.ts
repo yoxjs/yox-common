@@ -1,10 +1,11 @@
 import {
   Data,
   ValueHolder
-} from '../type/type'
+} from 'yox-type/src/type'
+
+import * as constant from 'yox-type/src/constant'
 
 import * as is from './is'
-import * as env from './env'
 import * as array from './array'
 import * as keypathUtil from './keypath'
 
@@ -51,7 +52,7 @@ export function sort(object: Data, desc?: boolean): string[] {
  */
 export function each(object: Data, callback: (value: any, key: string) => boolean | void): void {
   for (let key in object) {
-    if (callback(object[key], key) === env.FALSE) {
+    if (callback(object[key], key) === constant.FALSE) {
       break
     }
   }
@@ -147,7 +148,7 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
     keypath,
     function (key, isLast) {
 
-      if (object != env.NULL) {
+      if (object != constant.NULL) {
 
         // 先直接取值
         let value = object[key],
@@ -167,7 +168,7 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
             object = holder
           }
           else {
-            object = env.UNDEFINED
+            object = constant.UNDEFINED
           }
         }
         else {
@@ -175,8 +176,8 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
         }
       }
       else {
-        object = env.UNDEFINED
-        return env.FALSE
+        object = constant.UNDEFINED
+        return constant.FALSE
       }
 
     }
@@ -208,7 +209,7 @@ export function set(object: Data, keypath: string, value: any, autofill?: boolea
         object = object[key] = {}
       }
       else {
-        return env.FALSE
+        return constant.FALSE
       }
     }
   )

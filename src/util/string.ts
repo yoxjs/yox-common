@@ -1,5 +1,6 @@
+import * as constant from 'yox-type/src/constant'
+
 import * as is from './is'
-import * as env from './env'
 
 import isDef from '../function/isDef'
 
@@ -75,7 +76,7 @@ export function capitalize(str: string): string {
  */
 export function trim(str: any): string {
   return falsy(str)
-    ? env.EMPTY_STRING
+    ? constant.EMPTY_STRING
     : str.trim()
 }
 
@@ -90,7 +91,7 @@ export function trim(str: any): string {
 export function slice(str: string, start: number, end?: number): string {
   return is.number(end)
     ? start === end
-      ? env.EMPTY_STRING
+      ? constant.EMPTY_STRING
       : str.slice(start, end)
     : str.slice(start)
 }

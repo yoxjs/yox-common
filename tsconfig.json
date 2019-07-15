@@ -6,6 +6,9 @@
   "references": [
     {
       "path": "../yox-config"
+    },
+    {
+      "path": "../yox-type"
     }
   ],
   "include": [

@@ -1,21 +1,24 @@
 import {
   NativeListener,
-} from '../type/type'
+} from 'yox-type/src/type'
 
 import {
   EmitterOptions,
-} from '../type/options'
+} from 'yox-type/src/options'
+
+import {
+  CustomEvent,
+} from 'yox-type/src/yox'
+
+import * as constant from 'yox-type/src/constant'
 
 import execute from '../function/execute'
 
 import * as is from './is'
-import * as env from './env'
 import * as array from './array'
 import * as object from './object'
 import * as string from './string'
 import * as logger from './logger'
-
-import CustomEvent from './CustomEvent'
 
 type Namespace = {
 
@@ -45,7 +48,7 @@ export default class Emitter {
   nativeListeners?: Record<string, NativeListener>
 
   constructor(ns?: boolean) {
-    this.ns = ns || env.FALSE
+    this.ns = ns || constant.FALSE
     this.listeners = {}
   }
 
@@ -72,7 +75,7 @@ export default class Emitter {
 
     list = instance.listeners[namespace.type],
 
-    isComplete = env.TRUE
+    isComplete = constant.TRUE
 
     if (list) {
 
@@ -84,7 +87,7 @@ export default class Emitter {
       // 因为事件处理函数的参数列表是 (event, data)
       const event = args && args[0] instanceof CustomEvent
         ? args[0] as CustomEvent
-        : env.UNDEFINED
+        : constant.UNDEFINED
 
       array.each(
         list,
@@ -113,7 +116,7 @@ export default class Emitter {
           let result = execute(options.fn, options.ctx, args)
 
           if (event) {
-            event.listener = env.UNDEFINED
+            event.listener = constant.UNDEFINED
           }
 
           // 执行次数
@@ -126,16 +129,16 @@ export default class Emitter {
 
           // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
           if (event) {
-            if (result === env.FALSE) {
+            if (result === constant.FALSE) {
               event.prevent().stop()
             }
             else if (event.isStoped) {
-              result = env.FALSE
+              result = constant.FALSE
             }
           }
 
-          if (result === env.FALSE) {
-            return isComplete = env.FALSE
+          if (result === constant.FALSE) {
+            return isComplete = constant.FALSE
           }
         }
       )
@@ -212,7 +215,7 @@ export default class Emitter {
               list.splice(index, 1)
             }
           },
-          env.TRUE
+          constant.TRUE
         )
         if (!list.length) {
           delete listeners[name]
@@ -231,7 +234,7 @@ export default class Emitter {
       // 在开发阶段进行警告，比如传了 listener 进来，listener 是个空值
       // 但你不知道它是空值
       if (process.env.NODE_ENV === 'development') {
-        if (arguments.length > 1 && listener == env.NULL) {
+        if (arguments.length > 1 && listener == constant.NULL) {
           logger.warn(`emitter.off(type, listener) is invoked, but "listener" is ${listener}.`)
         }
       }
@@ -272,7 +275,7 @@ export default class Emitter {
 
     ns = namespace.ns,
 
-    result = env.TRUE,
+    result = constant.TRUE,
 
     matchListener = createMatchListener(listener),
 
@@ -281,7 +284,7 @@ export default class Emitter {
         list,
         function (options) {
           if (matchListener(options) && matchNamespace(ns, options)) {
-            return result = env.FALSE
+            return result = constant.FALSE
           }
         }
       )
@@ -312,12 +315,12 @@ export default class Emitter {
     // 用于区分 event 对象是否已完成命名空间的解析
     const result = {
       type,
-      ns: env.EMPTY_STRING,
+      ns: constant.EMPTY_STRING,
     }
 
     // 是否开启命名空间
     if (this.ns) {
-      const index = string.indexOf(type, env.RAW_DOT)
+      const index = string.indexOf(type, constant.RAW_DOT)
       if (index >= 0) {
         result.type = string.slice(type, 0, index)
         result.ns = string.slice(type, index + 1)
@@ -331,7 +334,7 @@ export default class Emitter {
 }
 
 function matchTrue() {
-  return env.TRUE
+  return constant.TRUE
 }
 
 /**
@@ -369,5 +372,5 @@ function matchNamespace(namespace: string | void, options: EmitterOptions): bool
   const { ns } = options
   return ns && namespace
     ? ns === namespace
-    : env.TRUE
+    : constant.TRUE
 }
