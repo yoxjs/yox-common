@@ -2,17 +2,13 @@ import {
   Task,
 } from 'yox-type/src/type'
 
-import {
-  NextTaskInterface,
-} from 'yox-type/src/yox'
-
 import * as array from './array'
 import execute from '../function/execute'
 import nextTick from '../function/nextTick'
 
 let shared: NextTask | void
 
-export default class NextTask implements NextTaskInterface {
+export default class NextTask {
 
   /**
    * 全局单例
