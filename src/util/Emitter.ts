@@ -8,7 +8,7 @@ import {
 
 import {
   Namespace,
-} from 'yox-type/src/emitter'
+} from 'yox-type/src/event'
 
 import execute from '../function/execute'
 

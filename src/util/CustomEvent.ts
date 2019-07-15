@@ -4,7 +4,7 @@ import {
 
 import {
   CustomEventInterface,
-} from 'yox-type/src/emitter'
+} from 'yox-type/src/event'
 
 import * as env from './env'
 
