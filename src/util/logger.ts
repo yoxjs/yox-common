@@ -14,8 +14,9 @@ const nativeConsole: Console | null = typeof console !== env.RAW_UNDEFINED ? con
 
 /**
  * 当前是否是源码调试，如果开启了代码压缩，empty function 里的注释会被干掉
+ * 源码模式默认选 INFO，因为 DEBUG 输出的日志太多，会导致性能急剧下降
  */
-defaultLogLevel = /yox/.test(toString(env.EMPTY_FUNCTION)) ? DEBUG : WARN,
+defaultLogLevel = /yox/.test(toString(env.EMPTY_FUNCTION)) ? INFO : WARN,
 
 /**
  * console 样式前缀
