@@ -143,7 +143,7 @@ export interface ComponentOptions<Computed = any, Watchers = any, Events = any, 
 
   components?: Record<string, ComponentOptions>
 
-  directives?: Record<string, DirectiveHooks>
+  directives?: Record<string, DirectiveHooks<YoxInterface>>
 
   partials?: Record<string, string>
 

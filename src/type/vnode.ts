@@ -48,7 +48,7 @@ export interface Directive {
   readonly value?: string | number | boolean
 
   // 必须有 hooks
-  readonly hooks: DirectiveHooks
+  readonly hooks: DirectiveHooks<YoxInterface>
 
   // 取值函数
   readonly getter?: () => any | void

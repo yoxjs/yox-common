@@ -6,10 +6,6 @@ import {
   EmitterOptions,
 } from '../type/options'
 
-import {
-  Namespace,
-} from '../type/event'
-
 import execute from '../function/execute'
 
 import * as is from './is'
@@ -20,6 +16,16 @@ import * as string from './string'
 import * as logger from './logger'
 
 import CustomEvent from './CustomEvent'
+
+type Namespace = {
+
+  // 事件名称
+  type: string
+
+  // 命名空间
+  ns?: string
+
+}
 
 export default class Emitter {
 

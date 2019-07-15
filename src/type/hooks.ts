@@ -7,14 +7,10 @@ import {
   Directive,
 } from './vnode'
 
-import {
-  YoxInterface,
-} from './yox'
-
-export interface DirectiveHooks {
+export interface DirectiveHooks<T> {
   once?: true
-  bind: (node: HTMLElement | YoxInterface, directive: Directive, vnode: VNode) => void
-  unbind?: (node: HTMLElement | YoxInterface, directive: Directive, vnode: VNode) => void
+  bind: (node: HTMLElement | T, directive: Directive, vnode: VNode) => void
+  unbind?: (node: HTMLElement | T, directive: Directive, vnode: VNode) => void
 }
 
 export interface SpecialEventHooks {

@@ -96,9 +96,9 @@ export interface YoxInterface {
   ): YoxInterface
 
   directive(
-    name: string | Record<string, DirectiveHooks>,
-    directive?: DirectiveHooks
-  ): DirectiveHooks | void
+    name: string | Record<string, DirectiveHooks<YoxInterface>>,
+    directive?: DirectiveHooks<YoxInterface>
+  ): DirectiveHooks<YoxInterface> | void
 
   transition(
     name: string | Record<string, TransitionHooks>,
