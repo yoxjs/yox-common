@@ -24,6 +24,7 @@
     "@types/node": "^12.6.2"
   },
   "peerDependencies": {
-    "yox-config": "^0.2.2"
+    "yox-config": "^0.2.2",
+    "yox-type": "^0.1.0"
   }
 }
