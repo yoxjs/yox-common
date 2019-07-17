@@ -4,11 +4,11 @@ import isDef from '../function/isDef'
 
 import * as array from './array'
 
-export const UNDEFINED = '$'
+export const UNDEFINED = '$0'
 
-export const TRUE = '!0'
+export const TRUE = '$1'
 
-export const FALSE = '!1'
+export const FALSE = '$2'
 
 export const COMMA = ','
 
@@ -71,5 +71,5 @@ export function toString(value: any): string {
 }
 
 export function toFunction(args: string, code: string) {
-  return `${constant.RAW_FUNCTION}(${args}){var ${UNDEFINED}=void 0;${RETURN}${code}}`
+  return `${constant.RAW_FUNCTION}(${args}){var ${UNDEFINED}=void 0,${TRUE}=!0,${FALSE}=!1;${RETURN}${code}}`
 }
