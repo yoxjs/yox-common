@@ -6,13 +6,11 @@ import {
   EmitterOptions,
 } from 'yox-type/src/options'
 
-import {
-  CustomEvent,
-} from 'yox-type/src/yox'
-
 import * as constant from 'yox-type/src/constant'
 
 import execute from '../function/execute'
+
+import CustomEvent from './CustomEvent'
 
 import * as is from './is'
 import * as array from './array'
