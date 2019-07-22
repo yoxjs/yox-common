@@ -1,5 +1,5 @@
 
-import * as string from '../../src/util/string'
+import * as string from 'yox-common/src/util/string'
 
 test('camelize', () => {
   expect(string.camelize('a-b')).toBe('aB')

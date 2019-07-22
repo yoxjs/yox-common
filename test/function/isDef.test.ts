@@ -1,5 +1,5 @@
 
-import isDef from '../../src/function/isDef'
+import isDef from 'yox-common/src/function/isDef'
 
 test('all types', () => {
 

@@ -1,5 +1,5 @@
 
-import * as is from '../../src/util/is'
+import * as is from 'yox-common/src/util/is'
 
 test('function', () => {
 

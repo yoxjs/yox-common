@@ -1,5 +1,5 @@
 
-import nextTick from '../../src/function/nextTick'
+import nextTick from 'yox-common/src/function/nextTick'
 
 test('nextTick', done => {
   let i = 0

@@ -1,5 +1,5 @@
 
-import * as object from '../../src/util/object'
+import * as object from 'yox-common/src/util/object'
 
 test('sort', () => {
 

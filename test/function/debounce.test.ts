@@ -1,5 +1,5 @@
 
-import debounce from '../../src/function/debounce'
+import debounce from 'yox-common/src/function/debounce'
 
 test('immediate', done => {
   let i = 0

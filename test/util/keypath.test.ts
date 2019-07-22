@@ -1,5 +1,5 @@
 
-import * as keypath from '../../src/util/keypath'
+import * as keypath from 'yox-common/src/util/keypath'
 
 test('join', () => {
 

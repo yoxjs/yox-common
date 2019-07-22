@@ -54,22 +54,46 @@ function trimArgs(list: (string | void)[]) {
 
 }
 
+/**
+ * 把 [ 'key1:value1', 'key2:value2' ] 格式转成 `{key1:value1,key2:value2}`
+ */
 export function toObject(fields: string[]): string {
   return `{${array.join(fields, COMMA)}}`
 }
 
+/**
+ * 把 [ 'item1', 'item2' ] 格式转成 `['item1','item2']`
+ */
 export function toArray(items: string[]): string {
   return `[${array.join(items, COMMA)}]`
 }
 
+/**
+ * 输出函数调用的格式
+ */
 export function toCall(name: string, args: (string | void)[]): string {
   return `${name}(${array.join(trimArgs(args), COMMA)})`
 }
 
-export function toString(value: any): string {
-  return JSON.stringify(value)
+/**
+ * 输出为字符串格式
+ */
+export function toString(value: string | number | boolean | undefined | null): string {
+  return value === constant.TRUE
+    ? TRUE
+    : value === constant.FALSE
+      ? FALSE
+      // null 和 undefined 都视为 undefined
+      : JSON.stringify(
+          value == constant.NULL
+          ? constant.UNDEFINED
+          : value
+        )
 }
 
+/**
+ * 输出为匿名函数格式
+ */
 export function toFunction(args: string, code: string) {
   return `${constant.RAW_FUNCTION}(${args}){var ${UNDEFINED}=void 0,${TRUE}=!0,${FALSE}=!1;${RETURN}${code}}`
 }

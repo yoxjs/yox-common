@@ -1,6 +1,6 @@
 
-import * as is from '../../src/util/is'
-import * as array from '../../src/util/array'
+import * as is from 'yox-common/src/util/is'
+import * as array from 'yox-common/src/util/array'
 
 test('each callback params', () => {
   let test = [1, 2, 3]

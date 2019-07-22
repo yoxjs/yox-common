@@ -1,5 +1,5 @@
 
-import guid from '../../src/function/guid'
+import guid from 'yox-common/src/function/guid'
 
 test('guid', () => {
 

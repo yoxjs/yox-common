@@ -1,5 +1,5 @@
 
-import execute from '../../src/function/execute'
+import execute from 'yox-common/src/function/execute'
 
 test('not a function', () => {
 

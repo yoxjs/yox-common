@@ -1,7 +1,7 @@
 
-import toString from '../../src/function/toString'
+import toString from 'yox-common/src/function/toString'
 
-test('defaultValue', () => {
+test('default value', () => {
   expect(
     toString(null)
   )
@@ -13,7 +13,7 @@ test('defaultValue', () => {
   .toBe('')
 })
 
-test('custom defaultValue', () => {
+test('custom default value', () => {
   expect(
     toString(null, '1')
   )

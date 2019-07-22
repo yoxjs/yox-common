@@ -1,5 +1,5 @@
 
-import toNumber from '../../src/function/toNumber'
+import toNumber from 'yox-common/src/function/toNumber'
 
 test('defaultValue', () => {
   expect(

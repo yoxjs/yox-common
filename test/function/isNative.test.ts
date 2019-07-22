@@ -1,5 +1,5 @@
 
-import isNative from '../../src/function/isNative'
+import isNative from 'yox-common/src/function/isNative'
 
 test('all types', () => {
 

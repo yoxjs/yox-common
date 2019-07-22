@@ -1,5 +1,5 @@
 
-import isUndef from '../../src/function/isUndef'
+import isUndef from 'yox-common/src/function/isUndef'
 
 test('all types', () => {
 

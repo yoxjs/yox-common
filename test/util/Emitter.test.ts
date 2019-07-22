@@ -1,5 +1,5 @@
 
-import Emitter from '../../src/util/Emitter'
+import Emitter from 'yox-common/src/util/Emitter'
 
 test('on', () => {
 

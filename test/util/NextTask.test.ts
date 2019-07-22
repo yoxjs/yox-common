@@ -1,5 +1,5 @@
 
-import NextTask from '../../src/util/NextTask'
+import NextTask from 'yox-common/src/util/NextTask'
 
 test('append', done => {
 
@@ -81,6 +81,8 @@ test('run', done => {
 
   expect(a).toBe(1)
   expect(b).toBe(2)
+
+  expect(nextTask.tasks.length).toBe(0)
   done()
 
 })
