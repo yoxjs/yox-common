@@ -73,8 +73,9 @@ export function toArray(items: string[]): string {
 /**
  * 输出函数调用的格式
  */
-export function toCall(name: string, args: (string | void)[]): string {
-  return `${name}(${array.join(trimArgs(args), COMMA)})`
+export function toCall(name: string, args?: (string | void)[]): string {
+  const code = args ? array.join(trimArgs(args), COMMA) : constant.EMPTY_STRING
+  return `${name}(${code})`
 }
 
 /**
