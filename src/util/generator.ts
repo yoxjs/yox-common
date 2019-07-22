@@ -6,9 +6,11 @@ import * as array from './array'
 
 export const UNDEFINED = '$0'
 
-export const TRUE = '$1'
+export const NULL = '$1'
 
-export const FALSE = '$2'
+export const TRUE = '$2'
+
+export const FALSE = '$3'
 
 export const COMMA = ','
 
@@ -83,17 +85,16 @@ export function toString(value: string | number | boolean | undefined | null): s
     ? TRUE
     : value === constant.FALSE
       ? FALSE
-      // null 和 undefined 都视为 undefined
-      : JSON.stringify(
-          value == constant.NULL
-          ? constant.UNDEFINED
-          : value
-        )
+      : value === constant.NULL
+        ? NULL
+        : value === constant.UNDEFINED
+          ? UNDEFINED
+          : JSON.stringify(value)
 }
 
 /**
  * 输出为匿名函数格式
  */
 export function toFunction(args: string, code: string) {
-  return `${constant.RAW_FUNCTION}(${args}){var ${UNDEFINED}=void 0,${TRUE}=!0,${FALSE}=!1;${RETURN}${code}}`
+  return `${constant.RAW_FUNCTION}(${args}){var ${UNDEFINED}=void 0,${NULL}=null,${TRUE}=!0,${FALSE}=!1;${RETURN}${code}}`
 }

@@ -8,8 +8,8 @@ test('toString', () => {
   expect(generator.toString(true)).toBe(generator.TRUE)
   expect(generator.toString(false)).toBe(generator.FALSE)
   expect(generator.toString('1')).toBe('"1"')
-  expect(generator.toString(null)).toBe(undefined)
-  expect(generator.toString(undefined)).toBe(undefined)
+  expect(generator.toString(null)).toBe(generator.NULL)
+  expect(generator.toString(undefined)).toBe(generator.UNDEFINED)
 
 })
 
@@ -50,6 +50,6 @@ test('toCall', () => {
 
 test('toFunction', () => {
 
-  expect(generator.toFunction('a', 'x')).toBe(`function(a){var ${generator.UNDEFINED}=void 0,${generator.TRUE}=!0,${generator.FALSE}=!1;${generator.RETURN}x}`)
+  expect(generator.toFunction('a', 'x')).toBe(`function(a){var ${generator.UNDEFINED}=void 0,${generator.NULL}=null,${generator.TRUE}=!0,${generator.FALSE}=!1;${generator.RETURN}x}`)
 
 })
