@@ -1,6 +1,6 @@
-import * as constant from 'yox-type/src/constant'
-
 import * as is from './is'
+import * as constant from './constant'
+
 import execute from '../function/execute'
 
 /**

@@ -3,10 +3,10 @@ import {
   ValueHolder
 } from 'yox-type/src/type'
 
-import * as constant from 'yox-type/src/constant'
 
 import * as is from './is'
 import * as array from './array'
+import * as constant from './constant'
 import * as keypathUtil from './keypath'
 
 import holder from './holder'

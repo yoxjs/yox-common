@@ -1,5 +1,5 @@
-import * as constant from 'yox-type/src/constant'
 import * as string from './string'
+import * as constant from './constant'
 
 const dotPattern = /\./g,
 

@@ -1,4 +1,4 @@
-import * as constant from 'yox-type/src/constant'
+import * as constant from '../util/constant'
 import isDef from './isDef'
 
 export default function (target: any, defaultValue?: string): string {

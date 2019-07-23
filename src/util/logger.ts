@@ -1,4 +1,4 @@
-import * as constant from 'yox-type/src/constant'
+import * as constant from './constant'
 import toString from '../function/toString'
 
 export const DEBUG = 1

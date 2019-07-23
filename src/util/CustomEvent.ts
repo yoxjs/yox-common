@@ -3,7 +3,7 @@ import {
   CustomEventInterface,
 } from 'yox-type/src/yox'
 
-import * as constant from 'yox-type/src/constant'
+import * as constant from './constant'
 
 export default class CustomEvent implements CustomEventInterface {
 

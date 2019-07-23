@@ -1,8 +1,7 @@
-import * as constant from 'yox-type/src/constant'
-
 import execute from './execute'
 
 import * as array from '../util/array'
+import * as constant from '../util/constant'
 
 /**
  * 节流调用

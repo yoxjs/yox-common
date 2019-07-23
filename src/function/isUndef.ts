@@ -1,4 +1,4 @@
-import * as constant from 'yox-type/src/constant'
+import * as constant from '../util/constant'
 
 export default function (target: any): boolean {
   return target === constant.UNDEFINED

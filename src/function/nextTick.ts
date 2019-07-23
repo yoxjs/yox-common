@@ -1,4 +1,4 @@
-import * as constant from 'yox-type/src/constant'
+import * as constant from '../util/constant'
 import isNative from './isNative'
 
 declare const setImmediate: Function

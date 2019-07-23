@@ -1,8 +1,7 @@
-import * as constant from 'yox-type/src/constant'
-
 import isDef from '../function/isDef'
 
 import * as array from './array'
+import * as constant from './constant'
 
 export const UNDEFINED = '$0'
 

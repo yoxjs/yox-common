@@ -6,8 +6,6 @@ import {
   EmitterOptions,
 } from 'yox-type/src/options'
 
-import * as constant from 'yox-type/src/constant'
-
 import execute from '../function/execute'
 
 import CustomEvent from './CustomEvent'
@@ -17,6 +15,7 @@ import * as array from './array'
 import * as object from './object'
 import * as string from './string'
 import * as logger from './logger'
+import * as constant from './constant'
 
 type Namespace = {
 
