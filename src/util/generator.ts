@@ -80,7 +80,7 @@ export function toCall(name: string, args?: (string | void)[]): string {
 /**
  * 输出为字符串格式
  */
-export function toString(value: string | number | boolean | void): string {
+export function toString(value: string | number | boolean | null | void): string {
   return value === constant.TRUE
     ? TRUE
     : value === constant.FALSE
