@@ -1,5 +1,5 @@
-import isDef from './isDef'
 import * as is from '../util/is'
+import * as constant from '../util/constant'
 
 /**
  * 任性地执行一个函数，不管它有没有、是不是
@@ -13,9 +13,9 @@ export default function (fn: any, context?: any, args?: any): any {
   if (is.func(fn)) {
     return is.array(args)
       ? fn.apply(context, args)
-      : isDef(context)
+      : context !== constant.UNDEFINED
         ? fn.call(context, args)
-        : isDef(args)
+        : args !== constant.UNDEFINED
           ? fn(args)
           : fn()
   }

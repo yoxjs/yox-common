@@ -1,8 +1,6 @@
 import * as is from './is'
 import * as constant from './constant'
 
-import isDef from '../function/isDef'
-
 const camelizePattern = /-([a-z])/gi,
 
 hyphenatePattern = /\B([A-Z])/g,
@@ -104,7 +102,7 @@ export function slice(str: string, start: number, end?: number): string {
  * @return
  */
 export function indexOf(str: string, part: string, start?: number): number {
-  return str.indexOf(part, isDef(start) ? start : 0)
+  return str.indexOf(part, start !== constant.UNDEFINED ? start : 0)
 }
 
 /**
@@ -116,7 +114,7 @@ export function indexOf(str: string, part: string, start?: number): number {
  * @return
  */
 export function lastIndexOf(str: string, part: string, end?: number): number {
-  return str.lastIndexOf(part, isDef(end) ? end : str.length)
+  return str.lastIndexOf(part, end !== constant.UNDEFINED ? end : str.length)
 }
 
 /**

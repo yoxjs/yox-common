@@ -1,10 +1,10 @@
 import * as is from '../util/is'
-import isDef from './isDef'
+import * as constant from '../util/constant'
 
 export default function (target: any, defaultValue?: number): number {
   return is.numeric(target)
     ? +target
-    : isDef(defaultValue)
+    : defaultValue !== constant.UNDEFINED
       ? defaultValue as number
       : 0
 }

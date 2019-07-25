@@ -3,15 +3,12 @@ import {
   ValueHolder
 } from 'yox-type/src/type'
 
-
 import * as is from './is'
 import * as array from './array'
 import * as constant from './constant'
 import * as keypathUtil from './keypath'
 
 import holder from './holder'
-
-import isDef from '../function/isDef'
 
 /**
  * 获取对象的 key 的数组
@@ -155,7 +152,7 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
 
         // 紧接着判断值是否存在
         // 下面会处理计算属性的值，不能在它后面设置 hasValue
-        hasValue = isDef(value)
+        hasValue = value !== constant.UNDEFINED
 
         // 如果是计算属性，取计算属性的值
         if (value && is.func(value.get)) {
@@ -224,7 +221,7 @@ export function set(object: Data, keypath: string, value: any, autofill?: boolea
  */
 export function has(object: Data, key: string | number): boolean {
   // 不用 hasOwnProperty，性能差
-  return isDef(object[key])
+  return object[key] !== constant.UNDEFINED
 }
 
 /**
