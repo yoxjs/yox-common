@@ -1,6 +1,6 @@
 import {
   Data,
-  ValueHolder
+  ValueHolder,
 } from 'yox-type/src/type'
 
 import * as is from './is'
