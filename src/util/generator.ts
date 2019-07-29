@@ -56,6 +56,15 @@ function trimArgs(list: (string | void)[]) {
 }
 
 /**
+ * 确保表达式的优先级是正确的
+ */
+export function toGroup(code: string): string {
+  return /[-+*\/%<>=!&^|]/.test(code)
+    ? `(${code})`
+    : code
+}
+
+/**
  * 把 [ 'key1:value1', 'key2:value2' ] 格式转成 `{key1:value1,key2:value2}`
  */
 export function toObject(fields: string[]): string {

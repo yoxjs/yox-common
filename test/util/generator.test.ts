@@ -1,6 +1,22 @@
 
 import * as generator from 'yox-common/src/util/generator'
 
+test('toGroup', () => {
+
+  expect(generator.toGroup('x')).toBe('x')
+  expect(generator.toGroup('x+y')).toBe('(x+y)')
+  expect(generator.toGroup('x-y')).toBe('(x-y)')
+  expect(generator.toGroup('x*y')).toBe('(x*y)')
+  expect(generator.toGroup('x/y')).toBe('(x/y)')
+  expect(generator.toGroup('x&&y')).toBe('(x&&y)')
+  expect(generator.toGroup('x||y')).toBe('(x||y)')
+  expect(generator.toGroup('x&y')).toBe('(x&y)')
+  expect(generator.toGroup('x|y')).toBe('(x|y)')
+  expect(generator.toGroup('x^y')).toBe('(x^y)')
+  expect(generator.toGroup('!x')).toBe('(!x)')
+
+})
+
 test('toString', () => {
 
   expect(generator.toString(0)).toBe('0')
