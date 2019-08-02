@@ -75,7 +75,7 @@ export function toGroup(code: string): string {
   ) {
     return code
   }
-  return /[-+*\/%<>=!&^|,]/.test(code)
+  return /[-+*\/%<>=!&^|,?:]/.test(code)
     ? `(${code})`
     : code
 }

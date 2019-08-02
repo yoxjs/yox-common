@@ -23,6 +23,7 @@ test('toGroup', () => {
   expect(generator.toGroup('x|y')).toBe('(x|y)')
   expect(generator.toGroup('x^y')).toBe('(x^y)')
   expect(generator.toGroup('x,y')).toBe('(x,y)')
+  expect(generator.toGroup('x?y:z')).toBe('(x?y:z)')
 
   expect(generator.toGroup('[x,y]')).toBe('[x,y]')
   expect(generator.toGroup('{x,y}')).toBe('{x,y}')
