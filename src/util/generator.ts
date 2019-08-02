@@ -1,6 +1,7 @@
 import isDef from '../function/isDef'
 
 import * as array from './array'
+import * as string from './string'
 import * as constant from './constant'
 
 export const UNDEFINED = '$0'
@@ -59,6 +60,12 @@ function trimArgs(list: (string | void)[]) {
  * 确保表达式的优先级是正确的
  */
 export function toGroup(code: string): string {
+  // 避免重复加括号
+  if (string.startsWith(code, '(')
+    && string.endsWith(code, ')')
+  ) {
+    return code
+  }
   return /[-+*\/%<>=!&^|,]/.test(code)
     ? `(${code})`
     : code
