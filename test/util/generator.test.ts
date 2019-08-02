@@ -14,6 +14,7 @@ test('toGroup', () => {
   expect(generator.toGroup('x|y')).toBe('(x|y)')
   expect(generator.toGroup('x^y')).toBe('(x^y)')
   expect(generator.toGroup('!x')).toBe('(!x)')
+  expect(generator.toGroup('x,y')).toBe('(x,y)')
 
 })
 

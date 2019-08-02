@@ -59,7 +59,7 @@ function trimArgs(list: (string | void)[]) {
  * 确保表达式的优先级是正确的
  */
 export function toGroup(code: string): string {
-  return /[-+*\/%<>=!&^|]/.test(code)
+  return /[-+*\/%<>=!&^|,]/.test(code)
     ? `(${code})`
     : code
 }
