@@ -71,7 +71,7 @@ export function toGroup(code: string): string {
     // 一元表达式不用加括号
     || /^(?:[-+~!]|!!)(?:[\$\w]+|\([\$\w]+\))$/.test(code)
     // 函数调用不用加括号
-    || /^\w+\(.*\)$/.test(code)
+    || /^\w+\([^\)\{\}]*\)$/.test(code)
   ) {
     return code
   }
