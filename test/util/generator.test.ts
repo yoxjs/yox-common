@@ -4,6 +4,15 @@ import * as generator from 'yox-common/src/util/generator'
 test('toGroup', () => {
 
   expect(generator.toGroup('x')).toBe('x')
+  expect(generator.toGroup('+x')).toBe('+x')
+  expect(generator.toGroup('-x')).toBe('-x')
+  expect(generator.toGroup('~x')).toBe('~x')
+  expect(generator.toGroup('!x')).toBe('!x')
+  expect(generator.toGroup('!$1')).toBe('!$1')
+  expect(generator.toGroup('!!x')).toBe('!!x')
+
+  expect(generator.toGroup('!x+y')).toBe('(!x+y)')
+
   expect(generator.toGroup('x+y')).toBe('(x+y)')
   expect(generator.toGroup('x-y')).toBe('(x-y)')
   expect(generator.toGroup('x*y')).toBe('(x*y)')
@@ -13,8 +22,12 @@ test('toGroup', () => {
   expect(generator.toGroup('x&y')).toBe('(x&y)')
   expect(generator.toGroup('x|y')).toBe('(x|y)')
   expect(generator.toGroup('x^y')).toBe('(x^y)')
-  expect(generator.toGroup('!x')).toBe('(!x)')
   expect(generator.toGroup('x,y')).toBe('(x,y)')
+
+  expect(generator.toGroup('[x,y]')).toBe('[x,y]')
+  expect(generator.toGroup('{x,y}')).toBe('{x,y}')
+  expect(generator.toGroup('"1-2"')).toBe('"1-2"')
+  expect(generator.toGroup('aa("1", 2)')).toBe('aa("1", 2)')
 
 })
 
