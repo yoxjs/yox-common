@@ -60,10 +60,8 @@ function trimArgs(list: (string | void)[]) {
  * 确保表达式的优先级是正确的
  */
 export function toGroup(code: string): string {
-  // 避免重复加括号
-  if (string.startsWith(code, '(') && string.endsWith(code, ')')
-    // 数组不用加括号
-    || string.startsWith(code, '[') && string.endsWith(code, ']')
+  // 数组不用加括号
+  if (string.startsWith(code, '[') && string.endsWith(code, ']')
     // 对象不用加括号
     || string.startsWith(code, '{') && string.endsWith(code, '}')
     // 字符串不用加括号
@@ -72,6 +70,8 @@ export function toGroup(code: string): string {
     || /^(?:[-+~!]|!!)(?:[\$\w]+|\([\$\w]+\))$/.test(code)
     // 函数调用不用加括号
     || /^\w+\([^\)\{\}]*\)$/.test(code)
+    // 避免重复加括号
+    || /^\([^\)]+\)$/.test(code)
   ) {
     return code
   }
