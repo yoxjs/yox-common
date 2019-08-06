@@ -212,6 +212,11 @@ test('number', () => {
   )
   .toBe(true)
 
+  expect(
+    is.number(NaN)
+  )
+  .toBe(false)
+
 })
 
 test('boolean', () => {
@@ -269,6 +274,11 @@ test('numeric', () => {
 
   expect(
     is.numeric(null)
+  )
+  .toBe(false)
+
+  expect(
+    is.numeric(NaN)
   )
   .toBe(false)
 

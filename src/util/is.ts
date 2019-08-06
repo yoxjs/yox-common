@@ -48,7 +48,7 @@ export function string(value: any): boolean {
  * @return
  */
 export function number(value: any): boolean {
-  return typeof value === 'number'
+  return typeof value === 'number' && !isNaN(value)
 }
 
 /**

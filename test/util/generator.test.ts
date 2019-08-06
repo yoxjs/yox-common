@@ -30,8 +30,14 @@ test('toGroup', () => {
   expect(generator.toGroup('(x),(y)')).toBe('((x),(y))')
 
   expect(generator.toGroup('[x,y]')).toBe('[x,y]')
+  expect(generator.toGroup('[x],[y]')).toBe('([x],[y])')
+
   expect(generator.toGroup('{x,y}')).toBe('{x,y}')
+  expect(generator.toGroup('{x},{y}')).toBe('({x},{y})')
+
   expect(generator.toGroup('"1-2"')).toBe('"1-2"')
+  expect(generator.toGroup('"1","2"')).toBe('("1","2")')
+
   expect(generator.toGroup('aa("1", 2)')).toBe('aa("1", 2)')
   expect(generator.toGroup('a(),b()')).toBe('(a(),b())')
 

@@ -1,7 +1,6 @@
 import isDef from '../function/isDef'
 
 import * as array from './array'
-import * as string from './string'
 import * as constant from './constant'
 
 export const UNDEFINED = '$0'
@@ -61,11 +60,11 @@ function trimArgs(list: (string | void)[]) {
  */
 export function toGroup(code: string): string {
   // 数组不用加括号
-  if (string.startsWith(code, '[') && string.endsWith(code, ']')
+  if (/^\[[^\]]+\]$/.test(code)
     // 对象不用加括号
-    || string.startsWith(code, '{') && string.endsWith(code, '}')
+    || /^{[^\}]+}$/.test(code)
     // 字符串不用加括号
-    || string.startsWith(code, '"') && string.endsWith(code, '"')
+    || /^"[^"]+\"$/.test(code)
     // 一元表达式不用加括号
     || /^(?:[-+~!]|!!)(?:[\$\w]+|\([\$\w]+\))$/.test(code)
     // 函数调用不用加括号
