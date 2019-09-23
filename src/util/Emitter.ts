@@ -86,59 +86,61 @@ export default class Emitter {
         ? args[0] as CustomEvent
         : constant.UNDEFINED
 
-      array.each(
-        list,
-        function (options) {
+      // 这里不用 array.each，减少函数调用
+      for (let i = 0, length = list.length; i < length; i++) {
 
-          // 命名空间不匹配
-          if (!matchNamespace(namespace.ns, options)
-            // 在 fire 过程中被移除了
-            || !array.has(list, options)
-            // 传了 filter，则用 filter 判断是否过滤此 options
-            || (filter && !filter(namespace, args, options))
-          ) {
-            return
-          }
+        let options = list[i]
 
-          // 为 event 对象加上当前正在处理的 listener
-          // 这样方便业务层移除事件绑定
-          // 比如 on('xx', function) 这样定义了匿名 listener
-          // 在这个 listener 里面获取不到当前 listener 的引用
-          // 为了能引用到，有时候会先定义 var listener = function
-          // 然后再 on('xx', listener) 这样其实是没有必要的
-          if (event) {
-            event.listener = options.fn
-          }
+        // 命名空间不匹配
+        if (!matchNamespace(namespace.ns, options)
+          // 在 fire 过程中被移除了
+          || !array.has(list, options)
+          // 传了 filter，则用 filter 判断是否过滤此 options
+          || (filter && !filter(namespace, args, options))
+        ) {
+          continue
+        }
 
-          let result = execute(options.fn, options.ctx, args)
+        // 为 event 对象加上当前正在处理的 listener
+        // 这样方便业务层移除事件绑定
+        // 比如 on('xx', function) 这样定义了匿名 listener
+        // 在这个 listener 里面获取不到当前 listener 的引用
+        // 为了能引用到，有时候会先定义 var listener = function
+        // 然后再 on('xx', listener) 这样其实是没有必要的
+        if (event) {
+          event.listener = options.fn
+        }
 
-          if (event) {
-            event.listener = constant.UNDEFINED
-          }
+        let result = execute(options.fn, options.ctx, args)
 
-          // 执行次数
-          options.num = options.num ? (options.num + 1) : 1
+        if (event) {
+          event.listener = constant.UNDEFINED
+        }
 
-          // 注册的 listener 可以指定最大执行次数
-          if (options.num === options.max) {
-            instance.off(namespace, options.fn)
-          }
+        // 执行次数
+        options.num = options.num ? (options.num + 1) : 1
 
-          // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
-          if (event) {
-            if (result === constant.FALSE) {
-              event.prevent().stop()
-            }
-            else if (event.isStoped) {
-              result = constant.FALSE
-            }
-          }
+        // 注册的 listener 可以指定最大执行次数
+        if (options.num === options.max) {
+          instance.off(namespace, options.fn)
+        }
 
+        // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
+        if (event) {
           if (result === constant.FALSE) {
-            return isComplete = constant.FALSE
+            event.prevent().stop()
+          }
+          else if (event.isStoped) {
+            result = constant.FALSE
           }
         }
-      )
+
+        if (result === constant.FALSE) {
+          isComplete = constant.FALSE
+          break
+        }
+
+      }
 
     }
 
