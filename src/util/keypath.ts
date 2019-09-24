@@ -34,7 +34,7 @@ export function match(keypath: string, prefix: string): number {
  * @param keypath
  * @param callback 返回 false 可中断遍历
  */
-export function each(keypath: string, callback: (key: string, isLast: boolean) => boolean | void) {
+export function each(keypath: string, callback: (key: string, index: number, lastIndex: number) => boolean | void) {
   // 如果 keypath 是 toString 之类的原型字段
   // splitCache[keypath] 会取到原型链上的对象
   const list = splitCache.hasOwnProperty(keypath)
@@ -42,7 +42,7 @@ export function each(keypath: string, callback: (key: string, isLast: boolean) =
     : (splitCache[keypath] = keypath.split(constant.RAW_DOT))
 
   for (let i = 0, lastIndex = list.length - 1; i <= lastIndex; i++) {
-    if (callback(list[i], i === lastIndex) === constant.FALSE) {
+    if (callback(list[i], i, lastIndex) === constant.FALSE) {
       break
     }
   }

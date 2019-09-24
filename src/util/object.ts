@@ -143,7 +143,7 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
 
   keypathUtil.each(
     keypath,
-    function (key, isLast) {
+    function (key, index, lastIndex) {
 
       if (object != constant.NULL) {
 
@@ -159,7 +159,7 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
           value = value.get()
         }
 
-        if (isLast) {
+        if (index === lastIndex) {
           if (hasValue) {
             holder.value = value
             object = holder
@@ -195,8 +195,8 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
 export function set(object: Data, keypath: string, value: any, autofill?: boolean): void {
   keypathUtil.each(
     keypath,
-    function (key, isLast) {
-      if (isLast) {
+    function (key, index, lastIndex) {
+      if (index === lastIndex) {
         object[key] = value
       }
       else if (object[key]) {
