@@ -20,27 +20,6 @@ export function keys(object: Data): string[] {
   return Object.keys(object)
 }
 
-function sortKeyByAsc(a: string, b: string): number {
-  return a.length - b.length
-}
-
-function sortKeyByDesc(a: string, b: string): number {
-  return b.length - a.length
-}
-
-/**
- * 排序对象的 key
- *
- * @param object
- * @param desc 是否逆序，默认从小到大排序
- * @return
- */
-export function sort(object: Data, desc?: boolean): string[] {
-  return keys(object).sort(
-    desc ? sortKeyByDesc : sortKeyByAsc
-  )
-}
-
 /**
  * 遍历对象
  *
