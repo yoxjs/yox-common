@@ -1,3 +1,4 @@
+import * as is from './is'
 import * as string from './string'
 import * as constant from './constant'
 
@@ -37,9 +38,23 @@ export function match(keypath: string, prefix: string): number {
 export function each(keypath: string, callback: (key: string, index: number, lastIndex: number) => boolean | void) {
   // 如果 keypath 是 toString 之类的原型字段
   // splitCache[keypath] 会取到原型链上的对象
-  const list = splitCache.hasOwnProperty(keypath)
-    ? splitCache[keypath]
-    : (splitCache[keypath] = keypath.split(constant.RAW_DOT))
+  // is.array() 比 splitCache.hasOwnProperty(keypath) 快一些
+  // 虽然不如后者严谨，但在这里够用了
+
+  let list: string[]
+
+  if (is.array(splitCache[keypath])) {
+    list = splitCache[keypath]
+  }
+  else {
+    if (string.indexOf(keypath, constant.RAW_DOT) < 0) {
+      list = [keypath]
+    }
+    else {
+      list = keypath.split(constant.RAW_DOT)
+    }
+    splitCache[keypath] = list
+  }
 
   for (let i = 0, lastIndex = list.length - 1; i <= lastIndex; i++) {
     if (callback(list[i], i, lastIndex) === constant.FALSE) {
