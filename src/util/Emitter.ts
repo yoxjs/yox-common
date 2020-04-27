@@ -3,6 +3,7 @@ import {
 } from 'yox-type/src/type'
 
 import {
+  EmitterNamespace,
   EmitterOptions,
 } from 'yox-type/src/options'
 
@@ -16,16 +17,6 @@ import * as object from './object'
 import * as string from './string'
 import * as logger from './logger'
 import * as constant from './constant'
-
-type Namespace = {
-
-  // 事件名称
-  type: string
-
-  // 命名空间
-  ns?: string
-
-}
 
 export default class Emitter {
 
@@ -57,10 +48,10 @@ export default class Emitter {
    * @param filter 自定义过滤器
    */
   fire(
-    type: string | Namespace,
+    type: string | EmitterNamespace,
     args: any[] | void,
     filter?: (
-      namespace: Namespace,
+      namespace: EmitterNamespace,
       args: any[] | void,
       options: EmitterOptions
     ) => boolean | void
@@ -68,7 +59,7 @@ export default class Emitter {
 
     let instance = this,
 
-    namespace = is.string(type) ? instance.parse(type as string) : type as Namespace,
+    namespace = is.string(type) ? instance.parse(type as string) : type as EmitterNamespace,
 
     list = instance.listeners[namespace.type],
 
@@ -155,7 +146,7 @@ export default class Emitter {
    * @param listener
    */
   on(
-    type: string | Namespace,
+    type: string | EmitterNamespace,
     listener: Function | EmitterOptions
   ): void {
 
@@ -168,7 +159,7 @@ export default class Emitter {
       : listener as EmitterOptions
 
     if (is.object(options) && is.func(options.fn)) {
-      const namespace = is.string(type) ? instance.parse(type as string) : type as Namespace
+      const namespace = is.string(type) ? instance.parse(type as string) : type as EmitterNamespace
       options.ns = namespace.ns
       array.push(
         listeners[namespace.type] || (listeners[namespace.type] = []),
@@ -188,7 +179,7 @@ export default class Emitter {
    * @param listener
    */
   off(
-    type?: string | Namespace,
+    type?: string | EmitterNamespace,
     listener?: Function
   ): void {
 
@@ -198,7 +189,7 @@ export default class Emitter {
 
     if (type) {
 
-      const namespace = is.string(type) ? instance.parse(type as string) : type as Namespace,
+      const namespace = is.string(type) ? instance.parse(type as string) : type as EmitterNamespace,
 
       name = namespace.type,
 
@@ -260,7 +251,7 @@ export default class Emitter {
    * @param listener
    */
   has(
-    type: string | Namespace,
+    type: string | EmitterNamespace,
     listener?: Function
   ): boolean {
 
@@ -268,7 +259,7 @@ export default class Emitter {
 
     listeners = instance.listeners,
 
-    namespace = is.string(type) ? instance.parse(type as string) : type as Namespace,
+    namespace = is.string(type) ? instance.parse(type as string) : type as EmitterNamespace,
 
     name = namespace.type,
 
@@ -308,7 +299,7 @@ export default class Emitter {
    *
    * @param type
    */
-  parse(type: string): Namespace {
+  parse(type: string): EmitterNamespace {
 
     // 这里 ns 必须为字符串
     // 用于区分 event 对象是否已完成命名空间的解析
@@ -351,10 +342,10 @@ function matchTrue() {
  */
 function createMatchListener(listener: Function | void): (options: EmitterOptions) => boolean {
   return is.func(listener)
-      ? function (options: EmitterOptions) {
-          return listener === options.fn
-        }
-      : matchTrue
+    ? function (options: EmitterOptions) {
+        return listener === options.fn
+      }
+    : matchTrue
 }
 
 /**
