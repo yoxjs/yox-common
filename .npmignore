@@ -6,4 +6,5 @@ dist
 package-lock.json
 yarn.lock
 jest.config.js
+tsconfig.json
 tsconfig.tsbuildinfo
