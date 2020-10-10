@@ -67,15 +67,13 @@ test('match', () => {
 test('each', () => {
 
   let keys = ['a', 'b', 'c']
-  let index = -1
 
   keypath.each(
     keys.join('.'),
-    function (key, isLast) {
-      index++
+    function (key, index, lastIndex) {
       expect(key).toBe(keys[index])
       if (key === keys[keys.length - 1]) {
-        expect(isLast).toBe(true)
+        expect(index).toBe(lastIndex)
       }
     }
   )

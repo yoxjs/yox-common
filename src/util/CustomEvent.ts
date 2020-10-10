@@ -13,6 +13,10 @@ export default class CustomEvent implements CustomEventInterface {
 
   public static PHASE_DOWNWARD = constant.MINUS_ONE
 
+  public static is(event: any): boolean {
+    return event instanceof CustomEvent
+  }
+
   // 事件名称
   type: string
 

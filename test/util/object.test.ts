@@ -1,30 +1,6 @@
 
 import * as object from 'yox-common/src/util/object'
 
-test('sort', () => {
-
-  let target = {
-    a: 1,
-    aaa: 3,
-    aa: 2,
-    aaaa: 4,
-  }
-
-  let result1 = object.sort(target)
-  expect(result1.length).toBe(4)
-  expect(result1[0]).toBe('a')
-  expect(result1[1]).toBe('aa')
-  expect(result1[2]).toBe('aaa')
-  expect(result1[3]).toBe('aaaa')
-
-  let result2 = object.sort(target, true)
-  expect(result2[0]).toBe('aaaa')
-  expect(result2[1]).toBe('aaa')
-  expect(result2[2]).toBe('aa')
-  expect(result2[3]).toBe('a')
-
-})
-
 test('falsy', () => {
 
   expect(object.falsy([])).toBe(true)

@@ -3,7 +3,8 @@ import {
 } from 'yox-type/src/type'
 
 import {
-  EmitterNamespace,
+  EmitterEvent,
+  EmitterFilter,
   EmitterOptions,
 } from 'yox-type/src/options'
 
@@ -48,10 +49,10 @@ export default class Emitter {
    * @param filter 自定义过滤器
    */
   fire(
-    type: string | EmitterNamespace,
+    type: string | EmitterEvent,
     args: any[] | void,
     filter?: (
-      namespace: EmitterNamespace,
+      event: EmitterEvent,
       args: any[] | void,
       options: EmitterOptions
     ) => boolean | void
@@ -59,21 +60,21 @@ export default class Emitter {
 
     let instance = this,
 
-    namespace = is.string(type) ? instance.parse(type as string) : type as EmitterNamespace,
+    event = is.string(type) ? instance.toEvent(type as string) : type as EmitterEvent,
 
-    list = instance.listeners[namespace.type],
+    list = instance.listeners[event.type],
 
     isComplete = constant.TRUE
 
     if (list) {
 
       // 避免遍历过程中，数组发生变化，比如增删了
-      list = object.copy(list)
+      list = list.slice()
 
       // 判断是否是发射事件
       // 如果 args 的第一个参数是 CustomEvent 类型，表示发射事件
       // 因为事件处理函数的参数列表是 (event, data)
-      const event = args && args[0] instanceof CustomEvent
+      const customEvent = args && CustomEvent.is(args[0])
         ? args[0] as CustomEvent
         : constant.UNDEFINED
 
@@ -83,29 +84,29 @@ export default class Emitter {
         let options = list[i]
 
         // 命名空间不匹配
-        if (!matchNamespace(namespace.ns, options)
+        if (!matchNamespace(event.ns, options)
           // 在 fire 过程中被移除了
           || !array.has(list, options)
           // 传了 filter，则用 filter 判断是否过滤此 options
-          || (filter && !filter(namespace, args, options))
+          || (filter && !filter(event, args, options))
         ) {
           continue
         }
 
-        // 为 event 对象加上当前正在处理的 listener
+        // 为 customEvent 对象加上当前正在处理的 listener
         // 这样方便业务层移除事件绑定
         // 比如 on('xx', function) 这样定义了匿名 listener
         // 在这个 listener 里面获取不到当前 listener 的引用
         // 为了能引用到，有时候会先定义 var listener = function
         // 然后再 on('xx', listener) 这样其实是没有必要的
-        if (event) {
-          event.listener = options.fn
+        if (customEvent) {
+          customEvent.listener = options.fn
         }
 
         let result = execute(options.fn, options.ctx, args)
 
-        if (event) {
-          event.listener = constant.UNDEFINED
+        if (customEvent) {
+          customEvent.listener = constant.UNDEFINED
         }
 
         // 执行次数
@@ -113,15 +114,21 @@ export default class Emitter {
 
         // 注册的 listener 可以指定最大执行次数
         if (options.num === options.max) {
-          instance.off(namespace, options.fn)
+          instance.off(
+            event.type,
+            {
+              ns: event.ns,
+              fn: options.fn,
+            }
+          )
         }
 
-        // 如果没有返回 false，而是调用了 event.stop 也算是返回 false
-        if (event) {
+        // 如果没有返回 false，而是调用了 customEvent.stop 也算是返回 false
+        if (customEvent) {
           if (result === constant.FALSE) {
-            event.prevent().stop()
+            customEvent.prevent().stop()
           }
-          else if (event.isStoped) {
+          else if (customEvent.isStoped) {
             result = constant.FALSE
           }
         }
@@ -146,7 +153,7 @@ export default class Emitter {
    * @param listener
    */
   on(
-    type: string | EmitterNamespace,
+    type: string,
     listener: Function | EmitterOptions
   ): void {
 
@@ -159,10 +166,13 @@ export default class Emitter {
       : listener as EmitterOptions
 
     if (is.object(options) && is.func(options.fn)) {
-      const namespace = is.string(type) ? instance.parse(type as string) : type as EmitterNamespace
-      options.ns = namespace.ns
+      if (!is.string(options.ns)) {
+        const event = instance.toEvent(type)
+        options.ns = event.ns
+        type = event.type
+      }
       array.push(
-        listeners[namespace.type] || (listeners[namespace.type] = []),
+        listeners[type] || (listeners[type] = []),
         options
       )
     }
@@ -179,8 +189,8 @@ export default class Emitter {
    * @param listener
    */
   off(
-    type?: string | EmitterNamespace,
-    listener?: Function
+    type?: string,
+    listener?: Function | EmitterFilter
   ): void {
 
     const instance = this,
@@ -189,19 +199,13 @@ export default class Emitter {
 
     if (type) {
 
-      const namespace = is.string(type) ? instance.parse(type as string) : type as EmitterNamespace,
-
-      name = namespace.type,
-
-      ns = namespace.ns,
-
-      matchListener = createMatchListener(listener),
+      const filter = instance.toFilter(type, listener),
 
       each = function (list: EmitterOptions[], name: string) {
         array.each(
           list,
-          function (options, index) {
-            if (matchListener(options) && matchNamespace(ns, options)) {
+          function (item, index) {
+            if (matchListener(filter.fn, item) && matchNamespace(filter.ns, item)) {
               list.splice(index, 1)
             }
           },
@@ -212,18 +216,19 @@ export default class Emitter {
         }
       }
 
-      if (name) {
-        if (listeners[name]) {
-          each(listeners[name], name)
+      if (filter.type) {
+        if (listeners[filter.type]) {
+          each(listeners[filter.type], filter.type)
         }
       }
-      else if (ns) {
+      // 按命名空间过滤，如 type 传入 .ns
+      else if (filter.ns) {
         object.each(listeners, each)
       }
 
-      // 在开发阶段进行警告，比如传了 listener 进来，listener 是个空值
-      // 但你不知道它是空值
       if (process.env.NODE_ENV === 'development') {
+        // 在开发阶段进行警告，比如传了 listener 进来，listener 是个空值
+        // 但你不知道它是空值
         if (arguments.length > 1 && listener == constant.NULL) {
           logger.warn(`emitter.off(type, listener) is invoked, but "listener" is ${listener}.`)
         }
@@ -233,9 +238,9 @@ export default class Emitter {
     else {
       // 清空
       instance.listeners = {}
-      // 在开发阶段进行警告，比如传了 type 进来，type 是个空值
-      // 但你不知道它是空值
       if (process.env.NODE_ENV === 'development') {
+        // 在开发阶段进行警告，比如传了 type 进来，type 是个空值
+        // 但你不知道它是空值
         if (arguments.length > 0) {
           logger.warn(`emitter.off(type) is invoked, but "type" is ${type}.`)
         }
@@ -251,29 +256,23 @@ export default class Emitter {
    * @param listener
    */
   has(
-    type: string | EmitterNamespace,
-    listener?: Function
+    type: string,
+    listener?: Function | EmitterFilter
   ): boolean {
 
     let instance = this,
 
     listeners = instance.listeners,
 
-    namespace = is.string(type) ? instance.parse(type as string) : type as EmitterNamespace,
-
-    name = namespace.type,
-
-    ns = namespace.ns,
-
+    filter = instance.toFilter(type, listener),
+    
     result = constant.TRUE,
-
-    matchListener = createMatchListener(listener),
 
     each = function (list: EmitterOptions[]) {
       array.each(
         list,
-        function (options) {
-          if (matchListener(options) && matchNamespace(ns, options)) {
+        function (item) {
+          if (matchListener(filter.fn, item) && matchNamespace(filter.ns, item)) {
             return result = constant.FALSE
           }
         }
@@ -281,12 +280,12 @@ export default class Emitter {
       return result
     }
 
-    if (name) {
-      if (listeners[name]) {
-        each(listeners[name])
+    if (filter.type) {
+      if (listeners[filter.type]) {
+        each(listeners[filter.type])
       }
     }
-    else if (ns) {
+    else if (filter.ns) {
       object.each(listeners, each)
     }
 
@@ -299,11 +298,11 @@ export default class Emitter {
    *
    * @param type
    */
-  parse(type: string): EmitterNamespace {
+  toEvent(type: string): EmitterEvent {
 
     // 这里 ns 必须为字符串
     // 用于区分 event 对象是否已完成命名空间的解析
-    const result = {
+    const event = {
       type,
       ns: constant.EMPTY_STRING,
     }
@@ -312,40 +311,56 @@ export default class Emitter {
     if (this.ns) {
       const index = string.indexOf(type, constant.RAW_DOT)
       if (index >= 0) {
-        result.type = string.slice(type, 0, index)
-        result.ns = string.slice(type, index + 1)
+        event.type = string.slice(type, 0, index)
+        event.ns = string.slice(type, index + 1)
       }
     }
 
-    return result
+    return event
 
+  }
+
+  toFilter(
+    type: string, 
+    listener?: Function | EmitterFilter
+  ): EmitterFilter {
+
+    let filter: EmitterFilter
+  
+    if (listener) {
+      filter = is.func(listener)
+        ? { fn: listener as Function }
+        : listener as EmitterFilter
+    }
+    else {
+      filter = {}
+    }
+  
+    if (is.string(filter.ns)) {
+      filter.type = type
+    }
+    else {
+      const event = this.toEvent(type)
+      filter.type = event.type
+      filter.ns = event.ns
+    }
+  
+    return filter
+    
   }
 
 }
 
-function matchTrue() {
-  return constant.TRUE
-}
-
 /**
- * 外部会传入 Function 或 EmitterOptions 或 空
- *
- * 这里根据传入值的不同类型，创建不同的判断函数
- *
- * 如果传入的是 EmitterOptions，则全等判断
- *
- * 如果传入的是 Function，则判断函数是否全等
- *
- * 如果传入的是空，则直接返回 true
+ * 判断 options 是否能匹配 listener
  *
  * @param listener
+ * @param options
  */
-function createMatchListener(listener: Function | void): (options: EmitterOptions) => boolean {
-  return is.func(listener)
-    ? function (options: EmitterOptions) {
-        return listener === options.fn
-      }
-    : matchTrue
+function matchListener(listener: Function | void, options: EmitterOptions): boolean {
+  return listener
+    ? listener === options.fn
+    : constant.TRUE
 }
 
 /**
