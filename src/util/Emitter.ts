@@ -100,10 +100,10 @@ export default class Emitter {
         // 为了能引用到，有时候会先定义 var listener = function
         // 然后再 on('xx', listener) 这样其实是没有必要的
         if (customEvent) {
-          customEvent.listener = options.fn
+          customEvent.listener = options.listener
         }
 
-        let result = execute(options.fn, options.ctx, args)
+        let result = execute(options.listener, options.ctx, args)
 
         if (customEvent) {
           customEvent.listener = constant.UNDEFINED
@@ -118,7 +118,7 @@ export default class Emitter {
             event.type,
             {
               ns: event.ns,
-              fn: options.fn,
+              listener: options.listener,
             }
           )
         }
@@ -162,10 +162,10 @@ export default class Emitter {
     listeners = instance.listeners,
 
     options: EmitterOptions = is.func(listener)
-      ? { fn: listener as Function }
+      ? { listener: listener as Function }
       : listener as EmitterOptions
 
-    if (is.object(options) && is.func(options.fn)) {
+    if (is.object(options) && is.func(options.listener)) {
       if (!is.string(options.ns)) {
         const event = instance.toEvent(type)
         options.ns = event.ns
@@ -205,7 +205,7 @@ export default class Emitter {
         array.each(
           list,
           function (item, index) {
-            if (matchListener(filter.fn, item) && matchNamespace(filter.ns, item)) {
+            if (matchListener(filter.listener, item) && matchNamespace(filter.ns, item)) {
               list.splice(index, 1)
             }
           },
@@ -272,7 +272,7 @@ export default class Emitter {
       array.each(
         list,
         function (item) {
-          if (matchListener(filter.fn, item) && matchNamespace(filter.ns, item)) {
+          if (matchListener(filter.listener, item) && matchNamespace(filter.ns, item)) {
             return result = constant.FALSE
           }
         }
@@ -329,7 +329,7 @@ export default class Emitter {
   
     if (listener) {
       filter = is.func(listener)
-        ? { fn: listener as Function }
+        ? { listener: listener as Function }
         : listener as EmitterFilter
     }
     else {
@@ -359,7 +359,7 @@ export default class Emitter {
  */
 function matchListener(listener: Function | void, options: EmitterOptions): boolean {
   return listener
-    ? listener === options.fn
+    ? listener === options.listener
     : constant.TRUE
 }
 

@@ -12,7 +12,7 @@ test('on', () => {
 
   expect(emitter.has('click')).toBe(false)
 
-  emitter.on('click', { fn: listener })
+  emitter.on('click', { listener: listener })
   expect(i).toBe(0)
 
   expect(emitter.has('click')).toBe(true)
@@ -36,7 +36,7 @@ test('on context', () => {
     $this = this
   }
 
-  emitter.on('click', { fn: listener, ctx: listener })
+  emitter.on('click', { listener: listener, ctx: listener })
 
   emitter.fire('click')
   expect($this).toBe(listener)
@@ -66,9 +66,9 @@ test('on namespace', () => {
   expect(emitter.has('click')).toBe(false)
   expect(emitter.has('click.c')).toBe(false)
 
-  emitter.on('click.a', { fn: listenerA })
-  emitter.on('click.b', { fn: listenerB })
-  emitter.on('click', { fn: listener })
+  emitter.on('click.a', { listener: listenerA })
+  emitter.on('click.b', { listener: listenerB })
+  emitter.on('click', { listener: listener })
 
   expect(emitter.has('click.a')).toBe(true)
   expect(emitter.has('click.b')).toBe(true)
@@ -124,7 +124,7 @@ test('once', () => {
     'click',
     {
       max: 1,
-      fn: function () {
+      listener: function () {
         i++
       },
     }
