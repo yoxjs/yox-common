@@ -1,7 +1,6 @@
-import * as constant from '../util/constant'
 import isNative from './isNative'
 
-declare const setImmediate: Function
+import * as constant from '../util/constant'
 
 let nextTick: Function
 

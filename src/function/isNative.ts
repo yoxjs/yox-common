@@ -1,8 +1,8 @@
-import * as is from '../util/is'
-import * as string from '../util/string'
 import toString from './toString'
+
+import * as is from '../util/is'
 
 export default function (target: any): boolean {
   return is.func(target)
-    && string.has(toString(target), '[native code]')
+    && toString(target).indexOf('[native code]') >= 0
 }

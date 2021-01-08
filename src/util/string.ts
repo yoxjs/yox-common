@@ -1,17 +1,12 @@
 import * as is from './is'
+import * as cache from './cache'
 import * as constant from './constant'
 
 const camelizePattern = /-([a-z])/gi,
 
 hyphenatePattern = /\B([A-Z])/g,
 
-capitalizePattern = /^[a-z]/,
-
-camelizeCache: Record<string, string> = {},
-
-hyphenateCache: Record<string, string> = {},
-
-capitalizeCache: Record<string, string> = {}
+capitalizePattern = /^[a-z]/
 
 /**
  * 连字符转成驼峰
@@ -19,17 +14,16 @@ capitalizeCache: Record<string, string> = {}
  * @param str
  * @return 驼峰格式的字符串
  */
-export function camelize(str: string): string {
-  if (!camelizeCache[str]) {
-    camelizeCache[str] = str.replace(
+export const camelize = cache.createOneKeyCache(
+  function (str: string): string {
+    return str.replace(
       camelizePattern,
-      function ($0, $1) {
+      function (_, $1) {
         return upper($1)
       }
     )
   }
-  return camelizeCache[str]
-}
+)
 
 /**
  * 驼峰转成连字符
@@ -37,17 +31,16 @@ export function camelize(str: string): string {
  * @param str
  * @return 连字符格式的字符串
  */
-export function hyphenate(str: string): string {
-  if (!hyphenateCache[str]) {
-    hyphenateCache[str] = str.replace(
+export const hyphenate = cache.createOneKeyCache(
+  function (str: string): string {
+    return str.replace(
       hyphenatePattern,
-      function ($0, $1) {
+      function (_, $1) {
         return '-' + lower($1)
       }
     )
   }
-  return hyphenateCache[str]
-}
+)
 
 /**
  * 首字母大写
@@ -55,15 +48,14 @@ export function hyphenate(str: string): string {
  * @param str
  * @return
  */
-export function capitalize(str: string): string {
-  if (!capitalizeCache[str]) {
-    capitalizeCache[str] = str.replace(
+export const capitalize = cache.createOneKeyCache(
+  function (str: string): string {
+    return str.replace(
       capitalizePattern,
       upper
     )
   }
-  return capitalizeCache[str]
-}
+)
 
 /**
  * 清除两侧空白符
