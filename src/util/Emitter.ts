@@ -265,7 +265,7 @@ export default class Emitter {
     listeners = instance.listeners,
 
     filter = instance.toFilter(type, listener),
-    
+
     result = constant.TRUE,
 
     each = function (list: EmitterOptions[]) {
@@ -321,12 +321,12 @@ export default class Emitter {
   }
 
   toFilter(
-    type: string, 
+    type: string,
     listener?: Function | EmitterFilter
   ): EmitterFilter {
 
     let filter: EmitterFilter
-  
+
     if (listener) {
       filter = is.func(listener)
         ? { listener: listener as Function }
@@ -335,7 +335,7 @@ export default class Emitter {
     else {
       filter = {}
     }
-  
+
     if (is.string(filter.ns)) {
       filter.type = type
     }
@@ -344,9 +344,9 @@ export default class Emitter {
       filter.type = event.type
       filter.ns = event.ns
     }
-  
+
     return filter
-    
+
   }
 
 }

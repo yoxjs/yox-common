@@ -45,7 +45,7 @@ if (process.env.NODE_LEGACY) {
 
 /**
  * 创建纯净对象
- * 
+ *
  * @return 纯净对象
  */
 export default createPureObject
