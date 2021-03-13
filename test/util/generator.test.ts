@@ -57,9 +57,11 @@ test('toString', () => {
 
 test('toObject', () => {
 
-  expect(generator.toObject(['key1:value1', 'key2:value2'])).toBe('{key1:value1,key2:value2}')
+  const object = new generator.GeneratorObject()
+  object.set('key1', 'value1')
+  object.set('key2', 'value2')
 
-  expect(generator.toObject([])).toBe('{}')
+  expect(object.toString()).toBe('{key1:value1,key2:value2}')
 
 })
 

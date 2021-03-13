@@ -58,6 +58,17 @@ export const capitalize = cache.createOneKeyCache(
 )
 
 /**
+ * 重复字符串
+ *
+ * @param str
+ * @param count 重复次数
+ * @return
+ */
+export function repeat(str: any, count: number): string {
+  return new Array(count + 1).join(str)
+}
+
+/**
  * 清除两侧空白符
  *
  * @param str
