@@ -1,46 +1,39 @@
+import * as is from './is'
 import * as array from './array'
 import * as object from './object'
 import * as string from './string'
 import * as constant from './constant'
 
-export const UNDEFINED = '$0'
+const STRING_QUOTE = `'`,
 
-export const NULL = '$1'
+UNDEFINED = '$0',
 
-export const TRUE = '$2'
+NULL = '$1',
 
-export const FALSE = '$3'
+TRUE = '$2',
 
-export const COMMA = ','
+FALSE = '$3',
 
-export const COLON = ':'
+COMMA = ',',
 
-export const PLUS = '+'
+EMPTY = string.repeat(STRING_QUOTE, 2),
 
-export const AND = '&&'
-
-export const QUESTION = '?'
-
-export const NOT = '!'
-
-export const EMPTY = '""'
-
-export const RETURN = 'return '
+RETURN = 'return ',
 
 // 空格
-export const SPACE = ' '
+SPACE = ' ',
 
 // 缩进
-export const INDENT = '  '
+INDENT = '  ',
 
 // 换行
-export const BREAK_LINE = '\n'
+BREAK_LINE = '\n'
 
 export interface GBase {
   toString(tabSize?: number): string
 }
 
-export class GRaw implements GBase {
+class GRaw implements GBase {
 
   private value: string
 
@@ -54,24 +47,24 @@ export class GRaw implements GBase {
 
 }
 
-export const GRAW_UNDEFINED = new GRaw(UNDEFINED)
-export const GRAW_TRUE = new GRaw(TRUE)
+class GPrimitive implements GBase {
 
-export class GPrimitive implements GBase {
+  private value: string | number
 
-  private value: any
-
-  constructor(value: any) {
+  constructor(value: string | number) {
     this.value = value
   }
 
   toString() {
-    return toString(this.value)
+    const { value } = this
+    return is.string(value)
+      ? `${STRING_QUOTE}${value}${STRING_QUOTE}`
+      : `${value}`
   }
 
 }
 
-export class GArray implements GBase {
+class GArray implements GBase {
 
   private items: GBase[]
 
@@ -122,7 +115,7 @@ export class GArray implements GBase {
 
 }
 
-export class GObject implements GBase {
+class GObject implements GBase {
 
   private fields: Record<string, GBase> = {}
 
@@ -130,6 +123,10 @@ export class GObject implements GBase {
     if (value !== GRAW_UNDEFINED) {
       this.fields[name] = value
     }
+  }
+
+  has(key: string) {
+    return object.has(this.fields, key)
   }
 
   isNotEmpty() {
@@ -165,7 +162,7 @@ export class GObject implements GBase {
 
 }
 
-export class GCall implements GBase {
+class GCall implements GBase {
 
   private name: string
   private args: GBase[]
@@ -197,7 +194,7 @@ export class GCall implements GBase {
 
 }
 
-export class GUnary implements GBase {
+class GUnary implements GBase {
 
   private operator: string
   private value: GBase
@@ -213,7 +210,7 @@ export class GUnary implements GBase {
 
 }
 
-export class GBinary implements GBase {
+class GBinary implements GBase {
 
   private left: GBase
   private operator: string
@@ -241,7 +238,7 @@ export class GBinary implements GBase {
 
 }
 
-export class GTernary implements GBase {
+class GTernary implements GBase {
 
   private test: GBase
   private yes: GBase
@@ -254,12 +251,12 @@ export class GTernary implements GBase {
   }
 
   toString(tabSize?: number) {
-    return `${this.test.toString(tabSize)}${SPACE}${QUESTION}${SPACE}${this.yes.toString(tabSize)}${SPACE}${COLON}${SPACE}${this.no.toString(tabSize)}`
+    return `${this.test.toString(tabSize)}${SPACE}?${SPACE}${this.yes.toString(tabSize)}${SPACE}:${SPACE}${this.no.toString(tabSize)}`
   }
 
 }
 
-export class GAnonymousFunction implements GBase {
+class GAnonymousFunction implements GBase {
 
   private returnValue: GBase
   private args: GBase[]
@@ -286,6 +283,55 @@ export class GAnonymousFunction implements GBase {
     return `${constant.RAW_FUNCTION}${SPACE}(${result.join(`${COMMA}${SPACE}`)})${SPACE}{${BREAK_LINE}${nextIndentSize}${RETURN}${returnValue.toString(nextTabSize)}${BREAK_LINE}${currentIndentSize}}`
   }
 
+}
+
+const GRAW_UNDEFINED = new GRaw(UNDEFINED)
+const GRAW_NULL = new GRaw(NULL)
+const GRAW_TRUE = new GRaw(TRUE)
+const GRAW_FALSE = new GRaw(FALSE)
+
+export function toRaw(value: string) {
+  return new GRaw(value)
+}
+
+export function toPrimitive(value: any) {
+  return value === constant.TRUE
+    ? GRAW_TRUE
+    : value === constant.FALSE
+      ? GRAW_FALSE
+      : value === constant.NULL
+        ? GRAW_NULL
+        : value === constant.UNDEFINED
+          ? GRAW_UNDEFINED
+          : new GPrimitive(value)
+}
+
+export function toArray(values?: GBase[], join?: boolean) {
+  return new GArray(values, join)
+}
+
+export function toObject() {
+  return new GObject()
+}
+
+export function toCall(name: string, args?: GBase[]) {
+  return new GCall(name, args)
+}
+
+export function toUnary(operator: string, value: GBase) {
+  return new GUnary(operator, value)
+}
+
+export function toBinary(left: GBase, operator: string, right: GBase) {
+  return new GBinary(left, operator, right)
+}
+
+export function toTernary(test: GBase, yes: GBase, no: GBase) {
+  return new GTernary(test, yes, no)
+}
+
+export function toAnonymousFunction(returnValue: GBase, args?: GBase[]) {
+  return new GAnonymousFunction(returnValue, args)
 }
 
 /**
@@ -318,24 +364,9 @@ function trimArgs(list: (string | void)[]) {
 
 function toPair(key: string, value: string) {
   if (!/^[\w$]+$/.test(key)) {
-    key = `"${key}"`
+    key = `${STRING_QUOTE}${key}${STRING_QUOTE}`
   }
-  return `${key}${COLON}${SPACE}${value}`
-}
-
-/**
- * 输出为字符串格式
- */
-function toString(value: string | number | boolean | null | void): string {
-  return value === constant.TRUE
-    ? TRUE
-    : value === constant.FALSE
-      ? FALSE
-      : value === constant.NULL
-        ? NULL
-        : value === constant.UNDEFINED
-          ? UNDEFINED
-          : JSON.stringify(value)
+  return `${key}:${SPACE}${value}`
 }
 
 export function generate(code: GBase, args: string[]) {
