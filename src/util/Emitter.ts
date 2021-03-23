@@ -1,8 +1,4 @@
 import {
-  NativeListener,
-} from 'yox-type/src/type'
-
-import {
   EmitterEvent,
   EmitterFilter,
   EmitterOptions,
@@ -30,11 +26,6 @@ export default class Emitter {
    * 已注册的事件监听
    */
   listeners: Record<string, EmitterOptions[]>
-
-  /**
-   * 原生事件监听，一个事件对应一个 listener
-   */
-  nativeListeners?: Record<string, NativeListener>
 
   constructor(ns?: boolean) {
     this.ns = ns || constant.FALSE

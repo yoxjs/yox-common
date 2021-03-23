@@ -16,8 +16,6 @@ FALSE = '$3',
 
 COMMA = ',',
 
-EMPTY = string.repeat(STRING_QUOTE, 2),
-
 RETURN = 'return ',
 
 // 空格
@@ -28,6 +26,10 @@ INDENT = '  ',
 
 // 换行
 BREAK_LINE = '\n'
+
+export const EMPTY = string.repeat(STRING_QUOTE, 2)
+
+export const DOT = '.'
 
 export interface GBase {
   toString(tabSize?: number): string
@@ -68,9 +70,9 @@ class GArray implements GBase {
 
   private items: GBase[]
 
-  join: boolean | void
+  join: string | void
 
-  constructor(values?: GBase[], join?: boolean) {
+  constructor(values?: GBase[], join?: string) {
     this.items = values || []
     this.join = join
   }
@@ -106,7 +108,7 @@ class GArray implements GBase {
 
     let str = `[${BREAK_LINE}${nextIndentSize}${array.join(result, COMMA + BREAK_LINE + nextIndentSize)}${BREAK_LINE}${currentIndentSize}]`
     if (join) {
-      str += `.join(${EMPTY})`
+      str += `.join(${join})`
     }
 
     return str
@@ -306,7 +308,7 @@ export function toPrimitive(value: any) {
           : new GPrimitive(value)
 }
 
-export function toArray(values?: GBase[], join?: boolean) {
+export function toArray(values?: GBase[], join?: string) {
   return new GArray(values, join)
 }
 
