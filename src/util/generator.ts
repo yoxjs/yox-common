@@ -27,9 +27,9 @@ INDENT = '  ',
 // 换行
 BREAK_LINE = '\n'
 
-export const EMPTY = string.repeat(STRING_QUOTE, 2)
+export const JOIN_EMPTY = string.repeat(STRING_QUOTE, 2)
 
-export const DOT = '.'
+export const JOIN_DOT = `${STRING_QUOTE}.${STRING_QUOTE}`
 
 export interface GBase {
   toString(tabSize?: number): string
@@ -77,6 +77,13 @@ class GArray implements GBase {
     this.join = join
   }
 
+  unshift(value: GBase) {
+    array.unshift(
+      this.items,
+      value
+    )
+  }
+
   push(value: GBase) {
     array.push(
       this.items,
@@ -108,7 +115,12 @@ class GArray implements GBase {
 
     let str = `[${BREAK_LINE}${nextIndentSize}${array.join(result, COMMA + BREAK_LINE + nextIndentSize)}${BREAK_LINE}${currentIndentSize}]`
     if (join) {
-      str += `.join(${join})`
+      if (length > 1) {
+        str += `.join(${join})`
+      }
+      else {
+        str = result[0]
+      }
     }
 
     return str
