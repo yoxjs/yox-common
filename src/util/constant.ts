@@ -33,6 +33,7 @@ export const RAW_DOT = '.'
 export const RAW_SLASH = '/'
 export const RAW_DOLLAR = '$'
 
+export const KEYPATH_ROOT= '~'
 export const KEYPATH_PARENT = '..'
 export const KEYPATH_CURRENT = RAW_THIS
 
