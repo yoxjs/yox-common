@@ -1,35 +1,56 @@
+import {
+  PUBLIC_CONFIG,
+} from 'yox-config/src/config'
+
 import * as is from './is'
 import * as array from './array'
 import * as object from './object'
 import * as string from './string'
 import * as constant from './constant'
 
-const STRING_QUOTE = `'`,
 
-UNDEFINED = '$0',
+const QUOTE_DOUBLE = '"',
 
-NULL = '$1',
-
-TRUE = '$2',
-
-FALSE = '$3',
+QUOTE_SINGLE = "'",
 
 COMMA = ',',
 
-RETURN = 'return ',
+RETURN = 'return '
+
+export const JOIN_EMPTY = string.repeat(QUOTE_SINGLE, 2)
+
+export const JOIN_DOT = `${QUOTE_SINGLE}.${QUOTE_SINGLE}`
+
+
+// 下面这些值需要根据外部配置才能确定
+let isUglify = constant.UNDEFINED,
+
+isMinify = constant.UNDEFINED,
+
+UNDEFINED = constant.EMPTY_STRING,
+
+NULL = constant.EMPTY_STRING,
+
+TRUE = constant.EMPTY_STRING,
+
+FALSE = constant.EMPTY_STRING,
 
 // 空格
-SPACE = ' ',
+SPACE = constant.EMPTY_STRING,
 
 // 缩进
-INDENT = '  ',
+INDENT = constant.EMPTY_STRING,
 
 // 换行
-BREAK_LINE = '\n'
+BREAK_LINE = constant.EMPTY_STRING,
 
-export const JOIN_EMPTY = string.repeat(STRING_QUOTE, 2)
+GRAW_UNDEFINED: GRaw,
 
-export const JOIN_DOT = `${STRING_QUOTE}.${STRING_QUOTE}`
+GRAW_NULL: GRaw,
+
+GRAW_TRUE: GRaw,
+
+GRAW_FALSE: GRaw
 
 export interface GBase {
   toString(tabSize?: number): string
@@ -60,7 +81,7 @@ class GPrimitive implements GBase {
   toString() {
     const { value } = this
     return is.string(value)
-      ? `${STRING_QUOTE}${value}${STRING_QUOTE}`
+      ? toStringLiteral(value as string)
       : `${value}`
   }
 
@@ -194,15 +215,22 @@ class GCall implements GBase {
     currentIndentSize = string.repeat(INDENT, currentTabSize),
     nextIndentSize = string.repeat(INDENT, nextTabSize),
 
-    result = trimArgs(
+    argList = trimArgs(
       args.map(
         function (item) {
           return item.toString(nextTabSize)
         }
       )
+    ),
+
+    argCode = array.join(
+      argList,
+      COMMA + SPACE + BREAK_LINE + nextIndentSize
     )
 
-    return `${name}(${BREAK_LINE}${nextIndentSize}${array.join(result, COMMA + SPACE + BREAK_LINE + nextIndentSize)}${BREAK_LINE}${currentIndentSize})`
+    return argList.length > 0
+      ? `${name}(${BREAK_LINE}${nextIndentSize}${argCode}${BREAK_LINE}${currentIndentSize})`
+      : `${name}()`
 
   }
 
@@ -299,11 +327,6 @@ class GAnonymousFunction implements GBase {
 
 }
 
-const GRAW_UNDEFINED = new GRaw(UNDEFINED)
-const GRAW_NULL = new GRaw(NULL)
-const GRAW_TRUE = new GRaw(TRUE)
-const GRAW_FALSE = new GRaw(FALSE)
-
 export function toRaw(value: string) {
   return new GRaw(value)
 }
@@ -376,11 +399,62 @@ function trimArgs(list: (string | void)[]) {
 
 }
 
+function toStringLiteral(value: string) {
+  // 优先用单引号
+  const quote = string.has(value, QUOTE_SINGLE)
+    ? QUOTE_DOUBLE
+    : QUOTE_SINGLE
+  return `${quote}${value}${quote}`
+}
+
 function toPair(key: string, value: string) {
   if (!/^[\w$]+$/.test(key)) {
-    key = `${STRING_QUOTE}${key}${STRING_QUOTE}`
+    key = toStringLiteral(key)
   }
   return `${key}:${SPACE}${value}`
+}
+
+export function init() {
+
+  if (isUglify !== PUBLIC_CONFIG.uglifyCompiled) {
+
+    isUglify = PUBLIC_CONFIG.uglifyCompiled
+
+    if (isUglify) {
+      UNDEFINED = '$1'
+      NULL = '$2'
+      TRUE = '$3'
+      FALSE = '$4'
+    }
+    else {
+      UNDEFINED = '$undefined'
+      NULL = '$null'
+      TRUE = '$true'
+      FALSE = '$false'
+    }
+
+    GRAW_UNDEFINED = new GRaw(UNDEFINED)
+    GRAW_NULL = new GRaw(NULL)
+    GRAW_TRUE = new GRaw(TRUE)
+    GRAW_FALSE = new GRaw(FALSE)
+
+  }
+
+  if (isMinify !== PUBLIC_CONFIG.minifyCompiled) {
+
+    isMinify = PUBLIC_CONFIG.minifyCompiled
+
+    if (isMinify) {
+      SPACE = INDENT = BREAK_LINE = constant.EMPTY_STRING
+    }
+    else {
+      SPACE = ' '
+      INDENT = '  '
+      BREAK_LINE = '\n'
+    }
+
+  }
+
 }
 
 export function generate(code: GBase, args: string[]) {

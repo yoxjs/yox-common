@@ -23,7 +23,7 @@ export const match = cache.createTwoKeyCache(
     prefix += constant.RAW_DOT
     return string.startsWith(keypath, prefix)
       ? prefix.length
-      : constant.MINUS_ONE
+      : -1
   }
 )
 

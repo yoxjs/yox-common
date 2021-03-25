@@ -11,7 +11,7 @@ export default class CustomEvent implements CustomEventInterface {
 
   public static PHASE_UPWARD = 1
 
-  public static PHASE_DOWNWARD = constant.MINUS_ONE
+  public static PHASE_DOWNWARD = -1
 
   public static is(event: any): boolean {
     return event instanceof CustomEvent

@@ -5,7 +5,6 @@ export const TRUE = true
 export const FALSE = false
 export const NULL = null
 export const UNDEFINED = void 0
-export const MINUS_ONE = -1
 
 export const RAW_TRUE = 'true'
 export const RAW_FALSE = 'false'
@@ -24,8 +23,6 @@ export const RAW_DIRECTIVE = 'directive'
 export const RAW_TRANSITION = 'transition'
 
 export const RAW_THIS = 'this'
-export const RAW_VALUE = 'value'
-export const RAW_LENGTH = 'length'
 export const RAW_FUNCTION = 'function'
 export const RAW_TEMPLATE = 'template'
 export const RAW_WILDCARD = '*'

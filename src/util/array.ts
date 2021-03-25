@@ -92,7 +92,7 @@ export function unshift<T>(array: T[], target: T | T[]): void {
  * @return 如果未找到，返回 -1
  */
 export function indexOf<T>(array: T[], target: T, strict?: boolean): number {
-  let result = constant.MINUS_ONE
+  let result = -1
   each(
     array,
     function (item: any, index: number) {
