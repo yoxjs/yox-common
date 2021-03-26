@@ -44,19 +44,19 @@ INDENT = constant.EMPTY_STRING,
 // 换行
 BREAK_LINE = constant.EMPTY_STRING,
 
-GRAW_UNDEFINED: GRaw,
+GRAW_UNDEFINED: Raw,
 
-GRAW_NULL: GRaw,
+GRAW_NULL: Raw,
 
-GRAW_TRUE: GRaw,
+GRAW_TRUE: Raw,
 
-GRAW_FALSE: GRaw
+GRAW_FALSE: Raw
 
-export interface GBase {
+export interface Base {
   toString(tabSize?: number): string
 }
 
-class GRaw implements GBase {
+class Raw implements Base {
 
   private value: string
 
@@ -70,7 +70,7 @@ class GRaw implements GBase {
 
 }
 
-class GPrimitive implements GBase {
+class Primitive implements Base {
 
   private value: string | number
 
@@ -87,25 +87,25 @@ class GPrimitive implements GBase {
 
 }
 
-class GArray implements GBase {
+class List implements Base {
 
-  private items: GBase[]
+  private items: Base[]
 
   join: string | void
 
-  constructor(values?: GBase[], join?: string) {
+  constructor(values?: Base[], join?: string) {
     this.items = values || []
     this.join = join
   }
 
-  unshift(value: GBase) {
+  unshift(value: Base) {
     array.unshift(
       this.items,
       value
     )
   }
 
-  push(value: GBase) {
+  push(value: Base) {
     array.push(
       this.items,
       value
@@ -150,11 +150,11 @@ class GArray implements GBase {
 
 }
 
-class GObject implements GBase {
+class Map implements Base {
 
-  private fields: Record<string, GBase> = {}
+  private fields: Record<string, Base> = {}
 
-  set(name: string, value: GBase) {
+  set(name: string, value: Base) {
     if (value !== GRAW_UNDEFINED) {
       this.fields[name] = value
     }
@@ -197,12 +197,12 @@ class GObject implements GBase {
 
 }
 
-class GCall implements GBase {
+class Call implements Base {
 
   private name: string
-  private args: GBase[]
+  private args: Base[]
 
-  constructor(name: string, args?: GBase[]) {
+  constructor(name: string, args?: Base[]) {
     this.name = name
     this.args = args || []
   }
@@ -236,12 +236,12 @@ class GCall implements GBase {
 
 }
 
-class GUnary implements GBase {
+class Unary implements Base {
 
   private operator: string
-  private value: GBase
+  private value: Base
 
-  constructor(operator: string, value: GBase) {
+  constructor(operator: string, value: Base) {
     this.operator = operator
     this.value = value
   }
@@ -252,16 +252,16 @@ class GUnary implements GBase {
 
 }
 
-class GBinary implements GBase {
+class Binary implements Base {
 
-  private left: GBase
+  private left: Base
   private operator: string
-  private right: GBase
+  private right: Base
 
   leftGroup: boolean | void
   rightGroup: boolean | void
 
-  constructor(left: GBase, operator: string, right: GBase) {
+  constructor(left: Base, operator: string, right: Base) {
     this.left = left
     this.operator = operator
     this.right = right
@@ -280,13 +280,13 @@ class GBinary implements GBase {
 
 }
 
-class GTernary implements GBase {
+class Ternary implements Base {
 
-  private test: GBase
-  private yes: GBase
-  private no: GBase
+  private test: Base
+  private yes: Base
+  private no: Base
 
-  constructor(test: GBase, yes: GBase, no: GBase) {
+  constructor(test: Base, yes: Base, no: Base) {
     this.test = test
     this.yes = yes
     this.no = no
@@ -298,12 +298,12 @@ class GTernary implements GBase {
 
 }
 
-class GAnonymousFunction implements GBase {
+class AnonymousFunction implements Base {
 
-  private returnValue: GBase
-  private args: GBase[]
+  private returnValue: Base
+  private args: Base[]
 
-  constructor(returnValue: GBase, args?: GBase[]) {
+  constructor(returnValue: Base, args?: Base[]) {
     this.returnValue = returnValue
     this.args = args || []
   }
@@ -328,7 +328,7 @@ class GAnonymousFunction implements GBase {
 }
 
 export function toRaw(value: string) {
-  return new GRaw(value)
+  return new Raw(value)
 }
 
 export function toPrimitive(value: any) {
@@ -340,35 +340,35 @@ export function toPrimitive(value: any) {
         ? GRAW_NULL
         : value === constant.UNDEFINED
           ? GRAW_UNDEFINED
-          : new GPrimitive(value)
+          : new Primitive(value)
 }
 
-export function toArray(values?: GBase[], join?: string) {
-  return new GArray(values, join)
+export function toList(values?: Base[], join?: string) {
+  return new List(values, join)
 }
 
-export function toObject() {
-  return new GObject()
+export function toMap() {
+  return new Map()
 }
 
-export function toCall(name: string, args?: GBase[]) {
-  return new GCall(name, args)
+export function toCall(name: string, args?: Base[]) {
+  return new Call(name, args)
 }
 
-export function toUnary(operator: string, value: GBase) {
-  return new GUnary(operator, value)
+export function toUnary(operator: string, value: Base) {
+  return new Unary(operator, value)
 }
 
-export function toBinary(left: GBase, operator: string, right: GBase) {
-  return new GBinary(left, operator, right)
+export function toBinary(left: Base, operator: string, right: Base) {
+  return new Binary(left, operator, right)
 }
 
-export function toTernary(test: GBase, yes: GBase, no: GBase) {
-  return new GTernary(test, yes, no)
+export function toTernary(test: Base, yes: Base, no: Base) {
+  return new Ternary(test, yes, no)
 }
 
-export function toAnonymousFunction(returnValue: GBase, args?: GBase[]) {
-  return new GAnonymousFunction(returnValue, args)
+export function toAnonymousFunction(returnValue: Base, args?: Base[]) {
+  return new AnonymousFunction(returnValue, args)
 }
 
 /**
@@ -433,10 +433,10 @@ export function init() {
       FALSE = '$false'
     }
 
-    GRAW_UNDEFINED = new GRaw(UNDEFINED)
-    GRAW_NULL = new GRaw(NULL)
-    GRAW_TRUE = new GRaw(TRUE)
-    GRAW_FALSE = new GRaw(FALSE)
+    GRAW_UNDEFINED = new Raw(UNDEFINED)
+    GRAW_NULL = new Raw(NULL)
+    GRAW_TRUE = new Raw(TRUE)
+    GRAW_FALSE = new Raw(FALSE)
 
   }
 
@@ -457,7 +457,7 @@ export function init() {
 
 }
 
-export function generate(code: GBase, args: string[]) {
+export function generate(code: Base, args: string[]) {
 
   const currentTabSize = 0,
   nextTabSize = currentTabSize + 1,

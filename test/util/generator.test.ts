@@ -65,11 +65,11 @@ test('toObject', () => {
 
 })
 
-test('toArray', () => {
+test('toList', () => {
 
-  expect(generator.toArray(['value1', 'value2'])).toBe('[value1,value2]')
+  expect(generator.toList(['value1', 'value2'])).toBe('[value1,value2]')
 
-  expect(generator.toArray([])).toBe('[]')
+  expect(generator.toList([])).toBe('[]')
 
 })
 
