@@ -400,7 +400,8 @@ function toStringLiteral(value: string) {
   const quote = string.has(value, QUOTE_SINGLE)
     ? QUOTE_DOUBLE
     : QUOTE_SINGLE
-  return `${quote}${value}${quote}`
+  // 换行符会导致字符串语法错误
+  return `${quote}${value.replace(/\n\s*/g, '\\n')}${quote}`
 }
 
 function toPair(key: string, value: string) {
