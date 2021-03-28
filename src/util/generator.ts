@@ -1,7 +1,3 @@
-import {
-  PUBLIC_CONFIG,
-} from 'yox-config/src/config'
-
 import * as is from './is'
 import * as array from './array'
 import * as object from './object'
@@ -416,9 +412,9 @@ function toPair(key: string, value: string) {
 
 export function init() {
 
-  if (isUglify !== PUBLIC_CONFIG.uglifyCompiled) {
+  if (isUglify !== constant.PUBLIC_CONFIG.uglifyCompiled) {
 
-    isUglify = PUBLIC_CONFIG.uglifyCompiled
+    isUglify = constant.PUBLIC_CONFIG.uglifyCompiled
 
     if (isUglify) {
       UNDEFINED = '$1'
@@ -440,9 +436,9 @@ export function init() {
 
   }
 
-  if (isMinify !== PUBLIC_CONFIG.minifyCompiled) {
+  if (isMinify !== constant.PUBLIC_CONFIG.minifyCompiled) {
 
-    isMinify = PUBLIC_CONFIG.minifyCompiled
+    isMinify = constant.PUBLIC_CONFIG.minifyCompiled
 
     if (isMinify) {
       SPACE = INDENT = BREAK_LINE = constant.EMPTY_STRING

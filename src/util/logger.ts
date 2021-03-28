@@ -1,22 +1,18 @@
 import * as constant from './constant'
-import toString from '../function/toString'
 
-export const DEBUG = 1
-export const INFO = 2
-export const WARN = 3
-export const ERROR = 4
-export const FATAL = 5
+/**
+ * 外部可用这些常量
+ */
+export const DEBUG = constant.LOG_LEVEL_DEBUG
+export const INFO = constant.LOG_LEVEL_INFO
+export const WARN = constant.LOG_LEVEL_WARN
+export const ERROR = constant.LOG_LEVEL_ERROR
+export const FATAL = constant.LOG_LEVEL_FATAL
 
 /**
  * 是否有原生的日志特性，没有必要单独实现
  */
 const nativeConsole: Console | null = typeof console !== constant.RAW_UNDEFINED ? console : constant.NULL,
-
-/**
- * 当前是否是源码调试，如果开启了代码压缩，empty function 里的注释会被干掉
- * 源码模式默认选 INFO，因为 DEBUG 输出的日志太多，会导致性能急剧下降
- */
-defaultLogLevel = /yox/.test(toString(constant.EMPTY_FUNCTION)) ? INFO : WARN,
 
 /**
  * console 样式前缀
@@ -43,13 +39,11 @@ printLog = nativeConsole
  * 全局调试开关
  */
 function getLogLevel() {
-  if (constant.GLOBAL) {
-    const logLevel = constant.GLOBAL['YOX_LOG_LEVEL']
-    if (logLevel >= DEBUG && logLevel <= FATAL) {
-      return logLevel as number
-    }
+  const { logLevel } = constant.PUBLIC_CONFIG
+  if (logLevel >= DEBUG && logLevel <= FATAL) {
+    return logLevel as number
   }
-  return defaultLogLevel
+  return constant.LOG_LEVEL_DEFAULT
 }
 
 function getStyle(backgroundColor: string) {

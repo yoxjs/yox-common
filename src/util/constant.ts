@@ -102,3 +102,29 @@ export const EMPTY_ARRAY = Object.freeze([])
  * 空字符串
  */
 export const EMPTY_STRING = ''
+
+/**
+ * 日志等级
+ */
+export const LOG_LEVEL_DEBUG = 1
+export const LOG_LEVEL_INFO = 2
+export const LOG_LEVEL_WARN = 3
+export const LOG_LEVEL_ERROR = 4
+export const LOG_LEVEL_FATAL = 5
+
+/**
+ * 当前是否是源码调试，如果开启了代码压缩，empty function 里的注释会被干掉
+ * 源码模式默认选 INFO，因为 DEBUG 输出的日志太多，会导致性能急剧下降
+ */
+export const LOG_LEVEL_DEFAULT = /yox/.test(EMPTY_FUNCTION.toString()) ? LOG_LEVEL_INFO : LOG_LEVEL_WARN
+
+/**
+ * 外部可配置的对象
+ */
+export const PUBLIC_CONFIG: Record<string, any> = {
+  leftDelimiter: '{',
+  rightDelimiter: '}',
+  uglifyCompiled: FALSE,
+  minifyCompiled: FALSE,
+  logLevel: LOG_LEVEL_DEFAULT,
+}
