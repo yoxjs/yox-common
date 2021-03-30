@@ -15,6 +15,9 @@ let createPureObject = function (): PureObject {
     set(key: string, value: any) {
       obj[key] = value
     },
+    has(key: string) {
+      return key in obj
+    },
     keys(): string[] {
       return Object.keys(obj)
     }
@@ -34,6 +37,9 @@ if (process.env.NODE_LEGACY) {
         },
         set(key: string, value: any) {
           obj[key] = value
+        },
+        has(key: string) {
+          return obj.hasOwnProperty(key)
         },
         keys(): string[] {
           return Object.keys(obj)
