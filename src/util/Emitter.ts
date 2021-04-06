@@ -47,7 +47,7 @@ export default class Emitter {
       args: any[] | void,
       options: EmitterOptions
     ) => boolean | void
-  ): boolean {
+  ) {
 
     let instance = this,
 
@@ -146,7 +146,7 @@ export default class Emitter {
   on(
     type: string,
     listener: Function | EmitterOptions
-  ): void {
+  ) {
 
     const instance = this,
 
@@ -182,7 +182,7 @@ export default class Emitter {
   off(
     type?: string,
     listener?: Function | EmitterFilter
-  ): void {
+  ) {
 
     const instance = this,
 
@@ -249,7 +249,7 @@ export default class Emitter {
   has(
     type: string,
     listener?: Function | EmitterFilter
-  ): boolean {
+  ) {
 
     let instance = this,
 
@@ -348,7 +348,7 @@ export default class Emitter {
  * @param listener
  * @param options
  */
-function matchListener(listener: Function | void, options: EmitterOptions): boolean {
+function matchListener(listener: Function | void, options: EmitterOptions) {
   return listener
     ? listener === options.listener
     : constant.TRUE
@@ -364,7 +364,7 @@ function matchListener(listener: Function | void, options: EmitterOptions): bool
  * @param namespace
  * @param options
  */
-function matchNamespace(namespace: string | void, options: EmitterOptions): boolean {
+function matchNamespace(namespace: string | void, options: EmitterOptions) {
   const { ns } = options
   return ns && namespace
     ? ns === namespace

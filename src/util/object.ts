@@ -120,14 +120,16 @@ export function copy(object: any, deep?: boolean): any {
  */
 export function get(object: any, keypath: string | string[]): ValueHolder | undefined {
 
+  let result = object
+
   keypathUtil.each(
     keypath,
     function (key, index, lastIndex) {
 
-      if (object != constant.NULL) {
+      if (result != constant.NULL) {
 
         // 先直接取值
-        let value = object[key],
+        let value = result[key],
 
         // 紧接着判断值是否存在
         // 下面会处理计算属性的值，不能在它后面设置 hasValue
@@ -141,25 +143,25 @@ export function get(object: any, keypath: string | string[]): ValueHolder | unde
         if (index === lastIndex) {
           if (hasValue) {
             holder.value = value
-            object = holder
+            result = holder
           }
           else {
-            object = constant.UNDEFINED
+            result = constant.UNDEFINED
           }
         }
         else {
-          object = value
+          result = value
         }
       }
       else {
-        object = constant.UNDEFINED
+        result = constant.UNDEFINED
         return constant.FALSE
       }
 
     }
   )
 
-  return object
+  return result
 
 }
 
@@ -172,17 +174,18 @@ export function get(object: any, keypath: string | string[]): ValueHolder | unde
  * @param autofill 是否自动填充不存在的对象，默认自动填充
  */
 export function set(object: Data, keypath: string, value: any, autofill?: boolean): void {
+  let next = object
   keypathUtil.each(
     keypath,
     function (key, index, lastIndex) {
       if (index === lastIndex) {
-        object[key] = value
+        next[key] = value
       }
-      else if (object[key]) {
-        object = object[key]
+      else if (next[key]) {
+        next = next[key]
       }
       else if (autofill) {
-        object = object[key] = {}
+        next = next[key] = { }
       }
       else {
         return constant.FALSE
