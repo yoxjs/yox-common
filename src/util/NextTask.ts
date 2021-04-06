@@ -3,14 +3,16 @@ import {
 } from 'yox-type/src/type'
 
 import * as array from './array'
+import * as constant from './constant'
+
 import execute from '../function/execute'
 import nextTick from '../function/nextTick'
 
 let shared: NextTask | void
 
 type NextTaskHooks = {
-  beforeRun?: Function,
-  afterRun?: Function,
+  beforeTask?: Function,
+  afterTask?: Function,
 }
 
 export default class NextTask {
@@ -27,14 +29,14 @@ export default class NextTask {
    */
   private tasks: Task[]
 
-  private hooks: NextTaskHooks | void
+  private hooks: NextTaskHooks
 
   constructor(hooks?: NextTaskHooks) {
 
     const instance = this
 
     instance.tasks = [ ]
-    instance.hooks = hooks
+    instance.hooks = hooks || constant.EMPTY_OBJECT
 
   }
 
@@ -94,8 +96,8 @@ export default class NextTask {
     const instance = this, { tasks, hooks } = instance, { length } = tasks
     if (length) {
       instance.tasks = [ ]
-      if (hooks && hooks.beforeRun) {
-        hooks.beforeRun()
+      if (hooks.beforeTask) {
+        hooks.beforeTask()
       }
       for (let i = 0; i < length; i++) {
         execute(
@@ -103,8 +105,8 @@ export default class NextTask {
           tasks[i].ctx
         )
       }
-      if (hooks && hooks.afterRun) {
-        hooks.afterRun()
+      if (hooks.afterTask) {
+        hooks.afterTask()
       }
     }
   }
