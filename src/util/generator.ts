@@ -13,10 +13,6 @@ COMMA = ',',
 
 RETURN = 'return '
 
-export const JOIN_EMPTY = string.repeat(QUOTE_SINGLE, 2)
-
-export const JOIN_DOT = `${QUOTE_SINGLE}.${QUOTE_SINGLE}`
-
 
 // 下面这些值需要根据外部配置才能确定
 let isUglify = constant.UNDEFINED,
@@ -38,21 +34,13 @@ SPACE = constant.EMPTY_STRING,
 INDENT = constant.EMPTY_STRING,
 
 // 换行
-BREAK_LINE = constant.EMPTY_STRING,
-
-GRAW_UNDEFINED: Raw,
-
-GRAW_NULL: Raw,
-
-GRAW_TRUE: Raw,
-
-GRAW_FALSE: Raw
+BREAK_LINE = constant.EMPTY_STRING
 
 export interface Base {
   toString(tabSize?: number): string
 }
 
-class Raw implements Base {
+export class Raw implements Base {
 
   private value: string
 
@@ -66,9 +54,9 @@ class Raw implements Base {
 
 }
 
-class Primitive implements Base {
+export class Primitive implements Base {
 
-  private value: string | number
+  value: string | number | boolean | null | undefined
 
   constructor(value: string | number) {
     this.value = value
@@ -76,22 +64,27 @@ class Primitive implements Base {
 
   toString() {
     const { value } = this
-    return is.string(value)
-      ? toStringLiteral(value as string)
-      : `${value}`
+    return value === constant.TRUE
+      ? TRUE
+      : value === constant.FALSE
+        ? FALSE
+        : value === constant.NULL
+          ? NULL
+          : value === constant.UNDEFINED
+            ? UNDEFINED
+            : is.string(value)
+              ? toStringLiteral(value as string)
+              : `${value}`
   }
 
 }
 
-class List implements Base {
+export class List implements Base {
 
   private items: Base[]
 
-  join: string | void
-
-  constructor(values?: Base[], join?: string) {
-    this.items = values || []
-    this.join = join
+  constructor(items?: Base[]) {
+    this.items = items || []
   }
 
   unshift(value: Base) {
@@ -110,7 +103,7 @@ class List implements Base {
 
   toString(tabSize?: number) {
 
-    const { items, join } = this, { length } = items
+    const { items } = this, { length } = items
 
     if (!length) {
       return `[${SPACE}]`
@@ -130,30 +123,23 @@ class List implements Base {
       }
     )
 
-    let str = `[${BREAK_LINE}${nextIndentSize}${array.join(result, COMMA + BREAK_LINE + nextIndentSize)}${BREAK_LINE}${currentIndentSize}]`
-    if (join) {
-      if (length > 1) {
-        str += `.join(${join})`
-      }
-      else {
-        str = result[0]
-      }
-    }
-
-    return str
+    return `[${BREAK_LINE}${nextIndentSize}${array.join(result, COMMA + BREAK_LINE + nextIndentSize)}${BREAK_LINE}${currentIndentSize}]`
 
   }
 
 }
 
-class Map implements Base {
+export class Map implements Base {
 
   private fields: Record<string, Base> = {}
 
   set(name: string, value: Base) {
-    if (value !== GRAW_UNDEFINED) {
-      this.fields[name] = value
+    if (value instanceof Primitive
+      && (value as Primitive).value === constant.UNDEFINED
+    ) {
+      return
     }
+    this.fields[name] = value
   }
 
   has(key: string) {
@@ -193,7 +179,7 @@ class Map implements Base {
 
 }
 
-class Call implements Base {
+export class Call implements Base {
 
   private name: string
   private args: Base[]
@@ -232,7 +218,7 @@ class Call implements Base {
 
 }
 
-class Unary implements Base {
+export class Unary implements Base {
 
   private operator: string
   private value: Base
@@ -248,7 +234,7 @@ class Unary implements Base {
 
 }
 
-class Binary implements Base {
+export class Binary implements Base {
 
   private left: Base
   private operator: string
@@ -276,7 +262,7 @@ class Binary implements Base {
 
 }
 
-class Ternary implements Base {
+export class Ternary implements Base {
 
   private test: Base
   private yes: Base
@@ -294,7 +280,7 @@ class Ternary implements Base {
 
 }
 
-class AnonymousFunction implements Base {
+export class AnonymousFunction implements Base {
 
   private returnValue: Base
   private args: Base[]
@@ -323,24 +309,33 @@ class AnonymousFunction implements Base {
 
 }
 
+export class Operator implements Base {
+
+  private base: Base
+  private code: Base
+
+  constructor(base: Base, code: Base) {
+    this.base = base
+    this.code = code
+  }
+
+  toString(tabSize?: number) {
+    const { base, code } = this
+    return `${base.toString(tabSize)}.${code.toString(tabSize)}`
+  }
+
+}
+
 export function toRaw(value: string) {
   return new Raw(value)
 }
 
 export function toPrimitive(value: any) {
-  return value === constant.TRUE
-    ? GRAW_TRUE
-    : value === constant.FALSE
-      ? GRAW_FALSE
-      : value === constant.NULL
-        ? GRAW_NULL
-        : value === constant.UNDEFINED
-          ? GRAW_UNDEFINED
-          : new Primitive(value)
+  return new Primitive(value)
 }
 
-export function toList(values?: Base[], join?: string) {
-  return new List(values, join)
+export function toList(items?: Base[]) {
+  return new List(items)
 }
 
 export function toMap() {
@@ -365,6 +360,10 @@ export function toTernary(test: Base, yes: Base, no: Base) {
 
 export function toAnonymousFunction(returnValue: Base, args?: Base[]) {
   return new AnonymousFunction(returnValue, args)
+}
+
+export function toOperator(base: Base, code: Base) {
+  return new Operator(base, code)
 }
 
 /**
@@ -430,11 +429,6 @@ export function init() {
       FALSE = '$false'
     }
 
-    GRAW_UNDEFINED = new Raw(UNDEFINED)
-    GRAW_NULL = new Raw(NULL)
-    GRAW_TRUE = new Raw(TRUE)
-    GRAW_FALSE = new Raw(FALSE)
-
   }
 
   if (isMinify !== constant.PUBLIC_CONFIG.minifyCompiled) {
@@ -454,15 +448,50 @@ export function init() {
 
 }
 
-export function generate(code: Base, args: string[]) {
+export function parse(keypath: string) {
+  return keypath.split(constant.RAW_DOT)
+  .filter(
+    function (item) {
+      return item.length > 0
+    }
+  )
+  .map(
+    toPrimitive
+  )
+}
+
+export function generate(code: Base, vars: Record<string, Base>, args: string[]) {
 
   const currentTabSize = 0,
   nextTabSize = currentTabSize + 1,
   currentIndentSize = string.repeat(INDENT, currentTabSize),
-  nextIndentSize = string.repeat(INDENT, nextTabSize)
+  nextIndentSize = string.repeat(INDENT, nextTabSize),
+  localVarMap: Record<string, Base> = { },
+  localVarList: string[] = [ ],
+  addLocalVar = function (value: Base, key: string) {
+    array.push(
+      localVarList,
+      `${key}${SPACE}=${SPACE}${value.toString(nextTabSize)}`
+    )
+  }
+
+  localVarMap[UNDEFINED] = toRaw('void 0')
+  localVarMap[NULL] = toRaw('null')
+  localVarMap[TRUE] = toRaw('!0')
+  localVarMap[FALSE] = toRaw('!1')
+
+  object.each(
+    localVarMap,
+    addLocalVar
+  )
+
+  object.each(
+    vars,
+    addLocalVar
+  )
 
   return `${currentIndentSize}${constant.RAW_FUNCTION}${SPACE}(${args.join(`${COMMA}${SPACE}`)})${SPACE}{`
-       + `${BREAK_LINE}${nextIndentSize}var ${UNDEFINED}${SPACE}=${SPACE}void 0,${SPACE}${NULL}${SPACE}=${SPACE}null,${SPACE}${TRUE}${SPACE}=${SPACE}!0,${SPACE}${FALSE}${SPACE}=${SPACE}!1;`
+       + `${BREAK_LINE}${nextIndentSize}var ${localVarList.join(`,${SPACE}`)};`
        + `${BREAK_LINE}${nextIndentSize}${RETURN}${code.toString(nextTabSize)}`
        + `${BREAK_LINE}${currentIndentSize}}`
 }
