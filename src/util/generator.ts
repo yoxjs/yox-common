@@ -131,7 +131,19 @@ export class List implements Base {
 
 export class Map implements Base {
 
-  private fields: Record<string, Base> = {}
+  private fields: Record<string, Base> = { }
+
+  constructor(fields?: Record<string, Base>) {
+    if (fields) {
+      const instance = this
+      object.each(
+        fields,
+        function (value, key) {
+          instance.set(key, value)
+        }
+      )
+    }
+  }
 
   set(name: string, value: Base) {
     if (value instanceof Primitive
@@ -338,8 +350,8 @@ export function toList(items?: Base[]) {
   return new List(items)
 }
 
-export function toMap() {
-  return new Map()
+export function toMap(fields?: Record<string, Base>) {
+  return new Map(fields)
 }
 
 export function toCall(name: string, args?: Base[]) {
