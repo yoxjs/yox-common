@@ -145,14 +145,6 @@ export class Tuple implements Base {
 
 }
 
-export class List extends Tuple {
-
-  constructor(items?: Base[]) {
-    super('[', ']', COMMA, constant.TRUE, items)
-  }
-
-}
-
 export class Map implements Base {
 
   private fields: Record<string, Base> = { }
@@ -381,7 +373,7 @@ export function toTuple(left: string, right: string, separator: string, breakLin
 }
 
 export function toList(items?: Base[]) {
-  return new List(items)
+  return new Tuple('[', ']', COMMA, constant.TRUE, items)
 }
 
 export function toMap(fields?: Record<string, Base>) {
