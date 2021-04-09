@@ -79,11 +79,15 @@ export class Primitive implements Base {
 
 }
 
-export class List implements Base {
+export class Tuple implements Base {
 
+  private left: string
+  private right: string
   private items: Base[]
 
-  constructor(items?: Base[]) {
+  constructor(left: string, right: string, items?: Base[]) {
+    this.left = left
+    this.right = right
     this.items = items || []
   }
 
@@ -103,10 +107,10 @@ export class List implements Base {
 
   toString(tabSize?: number) {
 
-    const { items } = this, { length } = items
+    const { left, right, items } = this, { length } = items
 
     if (!length) {
-      return `[${SPACE}]`
+      return `${left}${right}`
     }
 
     if (!tabSize) {
@@ -123,8 +127,16 @@ export class List implements Base {
       }
     )
 
-    return `[${BREAK_LINE}${nextIndentSize}${array.join(result, COMMA + BREAK_LINE + nextIndentSize)}${BREAK_LINE}${currentIndentSize}]`
+    return `${left}${BREAK_LINE}${nextIndentSize}${array.join(result, COMMA + BREAK_LINE + nextIndentSize)}${BREAK_LINE}${currentIndentSize}${right}`
 
+  }
+
+}
+
+export class List extends Tuple {
+
+  constructor(items?: Base[]) {
+    super('[', ']', items)
   }
 
 }
@@ -182,7 +194,7 @@ export class Map implements Base {
     )
 
     if (!result.length) {
-      return `{${SPACE}}`
+      return '{}'
     }
 
     return `{${BREAK_LINE}${nextIndentSize}${array.join(result, COMMA + BREAK_LINE + nextIndentSize)}${BREAK_LINE}${currentIndentSize}}`
@@ -294,29 +306,49 @@ export class Ternary implements Base {
 
 export class AnonymousFunction implements Base {
 
-  private returnValue: Base
-  private args: Base[]
+  private args: Base[] | void
+  private body: Base | void
+  private returnValue: Base | void
 
-  constructor(returnValue: Base, args?: Base[]) {
+  constructor(args: Base[] | void, body: Base | void, returnValue: Base | void) {
+    this.args = args
+    this.body = body
     this.returnValue = returnValue
-    this.args = args || []
   }
 
   toString(tabSize?: number) {
 
-    const { returnValue, args } = this,
+    const { args, body, returnValue } = this,
     currentTabSize = tabSize || 0,
     nextTabSize = currentTabSize + 1,
     currentIndentSize = string.repeat(INDENT, currentTabSize),
     nextIndentSize = string.repeat(INDENT, nextTabSize),
 
-    result = args.map(
-      function (item) {
-        return item.toString(currentTabSize)
-      }
-    )
+    argList = args
+      ? args.map(
+          function (item) {
+            return item.toString(currentTabSize)
+          }
+        )
+      : constant.EMPTY_ARRAY,
 
-    return `${constant.RAW_FUNCTION}${SPACE}(${result.join(`${COMMA}${SPACE}`)})${SPACE}{${BREAK_LINE}${nextIndentSize}${RETURN}${returnValue.toString(nextTabSize)}${BREAK_LINE}${currentIndentSize}}`
+    code: string[] = [ ]
+
+    if (body) {
+      array.push(
+        code,
+        body.toString(nextTabSize)
+      )
+    }
+    if (returnValue) {
+      array.push(
+        code,
+        `${RETURN}${returnValue.toString(nextTabSize)}`
+      )
+    }
+
+
+    return `${constant.RAW_FUNCTION}${SPACE}(${argList.join(`${COMMA}${SPACE}`)})${SPACE}{${BREAK_LINE}${nextIndentSize}${code.join(BREAK_LINE)}${BREAK_LINE}${currentIndentSize}}`
   }
 
 }
@@ -338,12 +370,33 @@ export class Operator implements Base {
 
 }
 
+export class Push implements Base {
+
+  private array: string
+  private item: Base
+
+  constructor(array: string, item: Base) {
+    this.array = array
+    this.item = item
+  }
+
+  toString(tabSize?: number) {
+    const { array, item } = this
+    return `${array}[${SPACE}${array}.length${SPACE}]${SPACE}=${SPACE}${item.toString(tabSize)}`
+  }
+
+}
+
 export function toRaw(value: string) {
   return new Raw(value)
 }
 
 export function toPrimitive(value: any) {
   return new Primitive(value)
+}
+
+export function toTuple(left: string, right: string, items?: Base[]) {
+  return new Tuple(left, right, items)
 }
 
 export function toList(items?: Base[]) {
@@ -370,12 +423,16 @@ export function toTernary(test: Base, yes: Base, no: Base) {
   return new Ternary(test, yes, no)
 }
 
-export function toAnonymousFunction(returnValue: Base, args?: Base[]) {
-  return new AnonymousFunction(returnValue, args)
+export function toAnonymousFunction(args: Base[] | void, body: Base | void, returnValue: Base | void) {
+  return new AnonymousFunction(args, body, returnValue)
 }
 
 export function toOperator(base: Base, code: Base) {
   return new Operator(base, code)
+}
+
+export function toPush(array: string, item: Base) {
+  return new Push(array, item)
 }
 
 /**
@@ -472,7 +529,7 @@ export function parse(keypath: string) {
   )
 }
 
-export function generate(code: Base, vars: Record<string, Base>, args: string[]) {
+export function generate(args: Base[], vars: Record<string, Base>, code: Base) {
 
   const currentTabSize = 0,
   nextTabSize = currentTabSize + 1,
@@ -504,6 +561,6 @@ export function generate(code: Base, vars: Record<string, Base>, args: string[])
 
   return `${currentIndentSize}${constant.RAW_FUNCTION}${SPACE}(${args.join(`${COMMA}${SPACE}`)})${SPACE}{`
        + `${BREAK_LINE}${nextIndentSize}var ${localVarList.join(`,${SPACE}`)};`
-       + `${BREAK_LINE}${nextIndentSize}${RETURN}${code.toString(nextTabSize)}`
+       + `${BREAK_LINE}${nextIndentSize}${code.toString(nextTabSize)}`
        + `${BREAK_LINE}${currentIndentSize}}`
 }
