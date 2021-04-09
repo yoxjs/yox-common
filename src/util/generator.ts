@@ -27,13 +27,10 @@ TRUE = constant.EMPTY_STRING,
 
 FALSE = constant.EMPTY_STRING,
 
-// 空格
 SPACE = constant.EMPTY_STRING,
 
-// 缩进
 INDENT = constant.EMPTY_STRING,
 
-// 换行
 BREAK_LINE = constant.EMPTY_STRING
 
 export interface Base {

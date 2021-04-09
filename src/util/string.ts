@@ -1,5 +1,6 @@
 import * as is from './is'
 import * as cache from './cache'
+import * as array from './array'
 import * as constant from './constant'
 
 const camelizePattern = /-([a-z])/gi,
@@ -65,7 +66,10 @@ export const capitalize = cache.createOneKeyCache(
  * @return
  */
 export function repeat(str: any, count: number): string {
-  return new Array(count + 1).join(str)
+  return array.join(
+    new Array(count + 1),
+    str
+  )
 }
 
 /**
