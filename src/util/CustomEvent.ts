@@ -38,9 +38,6 @@ export default class CustomEvent implements CustomEventInterface {
   // 是否已停止事件冒泡
   isStoped?: true
 
-  // 处理当前事件的监听器，方便外部获取 listener 进行解绑
-  listener?: Function
-
   /**
    * 构造函数
    *

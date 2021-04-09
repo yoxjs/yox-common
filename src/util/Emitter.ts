@@ -84,21 +84,7 @@ export default class Emitter {
           continue
         }
 
-        // 为 customEvent 对象加上当前正在处理的 listener
-        // 这样方便业务层移除事件绑定
-        // 比如 on('xx', function) 这样定义了匿名 listener
-        // 在这个 listener 里面获取不到当前 listener 的引用
-        // 为了能引用到，有时候会先定义 var listener = function
-        // 然后再 on('xx', listener) 这样其实是没有必要的
-        if (customEvent) {
-          customEvent.listener = options.listener
-        }
-
         let result = execute(options.listener, options.ctx, args)
-
-        if (customEvent) {
-          customEvent.listener = constant.UNDEFINED
-        }
 
         // 执行次数
         options.num = options.num ? (options.num + 1) : 1
