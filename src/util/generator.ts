@@ -83,11 +83,15 @@ export class Tuple implements Base {
 
   private left: string
   private right: string
+  private separator: string
+  private breakLine: boolean
   private items: Base[]
 
-  constructor(left: string, right: string, items?: Base[]) {
+  constructor(left: string, right: string, separator: string, breakLine: boolean, items?: Base[]) {
     this.left = left
     this.right = right
+    this.separator = separator
+    this.breakLine = breakLine
     this.items = items || []
   }
 
@@ -107,27 +111,38 @@ export class Tuple implements Base {
 
   toString(tabSize?: number) {
 
-    const { left, right, items } = this, { length } = items
+    let { left, right, separator, breakLine, items } = this, { length } = items
 
     if (!length) {
       return `${left}${right}`
     }
 
-    if (!tabSize) {
-      tabSize = 0
-    }
-
-    const currentIndentSize = string.repeat(INDENT, tabSize),
-
-    nextIndentSize = string.repeat(INDENT, tabSize + 1),
+    const currentTabSize = tabSize || 0,
+    nextTabSize = left ? currentTabSize + 1 : currentTabSize,
+    currentIndentSize = string.repeat(INDENT, currentTabSize),
+    nextIndentSize = string.repeat(INDENT, nextTabSize),
 
     result = items.map(
       function (item) {
-        return item.toString(tabSize as number + 1)
+        return item.toString(nextTabSize)
       }
     )
 
-    return `${left}${BREAK_LINE}${nextIndentSize}${array.join(result, COMMA + BREAK_LINE + nextIndentSize)}${BREAK_LINE}${currentIndentSize}${right}`
+    if (left && breakLine) {
+      left += BREAK_LINE + nextIndentSize
+    }
+    if (right && breakLine) {
+      right = BREAK_LINE + currentIndentSize + right
+    }
+
+    return `${left}${
+      array.join(
+        result,
+        breakLine
+          ? separator + BREAK_LINE + nextIndentSize
+          : separator + SPACE
+      )
+    }${right}`
 
   }
 
@@ -136,7 +151,7 @@ export class Tuple implements Base {
 export class List extends Tuple {
 
   constructor(items?: Base[]) {
-    super('[', ']', items)
+    super('[', ']', COMMA, constant.TRUE, items)
   }
 
 }
@@ -166,38 +181,29 @@ export class Map implements Base {
     this.fields[name] = value
   }
 
-  has(key: string) {
-    return object.has(this.fields, key)
-  }
-
   isNotEmpty() {
     return object.keys(this.fields).length > 0
   }
 
   toString(tabSize?: number) {
 
-    const { fields } = this,
-    currentTabSize = tabSize || 0,
-    nextTabSize = currentTabSize + 1,
-    currentIndentSize = string.repeat(INDENT, currentTabSize),
-    nextIndentSize = string.repeat(INDENT, nextTabSize),
-    result: string[] = []
+    const items: Base[] = [ ]
 
     object.each(
-      fields,
+      this.fields,
       function (value, key) {
         array.push(
-          result,
-          toPair(key, value.toString(nextTabSize))
+          items,
+          {
+            toString(tabSize) {
+              return toObjectPair(key, value.toString(tabSize))
+            }
+          }
         )
       }
     )
 
-    if (!result.length) {
-      return '{}'
-    }
-
-    return `{${BREAK_LINE}${nextIndentSize}${array.join(result, COMMA + BREAK_LINE + nextIndentSize)}${BREAK_LINE}${currentIndentSize}}`
+    return toTuple('{', '}', COMMA, constant.TRUE, items).toString(tabSize)
 
   }
 
@@ -206,37 +212,22 @@ export class Map implements Base {
 export class Call implements Base {
 
   private name: string
-  private args: Base[]
+  private args?: Base[]
 
   constructor(name: string, args?: Base[]) {
     this.name = name
-    this.args = args || []
+    this.args = args
   }
 
   toString(tabSize?: number) {
 
     const { name, args } = this,
-    currentTabSize = tabSize || 0,
-    nextTabSize = currentTabSize + 1,
-    currentIndentSize = string.repeat(INDENT, currentTabSize),
-    nextIndentSize = string.repeat(INDENT, nextTabSize),
 
-    argList = trimArgs(
-      args.map(
-        function (item) {
-          return item.toString(nextTabSize)
-        }
-      )
-    ),
+    tuple = args
+      ? toTuple('(', ')', COMMA, constant.TRUE, trimArgs(args)).toString(tabSize)
+      : '()'
 
-    argCode = array.join(
-      argList,
-      COMMA + SPACE + BREAK_LINE + nextIndentSize
-    )
-
-    return argList.length > 0
-      ? `${name}(${BREAK_LINE}${nextIndentSize}${argCode}${BREAK_LINE}${currentIndentSize})`
-      : `${name}()`
+    return `${name}${tuple}`
 
   }
 
@@ -324,13 +315,7 @@ export class AnonymousFunction implements Base {
     currentIndentSize = string.repeat(INDENT, currentTabSize),
     nextIndentSize = string.repeat(INDENT, nextTabSize),
 
-    argList = args
-      ? args.map(
-          function (item) {
-            return item.toString(currentTabSize)
-          }
-        )
-      : constant.EMPTY_ARRAY,
+    tuple = args ? toTuple(constant.EMPTY_STRING, constant.EMPTY_STRING, COMMA, constant.FALSE, args).toString(currentTabSize) : constant.EMPTY_STRING,
 
     code: string[] = [ ]
 
@@ -347,8 +332,7 @@ export class AnonymousFunction implements Base {
       )
     }
 
-
-    return `${constant.RAW_FUNCTION}${SPACE}(${argList.join(`${COMMA}${SPACE}`)})${SPACE}{${BREAK_LINE}${nextIndentSize}${code.join(BREAK_LINE)}${BREAK_LINE}${currentIndentSize}}`
+    return `${constant.RAW_FUNCTION}${SPACE}(${tuple})${SPACE}{${BREAK_LINE}${nextIndentSize}${array.join(code, BREAK_LINE + nextIndentSize)}${BREAK_LINE}${currentIndentSize}}`
   }
 
 }
@@ -395,8 +379,8 @@ export function toPrimitive(value: any) {
   return new Primitive(value)
 }
 
-export function toTuple(left: string, right: string, items?: Base[]) {
-  return new Tuple(left, right, items)
+export function toTuple(left: string, right: string, separator: string, breakLine: boolean, items?: Base[]) {
+  return new Tuple(left, right, separator, breakLine, items)
 }
 
 export function toList(items?: Base[]) {
@@ -441,20 +425,26 @@ export function toPush(array: string, item: Base) {
  * [a, undefined, undefined] => [a]
  * [a, undefined, b, undefined] => [a, undefined, b]
  */
-function trimArgs(list: (string | void)[]) {
+function trimArgs(list: Base[]) {
 
-  let args: string[] = [], removable = constant.TRUE
+  let args: Base[] = [ ], removable = constant.TRUE
 
   array.each(
     list,
     function (arg) {
-      if (arg !== UNDEFINED) {
+
+      const isDef = arg instanceof Primitive
+        ? arg.value !== constant.UNDEFINED
+        : constant.TRUE
+
+      if (isDef) {
         removable = constant.FALSE
-        array.unshift(args, arg as string)
+        array.unshift(args, arg)
       }
       else if (!removable) {
-        array.unshift(args, UNDEFINED)
+        array.unshift(args, toPrimitive(constant.UNDEFINED))
       }
+
     },
     constant.TRUE
   )
@@ -472,11 +462,15 @@ function toStringLiteral(value: string) {
   return `${quote}${value.replace(/\n\s*/g, '\\n')}${quote}`
 }
 
-function toPair(key: string, value: string) {
+function toObjectPair(key: string, value: string) {
   if (!/^[\w$]+$/.test(key)) {
     key = toStringLiteral(key)
   }
   return `${key}:${SPACE}${value}`
+}
+
+function toVarPair(key: string, value: string) {
+  return `${key}${SPACE}=${SPACE}${value}`
 }
 
 export function init() {
@@ -531,16 +525,18 @@ export function parse(keypath: string) {
 
 export function generate(args: Base[], vars: Record<string, Base>, code: Base) {
 
-  const currentTabSize = 0,
-  nextTabSize = currentTabSize + 1,
-  currentIndentSize = string.repeat(INDENT, currentTabSize),
-  nextIndentSize = string.repeat(INDENT, nextTabSize),
-  localVarMap: Record<string, Base> = { },
-  localVarList: string[] = [ ],
+  const localVarMap: Record<string, Base> = { },
+
+  localVarList: Base[] = [ ],
+
   addLocalVar = function (value: Base, key: string) {
     array.push(
       localVarList,
-      `${key}${SPACE}=${SPACE}${value.toString(nextTabSize)}`
+      {
+        toString(tabSize) {
+          return toVarPair(key, value.toString(tabSize))
+        }
+      }
     )
   }
 
@@ -559,8 +555,22 @@ export function generate(args: Base[], vars: Record<string, Base>, code: Base) {
     addLocalVar
   )
 
-  return `${currentIndentSize}${constant.RAW_FUNCTION}${SPACE}(${args.join(`${COMMA}${SPACE}`)})${SPACE}{`
-       + `${BREAK_LINE}${nextIndentSize}var ${localVarList.join(`,${SPACE}`)};`
-       + `${BREAK_LINE}${nextIndentSize}${code.toString(nextTabSize)}`
-       + `${BREAK_LINE}${currentIndentSize}}`
+  return toAnonymousFunction(
+    args,
+    toTuple(
+      constant.EMPTY_STRING,
+      constant.EMPTY_STRING,
+      ';',
+      constant.TRUE,
+      [
+        {
+          toString(tabSize) {
+            return `var ${toTuple(constant.EMPTY_STRING, constant.EMPTY_STRING, COMMA, constant.FALSE, localVarList).toString(tabSize)}`
+          }
+        },
+        code
+      ]
+    )
+  ).toString()
+
 }
