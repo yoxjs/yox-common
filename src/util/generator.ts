@@ -11,7 +11,9 @@ QUOTE_SINGLE = "'",
 
 COMMA = ',',
 
-RETURN = 'return '
+OPAREN = '(',
+
+CPAREN = ')'
 
 
 // 下面这些值需要根据外部配置才能确定
@@ -213,8 +215,8 @@ export class Call implements Base {
     const { name, args } = this,
 
     tuple = args
-      ? toTuple('(', ')', COMMA, constant.TRUE, trimArgs(args)).toString(tabSize)
-      : '()'
+      ? toTuple(OPAREN, CPAREN, COMMA, constant.TRUE, trimArgs(args)).toString(tabSize)
+      : `${OPAREN}${CPAREN}`
 
     return `${name}${tuple}`
 
@@ -256,10 +258,10 @@ export class Binary implements Base {
   toString(tabSize?: number) {
     let left = this.left.toString(tabSize), right = this.right.toString(tabSize)
     if (this.leftGroup) {
-      left = `(${left})`
+      left = `${OPAREN}${left}${CPAREN}`
     }
     if (this.rightGroup) {
-      right = `(${right})`
+      right = `${OPAREN}${right}${CPAREN}`
     }
     return `${left}${SPACE}${this.operator}${SPACE}${right}`
   }
@@ -317,7 +319,7 @@ export class AnonymousFunction implements Base {
     if (returnValue) {
       array.push(
         code,
-        `${RETURN}${returnValue.toString(nextTabSize)}`
+        `return ${returnValue.toString(nextTabSize)}`
       )
     }
 
@@ -339,6 +341,23 @@ export class Operator implements Base {
   toString(tabSize?: number) {
     const { base, code } = this
     return `${base.toString(tabSize)}.${code.toString(tabSize)}`
+  }
+
+}
+
+export class Assign implements Base {
+
+  private name: Base
+  private value: Base
+
+  constructor(name: Base, value: Base) {
+    this.name = name
+    this.value = value
+  }
+
+  toString(tabSize?: number) {
+    const { name, value } = this
+    return `${name.toString(tabSize)} = ${value.toString(tabSize)}`
   }
 
 }
@@ -402,6 +421,10 @@ export function toAnonymousFunction(args: Base[] | void, body: Base | void, retu
 
 export function toOperator(base: Base, code: Base) {
   return new Operator(base, code)
+}
+
+export function toAssign(name: Base, value: Base) {
+  return new Assign(name, value)
 }
 
 export function toPush(array: string, item: Base) {
