@@ -4,6 +4,8 @@ import * as object from './object'
 import * as string from './string'
 import * as constant from './constant'
 
+import toNumber from '../function/toNumber'
+
 
 const QUOTE_DOUBLE = '"',
 
@@ -328,6 +330,38 @@ export class AnonymousFunction implements Base {
 
 }
 
+export class Member implements Base {
+
+  private base: Base
+  private props: Base[]
+
+  constructor(base: Base, props: Base[]) {
+    this.base = base
+    this.props = props
+  }
+
+  toString(tabSize?: number) {
+    const { base, props } = this
+
+    let result = base.toString(tabSize)
+
+    array.each(
+      props,
+      function (prop) {
+        if (prop instanceof Primitive && is.string(prop.value)) {
+          result += '.' + prop.value
+        }
+        else {
+          result += `[${prop.toString(tabSize)}]`
+        }
+      }
+    )
+
+    return result
+  }
+
+}
+
 export class Operator implements Base {
 
   private base: Base
@@ -417,6 +451,10 @@ export function toTernary(test: Base, yes: Base, no: Base) {
 
 export function toAnonymousFunction(args: Base[] | void, body: Base | void, returnValue: Base | void) {
   return new AnonymousFunction(args, body, returnValue)
+}
+
+export function toMember(base: Base, props: Base[]) {
+  return new Member(base, props)
 }
 
 export function toOperator(base: Base, code: Base) {
@@ -531,7 +569,13 @@ export function parse(keypath: string) {
     }
   )
   .map(
-    toPrimitive
+    function (item) {
+      return toPrimitive(
+        is.numeric(item)
+          ? toNumber(item)
+          : item
+      )
+    }
   )
 }
 

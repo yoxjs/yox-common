@@ -118,7 +118,7 @@ export function copy(object: any, deep?: boolean): any {
  * @param keypath
  * @return
  */
-export function get(object: any, keypath: string | string[]): ValueHolder | undefined {
+export function get(object: any, keypath: string): ValueHolder | undefined {
 
   let result = object
 

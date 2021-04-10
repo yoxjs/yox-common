@@ -42,8 +42,8 @@ const getKeypathTokens = cache.createOneKeyCache(
  * @param keypath
  * @param callback 返回 false 可中断遍历
  */
-export function each(keypath: string | string[], callback: (key: string, index: number, lastIndex: number) => boolean | void) {
-  const tokens: string[] = is.string(keypath) ? getKeypathTokens(keypath as string) : keypath as string[]
+export function each(keypath: string, callback: (key: string, index: number, lastIndex: number) => boolean | void) {
+  const tokens: string[] = getKeypathTokens(keypath as string)
   for (let i = 0, lastIndex = tokens.length - 1; i <= lastIndex; i++) {
     if (callback(tokens[i], i, lastIndex) === constant.FALSE) {
       break
