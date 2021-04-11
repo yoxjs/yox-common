@@ -4,18 +4,10 @@ import * as object from './object'
 import * as string from './string'
 import * as constant from './constant'
 
-import toNumber from '../function/toNumber'
-
 
 const QUOTE_DOUBLE = '"',
 
-QUOTE_SINGLE = "'",
-
-COMMA = ',',
-
-OPAREN = '(',
-
-CPAREN = ')'
+QUOTE_SINGLE = "'"
 
 
 // 下面这些值需要根据外部配置才能确定
@@ -196,7 +188,7 @@ export class Map implements Base {
       }
     )
 
-    return toTuple('{', '}', COMMA, constant.TRUE, items).toString(tabSize)
+    return toTuple('{', '}', ',', constant.TRUE, items).toString(tabSize)
 
   }
 
@@ -216,11 +208,16 @@ export class Call implements Base {
 
     const { name, args } = this,
 
-    tuple = args
-      ? toTuple(OPAREN, CPAREN, COMMA, constant.TRUE, trimArgs(args)).toString(tabSize)
-      : `${OPAREN}${CPAREN}`
+    newArgs = args ? trimArgs(args) : [ ]
 
-    return `${name}${tuple}`
+    switch (newArgs.length) {
+      case 0:
+        return `${name}()`
+      case 1:
+        return `${name}(${toTuple(constant.EMPTY_STRING, constant.EMPTY_STRING, ',', constant.FALSE, newArgs).toString(tabSize)})`
+      default:
+        return `${name}${toTuple('(', ')', ',', constant.TRUE, newArgs).toString(tabSize)}`
+    }
 
   }
 
@@ -260,10 +257,10 @@ export class Binary implements Base {
   toString(tabSize?: number) {
     let left = this.left.toString(tabSize), right = this.right.toString(tabSize)
     if (this.leftGroup) {
-      left = `${OPAREN}${left}${CPAREN}`
+      left = `(${left})`
     }
     if (this.rightGroup) {
-      right = `${OPAREN}${right}${CPAREN}`
+      right = `(${right})`
     }
     return `${left}${SPACE}${this.operator}${SPACE}${right}`
   }
@@ -308,7 +305,7 @@ export class AnonymousFunction implements Base {
     currentIndentSize = string.repeat(INDENT, currentTabSize),
     nextIndentSize = string.repeat(INDENT, nextTabSize),
 
-    tuple = args ? toTuple(constant.EMPTY_STRING, constant.EMPTY_STRING, COMMA, constant.FALSE, args).toString(currentTabSize) : constant.EMPTY_STRING,
+    tuple = args ? toTuple(constant.EMPTY_STRING, constant.EMPTY_STRING, ',', constant.FALSE, args).toString(currentTabSize) : constant.EMPTY_STRING,
 
     code: string[] = [ ]
 
@@ -348,8 +345,13 @@ export class Member implements Base {
     array.each(
       props,
       function (prop) {
-        if (prop instanceof Primitive && is.string(prop.value)) {
-          result += '.' + prop.value
+        if (prop instanceof Primitive) {
+          if (is.numeric(prop.value)) {
+            result += `[${prop.value}]`
+          }
+          else {
+            result += '.' + prop.value
+          }
         }
         else {
           result += `[${prop.toString(tabSize)}]`
@@ -425,8 +427,20 @@ export function toTuple(left: string, right: string, separator: string, breakLin
   return new Tuple(left, right, separator, breakLine, items)
 }
 
-export function toList(items?: Base[]) {
-  return new Tuple('[', ']', COMMA, constant.TRUE, items)
+export function toList(items?: Base[], join?: string) {
+  let result: Base = new Tuple('[', ']', ',', constant.TRUE, items)
+  if (is.string(join)) {
+    result = toOperator(
+      result,
+      toCall(
+        'join',
+        [
+          toPrimitive(join)
+        ]
+      )
+    )
+  }
+  return result
 }
 
 export function toMap(fields?: Record<string, Base>) {
@@ -569,13 +583,7 @@ export function parse(keypath: string) {
     }
   )
   .map(
-    function (item) {
-      return toPrimitive(
-        is.numeric(item)
-          ? toNumber(item)
-          : item
-      )
-    }
+    toPrimitive
   )
 }
 
@@ -621,7 +629,7 @@ export function generate(args: Base[], vars: Record<string, Base>, code: Base) {
       [
         {
           toString(tabSize) {
-            return `var ${toTuple(constant.EMPTY_STRING, constant.EMPTY_STRING, COMMA, constant.FALSE, localVarList).toString(tabSize)}`
+            return `var ${toTuple(constant.EMPTY_STRING, constant.EMPTY_STRING, ',', constant.FALSE, localVarList).toString(tabSize)}`
           }
         },
         code
