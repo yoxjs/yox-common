@@ -1,4 +1,3 @@
-import * as is from './is'
 import * as cache from './cache'
 import * as string from './string'
 import * as constant from './constant'
