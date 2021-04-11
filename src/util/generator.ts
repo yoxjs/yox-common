@@ -210,14 +210,9 @@ export class Call implements Base {
 
     newArgs = args ? trimArgs(args) : [ ]
 
-    switch (newArgs.length) {
-      case 0:
-        return `${name}()`
-      case 1:
-        return `${name}(${toTuple(constant.EMPTY_STRING, constant.EMPTY_STRING, ',', constant.FALSE, newArgs).toString(tabSize)})`
-      default:
-        return `${name}${toTuple('(', ')', ',', constant.TRUE, newArgs).toString(tabSize)}`
-    }
+    return newArgs.length
+      ? `${name}${toTuple('(', ')', ',', constant.TRUE, newArgs).toString(tabSize)}`
+      : `${name}()`
 
   }
 
