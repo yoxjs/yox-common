@@ -550,7 +550,10 @@ export function addVar(value: Base, cache?: true) {
 
   const key = VAR_PREFIX + (varId++)
   varMap[key] = value
-  varCache[hash] = key
+
+  if (cache) {
+    varCache[hash] = key
+  }
 
   return key
 
