@@ -168,20 +168,16 @@ export class Map implements Base {
 
   toString(tabSize?: number) {
 
-    const { fields } = this, items: Base[] = [ ], keys = object.keys(fields)
+    const { fields } = this,
 
     // 按字典排序显得比较有规律
-    array.each(
-      keys.sort(),
+    items: Base[] = object.keys(fields).sort().map(
       function (key) {
-        array.push(
-          items,
-          {
-            toString(tabSize) {
-              return toObjectPair(key, fields[key].toString(tabSize))
-            }
+        return {
+          toString(tabSize) {
+            return toObjectPair(key, fields[key].toString(tabSize))
           }
-        )
+        }
       }
     )
 
