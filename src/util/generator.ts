@@ -41,20 +41,6 @@ export interface Base {
   toString(tabSize?: number): string
 }
 
-export class Raw implements Base {
-
-  private value: string
-
-  constructor(value: string) {
-    this.value = value
-  }
-
-  toString() {
-    return this.value
-  }
-
-}
-
 export class Primitive implements Base {
 
   value: string | number | boolean | null | undefined
@@ -418,10 +404,6 @@ export class Push implements Base {
 
 }
 
-export function toRaw(value: string) {
-  return new Raw(value)
-}
-
 export function toPrimitive(value: any) {
   return new Primitive(value)
 }
@@ -540,25 +522,6 @@ function toVarPair(key: string, value: string) {
   return `${key}${SPACE}=${SPACE}${value}`
 }
 
-export function addVar(value: Base, cache?: true) {
-
-  const hash = value.toString()
-
-  if (cache && varCache[hash]) {
-    return varCache[hash]
-  }
-
-  const key = VAR_PREFIX + (varId++)
-  varMap[key] = value
-
-  if (cache) {
-    varCache[hash] = key
-  }
-
-  return key
-
-}
-
 export function init() {
 
   if (isUglify !== constant.PUBLIC_CONFIG.uglifyCompiled) {
@@ -588,10 +551,29 @@ export function init() {
   varMap = { }
   varCache = { }
 
-  UNDEFINED = addVar(toRaw('void 0'))
-  NULL = addVar(toRaw('null'))
-  TRUE = addVar(toRaw('!0'))
-  FALSE = addVar(toRaw('!1'))
+  UNDEFINED = addVar('void 0')
+  NULL = addVar('null')
+  TRUE = addVar('!0')
+  FALSE = addVar('!1')
+
+}
+
+export function addVar(value: Base, cache?: true) {
+
+  const hash = value.toString()
+
+  if (cache && varCache[hash]) {
+    return varCache[hash]
+  }
+
+  const key = VAR_PREFIX + (varId++)
+  varMap[key] = value
+
+  if (cache) {
+    varCache[hash] = key
+  }
+
+  return key
 
 }
 
