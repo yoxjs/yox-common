@@ -614,22 +614,16 @@ export function generate(args: Base[], vars: Record<string, Base>, code: Base) {
     addLocalVar
   )
 
-  return toAnonymousFunction(
-    args,
-    toTuple(
-      constant.EMPTY_STRING,
-      constant.EMPTY_STRING,
-      ';',
-      constant.TRUE,
-      [
-        {
-          toString(tabSize) {
-            return `var ${toTuple(constant.EMPTY_STRING, constant.EMPTY_STRING, ',', constant.FALSE, localVarList).toString(tabSize)}`
-          }
-        },
-        code
-      ]
+  const result = toAnonymousFunction(
+    constant.UNDEFINED,
+    toTuple('var ', ';', ',', constant.FALSE, localVarList),
+    toAnonymousFunction(
+      args,
+      code
     )
   ).toString()
+
+  // 自执行函数
+  return `(${result})()`
 
 }
