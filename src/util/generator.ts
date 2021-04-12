@@ -15,6 +15,14 @@ let isUglify = constant.UNDEFINED,
 
 isMinify = constant.UNDEFINED,
 
+varId = 0,
+
+varMap: Record<string, Base> = { },
+
+varCache: Record<string, string> = { },
+
+VAR_PREFIX = constant.EMPTY_STRING,
+
 UNDEFINED = constant.EMPTY_STRING,
 
 NULL = constant.EMPTY_STRING,
@@ -532,24 +540,29 @@ function toVarPair(key: string, value: string) {
   return `${key}${SPACE}=${SPACE}${value}`
 }
 
+export function addVar(value: Base, cache?: true) {
+
+  const hash = value.toString()
+
+  if (cache && varCache[hash]) {
+    return varCache[hash]
+  }
+
+  const key = VAR_PREFIX + (varId++)
+  varMap[key] = value
+  varCache[hash] = key
+
+  return key
+
+}
+
 export function init() {
 
   if (isUglify !== constant.PUBLIC_CONFIG.uglifyCompiled) {
 
     isUglify = constant.PUBLIC_CONFIG.uglifyCompiled
 
-    if (isUglify) {
-      UNDEFINED = '$1'
-      NULL = '$2'
-      TRUE = '$3'
-      FALSE = '$4'
-    }
-    else {
-      UNDEFINED = '$undefined'
-      NULL = '$null'
-      TRUE = '$true'
-      FALSE = '$false'
-    }
+    VAR_PREFIX = isUglify ? '$' : 'var'
 
   }
 
@@ -568,6 +581,15 @@ export function init() {
 
   }
 
+  varId = 0
+  varMap = { }
+  varCache = { }
+
+  UNDEFINED = addVar(toRaw('void 0'))
+  NULL = addVar(toRaw('null'))
+  TRUE = addVar(toRaw('!0'))
+  FALSE = addVar(toRaw('!1'))
+
 }
 
 export function parse(keypath: string) {
@@ -582,41 +604,27 @@ export function parse(keypath: string) {
   )
 }
 
-export function generate(args: Base[], vars: Record<string, Base>, code: Base) {
+export function generate(args: Base[], code: Base) {
 
-  const localVarMap: Record<string, Base> = { },
+  const varList: Base[] = [ ]
 
-  localVarList: Base[] = [ ],
-
-  addLocalVar = function (value: Base, key: string) {
-    array.push(
-      localVarList,
-      {
-        toString(tabSize) {
-          return toVarPair(key, value.toString(tabSize))
+  object.each(
+    varMap,
+    function (value: Base, key: string) {
+      array.push(
+        varList,
+        {
+          toString(tabSize) {
+            return toVarPair(key, value.toString(tabSize))
+          }
         }
-      }
-    )
-  }
-
-  localVarMap[UNDEFINED] = toRaw('void 0')
-  localVarMap[NULL] = toRaw('null')
-  localVarMap[TRUE] = toRaw('!0')
-  localVarMap[FALSE] = toRaw('!1')
-
-  object.each(
-    localVarMap,
-    addLocalVar
-  )
-
-  object.each(
-    vars,
-    addLocalVar
+      )
+    }
   )
 
   const result = toAnonymousFunction(
     constant.UNDEFINED,
-    toTuple('var ', ';', ',', constant.FALSE, localVarList),
+    toTuple('var ', ';', ',', constant.FALSE, varList),
     toAnonymousFunction(
       args,
       code
