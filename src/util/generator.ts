@@ -168,16 +168,17 @@ export class Map implements Base {
 
   toString(tabSize?: number) {
 
-    const items: Base[] = [ ]
+    const { fields } = this, items: Base[] = [ ], keys = object.keys(fields)
 
-    object.each(
-      this.fields,
-      function (value, key) {
+    // 按字典排序显得比较有规律
+    array.each(
+      keys.sort(),
+      function (key) {
         array.push(
           items,
           {
             toString(tabSize) {
-              return toObjectPair(key, value.toString(tabSize))
+              return toObjectPair(key, fields[key].toString(tabSize))
             }
           }
         )
@@ -566,7 +567,7 @@ export function parse(keypath: string) {
   )
 }
 
-export function generate(args: Base[], code: Base) {
+export function generate(args1: Base[], args2: Base[], code: Base) {
 
   const varList: Base[] = [ ]
 
@@ -584,16 +585,10 @@ export function generate(args: Base[], code: Base) {
     }
   )
 
-  // 自执行函数
-  return `(${
-    toAnonymousFunction(
-      constant.UNDEFINED,
-      toTuple('var ', ';', ',', constant.FALSE, 0, varList),
-      toAnonymousFunction(
-        args,
-        code
-      )
-    ).toString()
-  })()`
+  return toAnonymousFunction(
+    args1,
+    toTuple('var ', ';', ',', constant.FALSE, 0, varList),
+    toAnonymousFunction(args2, code)
+  ).toString()
 
 }
