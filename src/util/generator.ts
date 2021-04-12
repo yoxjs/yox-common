@@ -72,13 +72,15 @@ export class Tuple implements Base {
   private right: string
   private separator: string
   private breakLine: boolean
+  private offset: number
   private items: Base[]
 
-  constructor(left: string, right: string, separator: string, breakLine: boolean, items?: Base[]) {
+  constructor(left: string, right: string, separator: string, breakLine: boolean, offset: number, items?: Base[]) {
     this.left = left
     this.right = right
     this.separator = separator
     this.breakLine = breakLine
+    this.offset = offset
     this.items = items || []
   }
 
@@ -98,14 +100,14 @@ export class Tuple implements Base {
 
   toString(tabSize?: number) {
 
-    let { left, right, separator, breakLine, items } = this, { length } = items
+    let { left, right, separator, breakLine, offset, items } = this, { length } = items
 
     if (!length) {
       return `${left}${right}`
     }
 
     const currentTabSize = tabSize || 0,
-    nextTabSize = left ? currentTabSize + 1 : currentTabSize,
+    nextTabSize = currentTabSize + offset,
     currentIndentSize = string.repeat(INDENT, currentTabSize),
     nextIndentSize = string.repeat(INDENT, nextTabSize),
 
@@ -182,7 +184,7 @@ export class Map implements Base {
       }
     )
 
-    return toTuple('{', '}', ',', constant.TRUE, items).toString(tabSize)
+    return toTuple('{', '}', ',', constant.TRUE, 1, items).toString(tabSize)
 
   }
 
@@ -205,7 +207,7 @@ export class Call implements Base {
     newArgs = args ? trimArgs(args) : [ ]
 
     return newArgs.length
-      ? `${name}${toTuple('(', ')', ',', constant.TRUE, newArgs).toString(tabSize)}`
+      ? `${name}${toTuple('(', ')', ',', constant.TRUE, 1, newArgs).toString(tabSize)}`
       : `${name}()`
 
   }
@@ -294,7 +296,7 @@ export class AnonymousFunction implements Base {
     currentIndentSize = string.repeat(INDENT, currentTabSize),
     nextIndentSize = string.repeat(INDENT, nextTabSize),
 
-    tuple = args ? toTuple(constant.EMPTY_STRING, constant.EMPTY_STRING, ',', constant.FALSE, args).toString(currentTabSize) : constant.EMPTY_STRING,
+    tuple = args ? toTuple(constant.EMPTY_STRING, constant.EMPTY_STRING, ',', constant.FALSE, 1, args).toString(currentTabSize) : constant.EMPTY_STRING,
 
     code: string[] = [ ]
 
@@ -353,23 +355,6 @@ export class Member implements Base {
 
 }
 
-export class Operator implements Base {
-
-  private base: Base
-  private code: Base
-
-  constructor(base: Base, code: Base) {
-    this.base = base
-    this.code = code
-  }
-
-  toString(tabSize?: number) {
-    const { base, code } = this
-    return `${base.toString(tabSize)}.${code.toString(tabSize)}`
-  }
-
-}
-
 export class Assign implements Base {
 
   private name: Base
@@ -382,7 +367,7 @@ export class Assign implements Base {
 
   toString(tabSize?: number) {
     const { name, value } = this
-    return `${name.toString(tabSize)} = ${value.toString(tabSize)}`
+    return `${name.toString(tabSize)}${SPACE}=${SPACE}${value.toString(tabSize)}`
   }
 
 }
@@ -399,7 +384,7 @@ export class Push implements Base {
 
   toString(tabSize?: number) {
     const { array, item } = this
-    return `${array}[${SPACE}${array}.length${SPACE}]${SPACE}=${SPACE}${item.toString(tabSize)}`
+    return toAssign(`${array}[${SPACE}${array}.length${SPACE}]`, item).toString(tabSize)
   }
 
 }
@@ -408,22 +393,18 @@ export function toPrimitive(value: any) {
   return new Primitive(value)
 }
 
-export function toTuple(left: string, right: string, separator: string, breakLine: boolean, items?: Base[]) {
-  return new Tuple(left, right, separator, breakLine, items)
+export function toTuple(left: string, right: string, separator: string, breakLine: boolean, offset: number, items?: Base[]) {
+  return new Tuple(left, right, separator, breakLine, offset, items)
 }
 
 export function toList(items?: Base[], join?: string) {
-  let result: Base = new Tuple('[', ']', ',', constant.TRUE, items)
+  let result: Base = toTuple('[', ']', ',', constant.TRUE, 1, items)
   if (is.string(join)) {
-    result = toOperator(
-      result,
-      toCall(
-        'join',
-        [
-          toPrimitive(join)
-        ]
-      )
-    )
+    return {
+      toString(tabSize?: number) {
+        return `${result.toString(tabSize)}.join(${toPrimitive(join).toString()})`
+      }
+    }
   }
   return result
 }
@@ -454,10 +435,6 @@ export function toAnonymousFunction(args: Base[] | void, body: Base | void, retu
 
 export function toMember(base: Base, props: Base[]) {
   return new Member(base, props)
-}
-
-export function toOperator(base: Base, code: Base) {
-  return new Operator(base, code)
 }
 
 export function toAssign(name: Base, value: Base) {
@@ -607,16 +584,16 @@ export function generate(args: Base[], code: Base) {
     }
   )
 
-  const result = toAnonymousFunction(
-    constant.UNDEFINED,
-    toTuple('var ', ';', ',', constant.FALSE, varList),
-    toAnonymousFunction(
-      args,
-      code
-    )
-  ).toString()
-
   // 自执行函数
-  return `(${result})()`
+  return `(${
+    toAnonymousFunction(
+      constant.UNDEFINED,
+      toTuple('var ', ';', ',', constant.FALSE, 0, varList),
+      toAnonymousFunction(
+        args,
+        code
+      )
+    ).toString()
+  })()`
 
 }
