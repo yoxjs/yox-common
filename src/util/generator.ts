@@ -563,7 +563,7 @@ export function parse(keypath: string) {
   )
 }
 
-export function generate(args1: Base[], args2: Base[], code: Base) {
+export function generate(args: Base[], code: Base) {
 
   const varList: Base[] = [ ]
 
@@ -582,9 +582,18 @@ export function generate(args1: Base[], args2: Base[], code: Base) {
   )
 
   return toAnonymousFunction(
-    args1,
-    toTuple('var ', ';', ',', constant.FALSE, 0, varList),
-    toAnonymousFunction(args2, code)
+    args,
+    toTuple(
+      constant.EMPTY_STRING,
+      constant.EMPTY_STRING,
+      ';',
+      constant.TRUE,
+      0,
+      [
+        toTuple('var ', constant.EMPTY_STRING, ',', constant.FALSE, 0, varList),
+        code
+      ]
+    )
   ).toString()
 
 }
