@@ -335,14 +335,14 @@ export class Member implements Base {
       function (prop) {
         if (prop instanceof Primitive) {
           if (is.numeric(prop.value)) {
-            result += `[${prop.value}]`
+            result += `[${SPACE}${prop.value}${SPACE}]`
           }
           else {
             result += '.' + prop.value
           }
         }
         else {
-          result += `[${prop.toString(tabSize)}]`
+          result += `[${SPACE}${prop.toString(tabSize)}${SPACE}]`
         }
       }
     )
@@ -381,7 +381,20 @@ export class Push implements Base {
 
   toString(tabSize?: number) {
     const { array, item } = this
-    return toAssign(`${array}[${SPACE}${array}.length${SPACE}]`, item).toString(tabSize)
+    return toAssign(
+      toMember(
+        array,
+        [
+          toMember(
+            array,
+            [
+              toPrimitive('length')
+            ]
+          )
+        ]
+      ),
+      item
+    ).toString(tabSize)
   }
 
 }
