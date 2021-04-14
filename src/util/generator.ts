@@ -211,6 +211,48 @@ export class Call implements Base {
 
 }
 
+export class Precedence implements Base {
+
+  private value: Base
+
+  constructor(value: Base) {
+    this.value = value
+  }
+
+  toString(tabSize?: number) {
+    return `(${this.value.toString(tabSize)})`
+  }
+
+}
+
+export class StringBuffer implements Base {
+
+  private buffer: Base | void
+
+  append(text: Base) {
+    const { buffer } = this
+    if (buffer) {
+      this.buffer = toBinary(
+        buffer instanceof Ternary
+          ? toPrecedence(buffer)
+          : buffer,
+        '+',
+        text instanceof Ternary
+          ? toPrecedence(text)
+          : text
+      )
+    }
+    else {
+      this.buffer = text
+    }
+  }
+
+  toString(tabSize?: number) {
+    return (this.buffer as Base).toString(tabSize)
+  }
+
+}
+
 export class Unary implements Base {
 
   private operator: string
@@ -233,9 +275,6 @@ export class Binary implements Base {
   private operator: string
   private right: Base
 
-  leftGroup: boolean | void
-  rightGroup: boolean | void
-
   constructor(left: Base, operator: string, right: Base) {
     this.left = left
     this.operator = operator
@@ -243,14 +282,7 @@ export class Binary implements Base {
   }
 
   toString(tabSize?: number) {
-    let left = this.left.toString(tabSize), right = this.right.toString(tabSize)
-    if (this.leftGroup) {
-      left = `(${left})`
-    }
-    if (this.rightGroup) {
-      right = `(${right})`
-    }
-    return `${left}${SPACE}${this.operator}${SPACE}${right}`
+    return `${this.left.toString(tabSize)}${SPACE}${this.operator}${SPACE}${this.right.toString(tabSize)}`
   }
 
 }
@@ -425,6 +457,14 @@ export function toMap(fields?: Record<string, Base>) {
 
 export function toCall(name: string, args?: Base[]) {
   return new Call(name, args)
+}
+
+export function toPrecedence(value: Base) {
+  return new Precedence(value)
+}
+
+export function toStringBuffer() {
+  return new StringBuffer()
 }
 
 export function toUnary(operator: string, value: Base) {
