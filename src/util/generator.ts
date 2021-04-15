@@ -634,19 +634,12 @@ export function generate(args: Base[], code: Base) {
     }
   )
 
-  return toAnonymousFunction(
-    args,
-    toTuple(
-      constant.EMPTY_STRING,
-      constant.EMPTY_STRING,
-      ';',
-      constant.TRUE,
-      0,
-      [
-        toTuple('var ', constant.EMPTY_STRING, ',', constant.FALSE, 0, varList),
-        code
-      ]
-    )
-  ).toString()
+  const result = toAnonymousFunction(
+    constant.UNDEFINED,
+    toTuple('var ', ';', ',', constant.FALSE, 0, varList),
+    toAnonymousFunction(args, code)
+  )
+
+  return `(${result.toString()})()`
 
 }
