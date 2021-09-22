@@ -68,6 +68,5 @@ export function boolean(value: any): boolean {
  * @return
  */
 export function numeric(value: any): boolean {
-  return number(value)
-    || (string(value) && !isNaN(parseFloat(value)) && isFinite(value))
+  return !isNaN(value - parseFloat(value))
 }

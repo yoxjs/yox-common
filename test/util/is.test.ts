@@ -293,6 +293,16 @@ test('numeric', () => {
   .toBe(false)
 
   expect(
+    is.numeric('1.')
+  )
+  .toBe(true)
+
+  expect(
+    is.numeric('.1')
+  )
+  .toBe(true)
+
+  expect(
     is.numeric(1)
   )
   .toBe(true)
