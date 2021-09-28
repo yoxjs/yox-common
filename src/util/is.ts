@@ -58,7 +58,7 @@ export function number(value: any): boolean {
  * @return
  */
 export function boolean(value: any): boolean {
-  return typeof value === 'boolean'
+  return value === constant.TRUE || value === constant.FALSE
 }
 
 /**
