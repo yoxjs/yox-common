@@ -189,10 +189,10 @@ export class Map implements Base {
 
 export class Call implements Base {
 
-  private name: string
+  private name: string | Base
   private args?: Base[]
 
-  constructor(name: string, args?: Base[]) {
+  constructor(name: string | Base, args?: Base[]) {
     this.name = name
     this.args = args
   }
@@ -204,8 +204,8 @@ export class Call implements Base {
     newArgs = args ? trimArgs(args) : [ ]
 
     return newArgs.length
-      ? `${name}${toTuple('(', ')', ',', constant.TRUE, 1, newArgs).toString(tabSize)}`
-      : `${name}()`
+      ? `${name.toString(tabSize)}${toTuple('(', ')', ',', constant.TRUE, 1, newArgs).toString(tabSize)}`
+      : `${name.toString(tabSize)}()`
 
   }
 
@@ -455,7 +455,7 @@ export function toMap(fields?: Record<string, Base>) {
   return new Map(fields)
 }
 
-export function toCall(name: string, args?: Base[]) {
+export function toCall(name: string | Base, args?: Base[]) {
   return new Call(name, args)
 }
 
