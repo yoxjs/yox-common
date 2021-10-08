@@ -55,16 +55,6 @@ test('each interrupt', () => {
   expect(index).not.toBe(Object.keys(test).length)
 })
 
-test('clear', () => {
-  let test = {
-    a: 'a',
-    b: 'b',
-    c: 'c',
-  }
-  object.clear(test)
-  expect(Object.keys(test).length).toBe(0)
-})
-
 test('extend', () => {
   let test1 = { a: 1 }
   let test2 = { b: 2 }

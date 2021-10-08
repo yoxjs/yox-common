@@ -35,20 +35,6 @@ export function each(object: Data, callback: (value: any, key: string) => boolea
 }
 
 /**
- * 清空对象所有的键值对
- *
- * @param object
- */
-export function clear(object: Data): void {
-  each(
-    object,
-    function (_, key) {
-      delete object[key]
-    }
-  )
-}
-
-/**
  * 扩展对象
  *
  * @return
