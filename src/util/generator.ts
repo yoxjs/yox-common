@@ -420,7 +420,7 @@ export class Push implements Base {
           toMember(
             array,
             [
-              toPrimitive('length')
+              toPrimitive(constant.RAW_LENGTH)
             ]
           )
         ]
@@ -437,6 +437,27 @@ export function toPrimitive(value: any) {
 
 export function toTuple(left: string, right: string, separator: string, breakLine: boolean, offset: number, items?: Base[]) {
   return new Tuple(left, right, separator, breakLine, offset, items)
+}
+
+export function toStatement(items?: Base[], precedence?: boolean) {
+  if (precedence) {
+    return toTuple(
+      '(',
+      ')',
+      ',',
+      constant.TRUE,
+      1,
+      items
+    )
+  }
+  return toTuple(
+    constant.EMPTY_STRING,
+    constant.EMPTY_STRING,
+    ',',
+    constant.TRUE,
+    0,
+    items
+  )
 }
 
 export function toList(items?: Base[], join?: string) {
