@@ -332,7 +332,7 @@ export class AnonymousFunction implements Base {
     if (body) {
       array.push(
         code,
-        body.toString(nextTabSize)
+        body.toString(nextTabSize) + (returnValue ? ';' : constant.EMPTY_STRING)
       )
     }
     if (returnValue) {
