@@ -95,6 +95,13 @@ export function copy(object: any, deep?: boolean): any {
   return result
 }
 
+function getCallback(value: any) {
+  // 如果是计算属性，取计算属性的值
+  return is.func(value.get)
+    ? value.get()
+    : value
+}
+
 /**
  * 从对象中查找一个 keypath
  *
@@ -121,15 +128,11 @@ export function get(object: any, keypath: string, callback?: (value: any) => any
         // 下面会处理计算属性的值，不能在它后面设置 hasValue
         hasValue = value !== constant.UNDEFINED
 
+        // 为什么不用 hasValue 判断呢？
+        // 因为这里需要处理的 value 要么是函数，要么是对象，基础类型无需加工
         if (value) {
           // 如果数据中没有计算属性，也可以自定义
-          if (callback) {
-            value = callback(value)
-          }
-          // 如果是计算属性，取计算属性的值
-          else if (is.func(value.get)) {
-            value = value.get()
-          }
+          value = (callback || getCallback)(value)
         }
 
         if (index === lastIndex) {
