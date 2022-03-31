@@ -104,7 +104,7 @@ export function copy(object: any, deep?: boolean): any {
  * @param keypath
  * @return
  */
-export function get(object: any, keypath: string): ValueHolder | undefined {
+export function get(object: any, keypath: string, callback?: (value: any) => any): ValueHolder | undefined {
 
   let result = object
 
@@ -121,9 +121,15 @@ export function get(object: any, keypath: string): ValueHolder | undefined {
         // 下面会处理计算属性的值，不能在它后面设置 hasValue
         hasValue = value !== constant.UNDEFINED
 
-        // 如果是计算属性，取计算属性的值
-        if (value && is.func(value.get)) {
-          value = value.get()
+        if (value) {
+          // 如果数据中没有计算属性，也可以自定义
+          if (callback) {
+            value = callback(value)
+          }
+          // 如果是计算属性，取计算属性的值
+          else if (is.func(value.get)) {
+            value = value.get()
+          }
         }
 
         if (index === lastIndex) {
