@@ -17,11 +17,13 @@ isMinify = constant.UNDEFINED,
 
 varId = 0,
 
-varMap: Record<string, Base> = { },
+varMap: Record<string, Base | void> = { },
 
 varCache: Record<string, string> = { },
 
 VAR_PREFIX = constant.EMPTY_STRING,
+
+TEMP = constant.EMPTY_STRING,
 
 UNDEFINED = constant.EMPTY_STRING,
 
@@ -388,15 +390,20 @@ export class Assign implements Base {
 
   private name: Base
   private value: Base
+  private isDeclaration?: boolean
 
-  constructor(name: Base, value: Base) {
+  constructor(name: Base, value: Base, isDeclaration?: boolean) {
     this.name = name
     this.value = value
+    this.isDeclaration = isDeclaration
   }
 
   toString(tabSize?: number) {
-    const { name, value } = this
-    return `${name.toString(tabSize)}${SPACE}=${SPACE}${value.toString(tabSize)}`
+    const { name, value, isDeclaration } = this
+    const statement = `${name.toString(tabSize)}${SPACE}=${SPACE}${value.toString(tabSize)}`
+    return isDeclaration
+      ? `var ${statement}`
+      : statement
   }
 
 }
@@ -413,19 +420,16 @@ export class Push implements Base {
 
   toString(tabSize?: number) {
     const { array, item } = this
-    return toAssign(
+    return toCall(
       toMember(
         array,
         [
-          toMember(
-            array,
-            [
-              toPrimitive(constant.RAW_LENGTH)
-            ]
-          )
+          toPrimitive('push')
         ]
       ),
-      item
+      [
+        item
+      ]
     ).toString(tabSize)
   }
 
@@ -508,12 +512,16 @@ export function toMember(base: Base, props: Base[]) {
   return new Member(base, props)
 }
 
-export function toAssign(name: Base, value: Base) {
-  return new Assign(name, value)
+export function toAssign(name: Base, value: Base, isDeclaration?: boolean) {
+  return new Assign(name, value, isDeclaration)
 }
 
 export function toPush(array: string, item: Base) {
   return new Push(array, item)
+}
+
+export function getTempName() {
+  return TEMP
 }
 
 /**
@@ -566,8 +574,10 @@ function toObjectPair(key: string, value: string) {
   return `${key}:${SPACE}${value}`
 }
 
-function toVarPair(key: string, value: string) {
-  return `${key}${SPACE}=${SPACE}${value}`
+function toVarPair(key: string, value: string | void) {
+  return value !== constant.UNDEFINED
+    ? `${key}${SPACE}=${SPACE}${value}`
+    : key
 }
 
 export function init() {
@@ -599,6 +609,7 @@ export function init() {
   varMap = { }
   varCache = { }
 
+  TEMP = addVar()
   UNDEFINED = addVar('void 0')
   NULL = addVar('null')
   TRUE = addVar('!0')
@@ -606,18 +617,18 @@ export function init() {
 
 }
 
-export function addVar(value: Base, cache?: true) {
+export function addVar(value?: Base, cache?: true) {
 
-  const hash = value.toString()
+  const hash = value ? value.toString() : constant.UNDEFINED
 
-  if (cache && varCache[hash]) {
+  if (cache && hash && varCache[hash]) {
     return varCache[hash]
   }
 
   const key = VAR_PREFIX + (varId++)
   varMap[key] = value
 
-  if (cache) {
+  if (cache && hash) {
     varCache[hash] = key
   }
 
@@ -648,7 +659,12 @@ export function generate(args: Base[], code: Base) {
         varList,
         {
           toString(tabSize) {
-            return toVarPair(key, value.toString(tabSize))
+            return toVarPair(
+              key,
+              value
+                ? value.toString(tabSize)
+                : constant.UNDEFINED
+            )
           }
         }
       )
@@ -657,7 +673,7 @@ export function generate(args: Base[], code: Base) {
 
   const result = toAnonymousFunction(
     constant.UNDEFINED,
-    toTuple('var ', ';', ',', constant.FALSE, 0, varList),
+    toTuple('var ', constant.EMPTY_STRING, ',', constant.FALSE, 0, varList),
     toAnonymousFunction(args, code)
   )
 
