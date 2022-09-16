@@ -12,7 +12,6 @@ export const RAW_NULL = 'null'
 export const RAW_UNDEFINED = 'undefined'
 
 export const RAW_FILTER = 'filter'
-export const RAW_PARTIAL = 'partial'
 export const RAW_COMPONENT = 'component'
 export const RAW_DIRECTIVE = 'directive'
 export const RAW_TRANSITION = 'transition'
