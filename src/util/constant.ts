@@ -28,6 +28,10 @@ export const KEYPATH_ROOT= '~'
 export const KEYPATH_PARENT = '..'
 export const KEYPATH_CURRENT = RAW_THIS
 
+export const NODE_TYPE_ELEMENT = 1
+export const NODE_TYPE_TEXT = 3
+export const NODE_TYPE_COMMENT = 8
+
 /**
  * Single instance for window in browser
  */
