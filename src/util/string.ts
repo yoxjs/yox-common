@@ -187,6 +187,22 @@ export function has(str: string, part: string): boolean {
 }
 
 /**
+ * str 转成 value 为 true 的 map
+ *
+ * @param str
+ * @param separator
+ */
+export function toMap(str: string, separator?: string): Record<string, true> {
+  const map = Object.create(constant.NULL)
+  array.each(
+    str.split(separator || ','),
+    function (item) {
+      map[item] = constant.TRUE
+    }
+  )
+  return map
+}
+/**
  * 判断长度大于 0 的字符串
  *
  * @param str

@@ -15,6 +15,9 @@ let isUglify = constant.UNDEFINED,
 
 isMinify = constant.UNDEFINED,
 
+// 保留字，避免 IE 出现 { class: 'xx' } 报错
+reservedWords = string.toMap('abstract,goto,native,static,enum,implements,package,super,byte,export,import,private,protected,public,synchronized,char,extends,int,throws,class,final,interface,transient,yield,let,const,float,double,boolean,long,short,volatile,default'),
+
 varId = 0,
 
 varMap: Record<string, Base | void> = { },
@@ -568,7 +571,7 @@ function toStringLiteral(value: string) {
 }
 
 function toObjectPair(key: string, value: string) {
-  if (!/^[\w$]+$/.test(key)) {
+  if (!/^[\w$]+$/.test(key) || reservedWords[key]) {
     key = toStringLiteral(key)
   }
   return `${key}:${SPACE}${value}`
