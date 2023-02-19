@@ -142,6 +142,42 @@ export class Tuple implements Base {
 
 }
 
+export class Statement implements Base {
+
+  private items: Base[]
+
+  constructor(items?: Base[]) {
+    this.items = items || []
+  }
+
+  add(value: Base) {
+    array.push(
+      this.items,
+      value
+    )
+  }
+
+  toString(tabSize?: number) {
+
+    const { items } = this
+
+    if (items.length === 1) {
+      return items[0].toString(tabSize)
+    }
+
+    return new Tuple(
+      '(',
+      ')',
+      ',',
+      constant.TRUE,
+      1,
+      items
+    ).toString(tabSize)
+
+  }
+
+}
+
 export class Map implements Base {
 
   private fields: Record<string, Base> = { }
@@ -446,25 +482,8 @@ export function toTuple(left: string, right: string, separator: string, breakLin
   return new Tuple(left, right, separator, breakLine, offset, items)
 }
 
-export function toStatement(items?: Base[], precedence?: boolean) {
-  if (precedence) {
-    return toTuple(
-      '(',
-      ')',
-      ',',
-      constant.TRUE,
-      1,
-      items
-    )
-  }
-  return toTuple(
-    constant.EMPTY_STRING,
-    constant.EMPTY_STRING,
-    ',',
-    constant.TRUE,
-    0,
-    items
-  )
+export function toStatement(items?: Base[]) {
+  return new Statement(items)
 }
 
 export function toList(items?: Base[], join?: string) {
