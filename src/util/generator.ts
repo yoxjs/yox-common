@@ -26,7 +26,15 @@ varCache: Record<string, string> = { },
 
 VAR_PREFIX = constant.EMPTY_STRING,
 
-TEMP = constant.EMPTY_STRING,
+TEMP1 = constant.EMPTY_STRING,
+
+TEMP2 = constant.EMPTY_STRING,
+
+TEMP3 = constant.EMPTY_STRING,
+
+TEMP4 = constant.EMPTY_STRING,
+
+TEMP5 = constant.EMPTY_STRING,
 
 UNDEFINED = constant.EMPTY_STRING,
 
@@ -474,6 +482,23 @@ export class Push implements Base {
 
 }
 
+export class Typeof implements Base {
+
+  private value: Base
+  private type: string
+
+  constructor(value: Base, type: string) {
+    this.value = value
+    this.type = type
+  }
+
+  toString(tabSize?: number) {
+    const { value, type } = this
+    return `typeof ${value.toString(tabSize)}${SPACE}===${SPACE}${toStringLiteral(type)}`
+  }
+
+}
+
 export function toPrimitive(value: any) {
   return new Primitive(value)
 }
@@ -542,8 +567,28 @@ export function toPush(array: string, item: Base) {
   return new Push(array, item)
 }
 
-export function getTempName() {
-  return TEMP
+export function toTypeof(value: Base, type: string) {
+  return new Typeof(value, type)
+}
+
+export function getTemp1Name() {
+  return TEMP1
+}
+
+export function getTemp2Name() {
+  return TEMP2
+}
+
+export function getTemp3Name() {
+  return TEMP3
+}
+
+export function getTemp4Name() {
+  return TEMP4
+}
+
+export function getTemp5Name() {
+  return TEMP5
 }
 
 /**
@@ -631,7 +676,11 @@ export function init() {
   varMap = { }
   varCache = { }
 
-  TEMP = addVar()
+  TEMP1 = addVar()
+  TEMP2 = addVar()
+  TEMP3 = addVar()
+  TEMP4 = addVar()
+  TEMP5 = addVar()
   UNDEFINED = addVar('void 0')
   NULL = addVar('null')
   TRUE = addVar('!0')
