@@ -111,7 +111,7 @@ function getCallback(value: any) {
  * @param keypath
  * @return
  */
-export function get(object: any, keypath: string, callback?: (value: any) => any): ValueHolder | undefined {
+export function get(object: any, keypath: string | string[], callback?: (value: any) => any): ValueHolder | undefined {
 
   let result = object
 
