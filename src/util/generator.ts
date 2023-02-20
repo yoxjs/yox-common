@@ -26,15 +26,7 @@ varCache: Record<string, string> = { },
 
 VAR_PREFIX = constant.EMPTY_STRING,
 
-TEMP1 = constant.EMPTY_STRING,
-
-TEMP2 = constant.EMPTY_STRING,
-
-TEMP3 = constant.EMPTY_STRING,
-
-TEMP4 = constant.EMPTY_STRING,
-
-TEMP5 = constant.EMPTY_STRING,
+TEMP = constant.EMPTY_STRING,
 
 UNDEFINED = constant.EMPTY_STRING,
 
@@ -58,7 +50,7 @@ export class Primitive implements Base {
 
   value: string | number | boolean | null | undefined
 
-  constructor(value: string | number) {
+  constructor(value: any) {
     this.value = value
   }
 
@@ -571,24 +563,8 @@ export function toTypeof(value: Base, type: string) {
   return new Typeof(value, type)
 }
 
-export function getTemp1Name() {
-  return TEMP1
-}
-
-export function getTemp2Name() {
-  return TEMP2
-}
-
-export function getTemp3Name() {
-  return TEMP3
-}
-
-export function getTemp4Name() {
-  return TEMP4
-}
-
-export function getTemp5Name() {
-  return TEMP5
+export function getTempName() {
+  return TEMP
 }
 
 /**
@@ -676,11 +652,7 @@ export function init() {
   varMap = { }
   varCache = { }
 
-  TEMP1 = addVar()
-  TEMP2 = addVar()
-  TEMP3 = addVar()
-  TEMP4 = addVar()
-  TEMP5 = addVar()
+  TEMP = addVar()
   UNDEFINED = addVar('void 0')
   NULL = addVar('null')
   TRUE = addVar('!0')
