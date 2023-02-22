@@ -602,12 +602,12 @@ function trimArgs(list: Base[]) {
 }
 
 function toStringLiteral(value: string) {
-  // 优先用单引号
-  const quote = string.has(value, QUOTE_SINGLE)
-    ? QUOTE_DOUBLE
-    : QUOTE_SINGLE
-  // 换行符会导致字符串语法错误
-  return `${quote}${value.replace(/\n\s*/g, '\\n')}${quote}`
+  value = value
+    .replace(/\\?'/g, "\\'")
+    .replace(/\\?"/g, '\\"')
+    // 换行符会导致字符串语法错误
+    .replace(/\n\s*/g, '\\n')
+  return QUOTE_DOUBLE + value + QUOTE_DOUBLE
 }
 
 function toObjectPair(key: string, value: string) {
