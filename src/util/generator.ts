@@ -4,12 +4,6 @@ import * as object from './object'
 import * as string from './string'
 import * as constant from './constant'
 
-
-const QUOTE_DOUBLE = '"',
-
-QUOTE_SINGLE = "'"
-
-
 // 下面这些值需要根据外部配置才能确定
 let isUglify = constant.UNDEFINED,
 
@@ -607,7 +601,7 @@ function toStringLiteral(value: string) {
     .replace(/\\?"/g, '\\"')
     // 换行符会导致字符串语法错误
     .replace(/\n\s*/g, '\\n')
-  return QUOTE_DOUBLE + value + QUOTE_DOUBLE
+  return `"${value}"`
 }
 
 function toObjectPair(key: string, value: string) {
